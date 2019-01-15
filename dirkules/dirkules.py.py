@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from dirkules import app
 
 @app.route('/', methods=['GET'])
 def index():
