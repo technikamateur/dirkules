@@ -1,7 +1,4 @@
 import os
-
-import dirkules.models
-import dirkules.views
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,4 +8,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(
     baseDir, 'dirkules.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+import dirkules.models
 db.create_all()
+
+import dirkules.views

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block nav %}
+<div class="nav-wrapper green darken-4">
+  <ul id="nav-mobile" class="right hide-on-med-and-down">
+    <li><a href="{{ url_for('about') }}" class="right">über Dirkules</a></li>
+  </ul>
+  <ul id="nav-mobile" class="left hide-on-med-and-down">
+    <li><a href="{{ url_for('index') }}">Startseite</a></li>
+    <li><a href="/nzbget">NZBGet</a></li>
+    <li class="active"><a href="{{ url_for('monitoring') }}">Monitoring</a></li>
+  </ul>
+</div>
+{% endblock %}
+{% block body %}
+  <div class="title">
+    <t1>Monitoring</t1>
+  </div>
+  <div class="tablebox">
+    <table class="striped">
+         <thead>
+           <tr>
+               <th>Laufwerk</th>
+               <th>Einhängepunkt</th>
+               <th>Dateisystem</th>
+           </tr>
+         </thead>
+
+         <tbody>
+           {% for drive in drives %}
+           <tr>
+             <td>{{drive.device}}</td>
+             <td>{{drive.mountpoint}}</td>
+             <td>{{drive.fstype}}</td>
+           </tr>
+           {% endfor %}
+         </tbody>
+       </table>
+   </div>
+{% endblock %}

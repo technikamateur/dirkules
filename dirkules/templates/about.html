@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block nav %}
+<div class="nav-wrapper green darken-4">
+  <ul id="nav-mobile" class="right hide-on-med-and-down">
+    <li class="active"><a href="{{ url_for('about') }}" class="right">über Dirkules</a></li>
+  </ul>
+  <ul id="nav-mobile" class="left hide-on-med-and-down">
+    <li><a href="{{ url_for('index') }}">Startseite</a></li>
+    <li><a href="/nzbget">NZBGet</a></li>
+    <li><a href="{{ url_for('monitoring') }}">Monitoring</a></li>
+  </ul>
+</div>
+{% endblock %}
+{% block body %}
+<div class="title">
+  <t1>Über Dirkules</t1>
+</div>
+<div class="tablebox">
+  <t3>Dirkules Version {{ version }}</t3>
+  <tnorm>
+    <p>
+      Dirkules - Benannt nach einem großartigen Mitbewohner. Immer zur Stelle, um deinen Server zu überwachen.
+    </p>
+    <p>
+      Das Projekt soll eine kleine, schnelle und einfache Weboberfläche erschaffen, welche es ermöglicht, die Wichtigesten Informationen sofort zu erfassen und ein paar kleine Einstellungen vorzunehmen.
+    </p>
+  </tnorm>
+</div>
+{% endblock %}
