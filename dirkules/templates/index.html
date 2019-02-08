@@ -3,18 +3,6 @@
 {% block head %}
   {{ super() }}
 {% endblock %}
-{% block nav %}
-<div class="nav-wrapper green darken-4">
-  <ul id="nav-mobile" class="right hide-on-med-and-down">
-    <li><a href="{{ url_for('about') }}" class="right">über Dirkules</a></li>
-  </ul>
-  <ul id="nav-mobile" class="left hide-on-med-and-down">
-    <li class="active"><a href="{{ url_for('index') }}">Startseite</a></li>
-    <li><a href="/nzbget">NZBGet</a></li>
-    <li><a href="{{ url_for('monitoring') }}">Monitoring</a></li>
-  </ul>
-</div>
-{% endblock %}
 {% block body %}
   <div class="title">
     <t1>Willkommen!</t1>

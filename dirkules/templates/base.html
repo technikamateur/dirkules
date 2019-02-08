@@ -1,21 +1,32 @@
 <!DOCTYPE html>
-  <head>
-    {% block head %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}"/>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
-    <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
-  </head>
-  <body>
+
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}" />
+  <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  <title>{% block title %}{% endblock %}</title>
+  {% endblock %}
+</head>
+
+<body>
   <nav>
-    {% block nav %}
-    {% endblock %}
+    <div class="nav-wrapper green darken-4">
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="{{ url_for('about') }}" class="right">über Dirkules</a></li>
+      </ul>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="{{ url_for('index') }}">Startseite</a></li>
+        <li><a href="/nzbget">NZBGet</a></li>
+        <li><a href="{{ url_for('drives') }}">Festplatten</a></li>
+      </ul>
+    </div>
   </nav>
   {% block body %}
   {% endblock %}
-  </body>
+</body>
+
 </html>
