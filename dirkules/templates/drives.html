@@ -12,6 +12,7 @@
          <thead>
            <tr>
                <th>Laufwerk</th>
+               <th>Name</th>
                <th>Einhängepunkt</th>
                <th>Dateisystem</th>
            </tr>
@@ -21,6 +22,7 @@
            {% for drive in drives %}
            <tr>
              <td>{{drive.device}}</td>
+             <td>{{drive.label}}</td>
              <td>{{drive.mountpoint}}</td>
              <td>{{drive.fstype}}</td>
            </tr>
