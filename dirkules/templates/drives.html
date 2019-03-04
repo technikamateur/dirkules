@@ -13,8 +13,7 @@
            <tr>
                <th>Laufwerk</th>
                <th>Name</th>
-               <th>Einhängepunkt</th>
-               <th>Dateisystem</th>
+               <th>SMART Status</th>
            </tr>
          </thead>
 
@@ -22,9 +21,8 @@
            {% for drive in drives %}
            <tr>
              <td>{{drive.device}}</td>
-             <td>{{drive.label}}</td>
-             <td>{{drive.mountpoint}}</td>
-             <td>{{drive.fstype}}</td>
+             <td>{{drive.name}}</td>
+             <td>{{drive.smart}}</td>
            </tr>
            {% endfor %}
          </tbody>
