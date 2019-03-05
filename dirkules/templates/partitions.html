@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block body %}
+  <div class="title">
+    <t1>Partitionen</t1>
+  </div>
+  <div class="tablebox">
+    <table class="striped">
+         <thead>
+           <tr>
+               <th>Laufwerk</th>
+               <th>Name</th>
+               <th>Speicherplatz</th>
+               <th>SMART Status</th>
+           </tr>
+         </thead>
+
+         <tbody>
+           {% for drive in drives %}
+           <tr>
+             <td>{{drive.device}}</td>
+             <td>{{drive.name}}</td>
+             <td>{{drive.size}}</td>
+             <td>{{drive.smart}}</td>
+           </tr>
+           {% endfor %}
+         </tbody>
+       </table>
+   </div>
+{% endblock %}

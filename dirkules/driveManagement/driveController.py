@@ -2,6 +2,7 @@
 import psutil
 import subprocess
 import os
+from dirkules.models import Drive
 
 
 def getAllDrives():
@@ -33,16 +34,17 @@ def getAllDrives():
         values.append(smartPassed(values[0]))
         values.append(getTotalSize(values[0]))
         driveDict.append(dict(zip(keys, values)))
+        db.session.add(Drive(values[0], values[1], values[2], values[3]))
+        db.session.commit()
     return driveDict
 
 
 def smartPassed(device):
     passed = False
-    smartctl = subprocess.Popen(
-        ["smartctl -H " + device],
-        stdout=subprocess.PIPE,
-        shell=True,
-        universal_newlines=True)
+    smartctl = subprocess.Popen(["smartctl -H " + device],
+                                stdout=subprocess.PIPE,
+                                shell=True,
+                                universal_newlines=True)
     while True:
         line = smartctl.stdout.readline()
         if "PASSED" in line:
@@ -53,6 +55,7 @@ def smartPassed(device):
             pass
     smartctl.stdout.close()
     return passed
+
 
 def getTotalSize(device):
     # Hier könnte man auch die Partitionen mit abfragen
@@ -75,6 +78,7 @@ def getTotalSize(device):
     firstLine = drives[0].split(" ")
     size = firstLine[2] + " " + firstLine[3][:-1]
     return size
+
 
 #nicht verwenden
 def OLDgetAllDrives():
