@@ -7,6 +7,7 @@ Debian basiertes Betriebssystem mit folgenden installierten Paketen:
 - python3
 - python3-pip
 - gunicorn3
+- hwinfo
 
 ## Installation
 Bitte einen eigenen Benutzer anlegen. Diesem folgende root-Rechte (ohne Passwort) einräumen:
@@ -17,4 +18,3 @@ Als dieser Nutzer folgende Befehle ausführen:
 - `cd dirkules`
 - `pip3 install .`
 - `gunicorn3 dirkules:app`
-

@@ -9,6 +9,5 @@ setup(
         'flask',
         'Flask-SQLAlchemy',
         'psutil',
-        'pySMART',
     ],
 )

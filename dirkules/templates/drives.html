@@ -13,6 +13,7 @@
            <tr>
                <th>Laufwerk</th>
                <th>Name</th>
+               <th>Speicherplatz</th>
                <th>SMART Status</th>
            </tr>
          </thead>
@@ -22,6 +23,7 @@
            <tr>
              <td>{{drive.device}}</td>
              <td>{{drive.name}}</td>
+             <td>{{drive.size}}</td>
              <td>{{drive.smart}}</td>
            </tr>
            {% endfor %}

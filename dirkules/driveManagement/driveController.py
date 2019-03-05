@@ -8,7 +8,7 @@ def getAllDrives():
     #vorbereitung
     drives = []
     driveDict = []
-    keys = ['device', 'name', 'smart']
+    keys = ['device', 'name', 'smart', 'size']
 
     blkid = subprocess.Popen(["hwinfo --disk --short"],
                              stdout=subprocess.PIPE,
@@ -31,6 +31,7 @@ def getAllDrives():
         values.append(line[:8])
         values.append(line[8:])
         values.append(smartPassed(values[0]))
+        values.append(getTotalSize(values[0]))
         driveDict.append(dict(zip(keys, values)))
     return driveDict
 
@@ -53,6 +54,27 @@ def smartPassed(device):
     smartctl.stdout.close()
     return passed
 
+def getTotalSize(device):
+    # Hier könnte man auch die Partitionen mit abfragen
+    drives = []
+    fdisk = subprocess.Popen(["fdisk -l"],
+                             stdout=subprocess.PIPE,
+                             shell=True,
+                             universal_newlines=True)
+    grepedDrives = subprocess.Popen(["grep", device],
+                                    stdin=fdisk.stdout,
+                                    stdout=subprocess.PIPE,
+                                    universal_newlines=True)
+    while True:
+        line = grepedDrives.stdout.readline()
+        if line != '':
+            drives.append(line.rstrip())
+        else:
+            break
+    fdisk.stdout.close()
+    firstLine = drives[0].split(" ")
+    size = firstLine[2] + " " + firstLine[3][:-1]
+    return size
 
 #nicht verwenden
 def OLDgetAllDrives():
