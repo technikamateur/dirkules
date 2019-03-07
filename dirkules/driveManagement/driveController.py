@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import psutil
 import subprocess
 import os
 from dirkules.models import Drive
@@ -9,7 +8,7 @@ from dirkules import db
 def getAllDrives():
     #vorbereitung
     drives = []
-    driveDict = []
+    driveDict = []  # ist eine Liste, enthält für jede HDD ein dict
     keys = ['device', 'name', 'smart', 'size']
 
     blkid = subprocess.Popen(["hwinfo --disk --short"],
@@ -28,6 +27,7 @@ def getAllDrives():
             break
     blkid.stdout.close()
     for line in drives:
+        # Effizienter machen mit newLine = ' '.join(line.split())
         values = []
         line = line.replace(" ", "", 15)
         values.append(line[:8])
@@ -63,7 +63,6 @@ def smartPassed(device):
 
 
 def getTotalSize(device):
-    # Hier könnte man auch die Partitionen mit abfragen
     drives = []
     fdisk = subprocess.Popen(["fdisk -l"],
                              stdout=subprocess.PIPE,
@@ -85,19 +84,18 @@ def getTotalSize(device):
     return size
 
 
-#nicht verwenden
-def OLDgetAllDrives():
-
-    #vorbereitung
+def getPartitions(device):
+    partDict = []  # ist eine Liste, enthält für jede part ein dict
     drives = []
-    driveDict = []
-    keys = ['device', 'mountpoint', 'fstype', 'label']
+    # name = sda1 zum Beispiel
+    keys = ['name', 'fs', 'size', 'uuid', 'mountpoint', 'label']
 
-    blkid = subprocess.Popen(["blkid"],
+    fdisk = subprocess.Popen(["fdisk -l"],
                              stdout=subprocess.PIPE,
+                             shell=True,
                              universal_newlines=True)
-    grepedDrives = subprocess.Popen(["grep", "/dev/sd"],
-                                    stdin=blkid.stdout,
+    grepedDrives = subprocess.Popen(["grep", device],
+                                    stdin=fdisk.stdout,
                                     stdout=subprocess.PIPE,
                                     universal_newlines=True)
     while True:
@@ -106,31 +104,22 @@ def OLDgetAllDrives():
             drives.append(line.rstrip())
         else:
             break
-    blkid.stdout.close()
+    fdisk.stdout.close()
+    del drives[0]
     for line in drives:
-        values = []
-        #Informationen aufbereiten
-        arrayline = line.split(' ')
-        values.append(arrayline[0][:-1])
-        if any("LABEL" in s for s in arrayline):
-            if any("UUID_SUB" in s for s in arrayline):
-                values.append("Was weiß ich...")
-                values.append(arrayline[4][6:-1])
-                values.append("Weiß ich auch noch nicht...")
-            else:
-                values.append("Was weiß ich...")
-                values.append(arrayline[3][6:-1])
-                values.append("Weiß ich auch noch nicht...")
-        elif any(not "LABEL" in s
-                 for s in arrayline) and any("UUID_SUB" in s
-                                             for s in arrayline):
-            values.append("Was weiß ich...")
-            values.append(arrayline[3][6:-1])
-            values.append("(keiner)")
+        line = line.replace("*", "")
+        newLine = ' '.join(line.split())
+        newLine = newLine.split(" ")
+        if newLine[5] != 5:  #Ungültige Partitionen herausfiltern
+            # Für jede Partition muss nun blkid ausgeführt werden, um weitere Informationen zu erhalten
+            values = []
+            values.append(newLine[0])
+            values.append("fs")
+            values.append(newLine[4])
+            values.append("uuid")
+            values.append("mountpoint")
+            values.append("label")
+            partDict.append(dict(zip(keys, values)))
         else:
-            values.append("Was weiß ich...")
-            values.append(arrayline[2][6:-1])
-            values.append("(keiner)")
-        #Dict für Jinja anfügen
-        driveDict.append(dict(zip(keys, values)))
-    return driveDict
+            pass
+    return partDict

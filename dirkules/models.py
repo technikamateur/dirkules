@@ -26,17 +26,17 @@ class Partitions(db.Model):
     drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'))
     name = db.Column(db.String)
     fs = db.Column(db.String)
+    size =db.Column(db.String)
     uuid = db.Column(db.String)
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)
 
 
-class Times(db.Model):
-    __tablename__ = 'times'
+class Time(db.Model):
+    __tablename__ = 'time'
     id = db.Column(db.Integer, primary_key=True)
     desc = db.Column(db.String)
     time = db.Column(db.Integer, default=0, onupdate=1)
 
-    def __init__(self, desc, time):
+    def __init__(self, desc):
         self.desc = desc
-        self.time = time

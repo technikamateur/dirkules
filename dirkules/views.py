@@ -12,7 +12,9 @@ def index():
 @app.route('/drives', methods=['GET'])
 def drives():
     drives = drico.getAllDrives()
-    print(Drive.query.filter_by(device='/dev/sda').all())
+    #print(Drive.query.filter_by(device='/dev/sda').all())
+    test = drico.getPartitions("/dev/sdb")
+    print(test)
     return render_template('drives.html', drives=drives)
 
 
