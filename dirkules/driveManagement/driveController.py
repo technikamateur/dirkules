@@ -3,6 +3,7 @@ import psutil
 import subprocess
 import os
 from dirkules.models import Drive
+from dirkules import db
 
 
 def getAllDrives():
@@ -34,9 +35,13 @@ def getAllDrives():
         values.append(smartPassed(values[0]))
         values.append(getTotalSize(values[0]))
         driveDict.append(dict(zip(keys, values)))
-        db.session.add(Drive(values[0], values[1], values[2], values[3]))
-        db.session.commit()
-    return driveDict
+    sortedDriveDict = sorted(driveDict, key=lambda drive: drive['device'])
+
+    #add to db
+    #db.session.add(Drive(values[0], values[1], values[2], values[3]))
+    #db.session.commit()
+
+    return sortedDriveDict
 
 
 def smartPassed(device):

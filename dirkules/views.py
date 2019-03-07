@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from dirkules import app
 import dirkules.driveManagement.driveController as drico
+from dirkules.models import Drive
 
 
 @app.route('/', methods=['GET'])
@@ -11,6 +12,7 @@ def index():
 @app.route('/drives', methods=['GET'])
 def drives():
     drives = drico.getAllDrives()
+    print(Drive.query.filter_by(device='/dev/sda').all())
     return render_template('drives.html', drives=drives)
 
 

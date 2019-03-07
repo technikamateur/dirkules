@@ -13,6 +13,12 @@ class Drive(db.Model):
     smart = db.Column(db.Boolean)
     partitions = db.relationship("Partitions")
 
+    def __init__(self, device, name, smart, size):
+        self.device = device
+        self.name = name
+        self.smart = smart
+        self.size = size
+
 
 class Partitions(db.Model):
     __tablename__ = 'partitions'
@@ -23,3 +29,14 @@ class Partitions(db.Model):
     uuid = db.Column(db.String)
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)
+
+
+class Times(db.Model):
+    __tablename__ = 'times'
+    id = db.Column(db.Integer, primary_key=True)
+    desc = db.Column(db.String)
+    time = db.Column(db.Integer, default=0, onupdate=1)
+
+    def __init__(self, desc, time):
+        self.desc = desc
+        self.time = time
