@@ -13,8 +13,6 @@ def index():
 def drives():
     drives = drico.getAllDrives()
     #print(Drive.query.filter_by(device='/dev/sda').all())
-    test = drico.getPartitions("/dev/sdb")
-    print(test)
     return render_template('drives.html', drives=drives)
 
 
@@ -24,6 +22,8 @@ def about():
     return render_template('about.html', version=version)
 
 
-@app.route('/partitions', methods=['GET'])
-def partitions():
-    return render_template('partitions.html')
+@app.route('/partitions/<part>', methods=['GET'])
+def partitions(part):
+    part = part.replace("_", "/")
+    parts = drico.getPartitions(part)
+    return render_template('partitions.html', parts=parts)

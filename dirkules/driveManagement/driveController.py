@@ -110,16 +110,56 @@ def getPartitions(device):
         line = line.replace("*", "")
         newLine = ' '.join(line.split())
         newLine = newLine.split(" ")
-        if newLine[5] != 5:  #Ungültige Partitionen herausfiltern
-            # Für jede Partition muss nun blkid ausgeführt werden, um weitere Informationen zu erhalten
+        if newLine[5] != "5":  #Ungültige Partitionen herausfiltern
             values = []
             values.append(newLine[0])
-            values.append("fs")
+            # Für jede Partition muss nun blkid ausgeführt werden, um weitere Informationen zu erhalten
+            partDet = partDetails(newLine[0])
+            values.append(partDet[2])
             values.append(newLine[4])
-            values.append("uuid")
+            values.append(partDet[1])
             values.append("mountpoint")
-            values.append("label")
+            values.append(partDet[0])
             partDict.append(dict(zip(keys, values)))
         else:
             pass
     return partDict
+
+
+def partDetails(part):
+    values = []
+    blkid = subprocess.Popen(["blkid"],
+                             stdout=subprocess.PIPE,
+                             shell=True,
+                             universal_newlines=True)
+    grepedDrives = subprocess.Popen(["grep", part],
+                                    stdin=blkid.stdout,
+                                    stdout=subprocess.PIPE,
+                                    universal_newlines=True)
+
+    line = grepedDrives.stdout.readline()
+    partDet = line.rstrip()
+    blkid.stdout.close()
+
+    partDet = partDet.split(" ")
+
+    if any("LABEL" in s for s in partDet):
+        if any("UUID_SUB" in s for s in partDet):
+            values.append(partDet[1][7:-1])
+            values.append(partDet[2][6:-1])
+            values.append(partDet[4][6:-1])
+        else:
+            values.append(partDet[1][7:-1])
+            values.append(partDet[2][6:-1])
+            values.append(partDet[3][6:-1])
+
+    elif any(not "LABEL" in s for s in partDet) and any("UUID_SUB" in s
+                                                        for s in partDet):
+        values.append("kein Label")
+        values.append(partDet[1][6:-1])
+        values.append(partDet[3][6:-1])
+    else:
+        values.append("kein Label")
+        values.append(partDet[1][6:-1])
+        values.append(partDet[2][6:-1])
+    return values  # Format: Label, UUID, FS

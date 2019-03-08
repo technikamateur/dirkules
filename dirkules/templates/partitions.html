@@ -11,20 +11,22 @@
     <table class="striped">
          <thead>
            <tr>
-               <th>Laufwerk</th>
-               <th>Name</th>
-               <th>Speicherplatz</th>
-               <th>SMART Status</th>
+               <th>Partition</th>
+               <th>Label</th>
+               <th>UUID</th>
+               <th>Größe</th>
+               <th>Dateisystem</th>
            </tr>
          </thead>
 
          <tbody>
-           {% for drive in drives %}
+           {% for part in parts %}
            <tr>
-             <td>{{drive.device}}</td>
-             <td>{{drive.name}}</td>
-             <td>{{drive.size}}</td>
-             <td>{{drive.smart}}</td>
+             <td>{{part.name}}</td>
+             <td>{{part.label}}</td>
+             <td>{{part.uuid}}</td>
+             <td>{{part.size}}</td>
+             <td>{{part.fs}}</td>
            </tr>
            {% endfor %}
          </tbody>

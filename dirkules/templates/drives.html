@@ -15,6 +15,7 @@
         <th>Name</th>
         <th>Speicherplatz</th>
         <th>SMART Status</th>
+        <th>Aktionen</th>
       </tr>
     </thead>
 
@@ -25,6 +26,12 @@
         <td>{{drive.name}}</td>
         <td>{{drive.size}}</td>
         <td>{{drive.smart}}</td>
+        <td>
+          <a href="/partitions/{{drive.device | replace("/", "_")}}" class="waves-effect waves-light btn">
+            <i class="material-icons left">list</i>
+            Partitionen
+          </a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
