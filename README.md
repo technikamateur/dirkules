@@ -18,3 +18,7 @@ Als dieser Nutzer folgende Befehle ausführen:
 - `cd dirkules`
 - `pip3 install .`
 - `gunicorn3 dirkules:app`
+
+## Integrierte Projekte und Frameworks
+- [Materialize](https://github.com/Dogfalo/materialize) - licensed under MIT
+- [Material Icons](https://github.com/google/material-design-icons) - licensed under Apache-2.0
