@@ -8,5 +8,7 @@ setup(
     install_requires=[
         'flask',
         'Flask-SQLAlchemy',
+        'Flask-APScheduler',
+        'APScheduler',
     ],
 )
