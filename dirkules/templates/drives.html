@@ -27,7 +27,7 @@
         <td>{{drive.size}}</td>
         <td>{{drive.smart}}</td>
         <td>
-          <a href="/partitions/{{drive.device | replace("/", "_")}}" class="waves-effect waves-light btn">
+          <a href="{{ url_for('partitions', part=(drive.device | replace("/", "_"))) }}" class="waves-effect waves-light btn">
             <i class="material-icons left">list</i>
             Partitionen
           </a>
