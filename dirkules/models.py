@@ -9,15 +9,17 @@ class Drive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     device = db.Column(db.String)
     name = db.Column(db.String)
-    size = db.Column(db.Integer)
+    size = db.Column(db.String)
     smart = db.Column(db.Boolean)
+    serial = db.Column(db.String)
     partitions = db.relationship("Partitions")
 
-    def __init__(self, device, name, smart, size):
+    def __init__(self, device, name, smart, size, serial):
         self.device = device
         self.name = name
         self.smart = smart
         self.size = size
+        self.serial = serial
 
 
 class Partitions(db.Model):

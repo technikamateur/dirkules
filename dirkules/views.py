@@ -3,6 +3,7 @@ from dirkules import app
 import dirkules.driveManagement.driveController as drico
 from dirkules.models import Drive
 from dirkules import scheduler
+import dirkules.viewManager.viewManager as viewManager
 
 
 @app.route('/', methods=['GET'])
@@ -14,8 +15,12 @@ def index():
 def drives():
     drives = drico.getAllDrives()
     print(scheduler.get_jobs())
-    #print(Drive.query.filter_by(device='/dev/sda').all())
-    return render_template('drives.html', drives=drives)
+    dbDrives = []
+    print(Drive.query.all())
+    for drive in Drive.query.all():
+        d = viewManager.db_object_as_dict(drive)
+        dbDrives.append(d)
+    return render_template('drives.html', drives=dbDrives)
 
 
 @app.route('/about', methods=['GET'])

@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import subprocess
-import os
 from dirkules.models import Drive
 from dirkules import db
+from sqlalchemy.sql.expression import exists
 
 
 def getAllDrives():
     #vorbereitung
+    #
+    #sudo hwinfo --short --block  IST SUPER GEIL
+    #
     drives = []
     driveDict = []  # ist eine Liste, enthält für jede HDD ein dict
-    keys = ['device', 'name', 'smart', 'size']
+    keys = ['device', 'name', 'smart', 'size', 'serial']
 
     blkid = subprocess.Popen(["hwinfo --disk --short"],
                              stdout=subprocess.PIPE,
@@ -27,19 +30,32 @@ def getAllDrives():
             break
     blkid.stdout.close()
     for line in drives:
+        #
         # Effizienter machen mit newLine = ' '.join(line.split())
+        #
         values = []
         line = line.replace(" ", "", 15)
         values.append(line[:8])
         values.append(line[8:])
         values.append(smartPassed(values[0]))
         values.append(getTotalSize(values[0]))
+        values.append(getSerial(values[0]))
         driveDict.append(dict(zip(keys, values)))
     sortedDriveDict = sorted(driveDict, key=lambda drive: drive['device'])
 
     #add to db
-    #db.session.add(Drive(values[0], values[1], values[2], values[3]))
-    #db.session.commit()
+    for drive in sortedDriveDict:
+        driveObj = Drive(
+            drive.get("device"), drive.get("name"), drive.get("smart"),
+            drive.get("size"), drive.get("serial"))
+        ret = db.session.query(
+            exists().where(Drive.serial == driveObj.serial)).scalar()
+        if ret:
+            print(drive.get("device") + " in db")
+        else:
+            print(drive.get("device") + " NICHT in db")
+            db.session.add(driveObj)
+            db.session.commit()
 
     return sortedDriveDict
 
@@ -82,6 +98,24 @@ def getTotalSize(device):
     firstLine = drives[0].split(" ")
     size = firstLine[2] + " " + firstLine[3][:-1]
     return size
+
+
+def getSerial(device):
+    # hier auch size abfragen
+    blkid = subprocess.Popen(["hwinfo --disk --only " + device],
+                             stdout=subprocess.PIPE,
+                             shell=True,
+                             universal_newlines=True)
+    grepedDrives = subprocess.Popen(["grep", "Serial"],
+                                    stdin=blkid.stdout,
+                                    stdout=subprocess.PIPE,
+                                    universal_newlines=True)
+
+    line = grepedDrives.stdout.readline().strip()
+    blkid.stdout.close()
+    line = line.split(" ")
+    serial = line[2][1:-1]
+    return serial
 
 
 def getPartitions(device):
