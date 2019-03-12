@@ -7,19 +7,27 @@ from sqlalchemy.ext.declarative import declarative_base
 class Drive(db.Model):
     __tablename__ = 'drives'
     id = db.Column(db.Integer, primary_key=True)
-    device = db.Column(db.String)
     name = db.Column(db.String)
-    size = db.Column(db.String)
-    smart = db.Column(db.Boolean)
+    model = db.Column(db.String)
     serial = db.Column(db.String)
+    size = db.Column(db.Integer)
+    rota = db.Column(db.Boolean)
+    rm = db.Column(db.Boolean)
+    hotplug = db.Column(db.Boolean)
+    state = db.Column(db.String)
+    smart = db.Column(db.Boolean)
     partitions = db.relationship("Partitions")
 
-    def __init__(self, device, name, smart, size, serial):
-        self.device = device
+    def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart):
         self.name = name
-        self.smart = smart
-        self.size = size
+        self.model = model
         self.serial = serial
+        self.size = size
+        self.rota = rota
+        self.rm = rm
+        self.hotplug = hotplug
+        self.state = state
+        self.smart = smart
 
 
 class Partitions(db.Model):
