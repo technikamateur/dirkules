@@ -24,7 +24,7 @@
       <tr>
         <td>{{drive.name}}</td>
         <td>{{drive.model}}</td>
-        <td>{{drive.size|filesizeformat}}</td>
+        <td>{{drive.size|filesizeformat(true)}}</td>
         <td>{{drive.smart}}</td>
         <td>
           <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}" class="waves-effect waves-light btn">
