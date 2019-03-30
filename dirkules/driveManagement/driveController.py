@@ -15,7 +15,7 @@ def getAllDrives():
     ]
 
     lsblk = subprocess.Popen(
-        ["lsblk -I 8 -d -b -o NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG,STATE"],
+        ["lsblk -I 8 -d -b -o NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG"],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -30,17 +30,18 @@ def getAllDrives():
     for line in drives:
         newLine = ' '.join(line.split())
         newLine = newLine.split(" ")
-        while len(newLine) > 8:
+        while len(newLine) > 7:
             newLine[1] = newLine[1] + " " + newLine[2]
             del newLine[2]
         values = []
-        for i in range(len(keys) - 1):
+        for i in range(len(keys) - 2):
             if newLine[i] == "0":
                 values.append(False)
             elif newLine[i] == "1":
                 values.append(True)
             else:
                 values.append(newLine[i])
+        values.append("running")
         values.append(smartPassed("/dev/" + values[0]))
         driveDict.append(dict(zip(keys, values)))
     sortedDriveDict = sorted(driveDict, key=lambda drive: drive['name'])
