@@ -1,6 +1,8 @@
 from dirkules import scheduler
 import datetime
+import dirkules.driveManagement.driveController as drico
 
-@scheduler.task('interval', id='do_job_1', seconds=20, next_run_time=datetime.datetime.now())
-def job1():
-    print("Job 1 executed")
+@scheduler.task('interval', id='refresh_disks', seconds=3600, next_run_time=datetime.datetime.now())
+def refresh_disks():
+    drives = drico.getAllDrives()
+    print("Drives refreshed")
