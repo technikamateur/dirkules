@@ -7,7 +7,7 @@
 <div class="title">
   <t1>Willkommen!</t1>
 </div>
-<div class="tablebox">
+<div class="container">
   <table>
     <thead>
       <tr>
@@ -19,7 +19,11 @@
     <tbody>
       {% for key in service %}
       <tr>
-        <td>{{ service[key] }}</td>
+        {% if service[key] %}
+        <td><i class="small material-icons">check</i></td>
+        {% else %}
+        <td><i class="small material-icons">error</i></td>
+        {% endif %}
         <td>{{ key }}</td>
       </tr>
       {% endfor %}
