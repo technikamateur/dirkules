@@ -1,7 +1,8 @@
 from dirkules import db
-from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy import Table, Column, Integer, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 
 
 class Drive(db.Model):
@@ -50,3 +51,13 @@ class Time(db.Model):
 
     def __init__(self, desc):
         self.desc = desc
+
+
+class Cleaning(db.Model):
+    __tablename__ = 'cleaning'
+    id = db.Column(db.Integer, primary_key=True)
+    event = db.Column(db.String)
+    time = db.Column(db.DateTime(timezone=True), default=func.now())
+
+    def __init__(self, event):
+        self.event = event
