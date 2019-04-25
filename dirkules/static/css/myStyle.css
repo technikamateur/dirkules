@@ -16,6 +16,11 @@ body {
   margin: auto;
 }
 
+.ui.mymenu.menu {
+  background-color: #1b5e20;
+  color: #fff;
+}
+
 /*fonts*/
 
 t1 {

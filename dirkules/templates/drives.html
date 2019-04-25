@@ -8,7 +8,7 @@
   <t1>Festplatten</t1>
 </div>
 <div class="tablebox">
-  <table class="striped">
+  <table class="ui celled striped table">
     <thead>
       <tr>
         <th>Laufwerk</th>
@@ -27,8 +27,8 @@
         <td>{{drive.size|filesizeformat(true)}}</td>
         <td>{{drive.smart}}</td>
         <td>
-          <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}" class="waves-effect waves-light btn">
-            <i class="material-icons left">list</i>
+          <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}" class="ui button">
+            <i class="server icon"></i>
             Partitionen
           </a>
         </td>

@@ -7,8 +7,8 @@
 <div class="title">
   <t1>Willkommen!</t1>
 </div>
-<div class="container">
-  <table>
+<div class="tablebox">
+  <table class="ui celled table">
     <thead>
       <tr>
         <th>Status</th>
@@ -20,9 +20,9 @@
       {% for key in service %}
       <tr>
         {% if service[key] %}
-        <td><i class="small material-icons">check</i></td>
+        <td><i class="check circle icon"></i></td>
         {% else %}
-        <td><i class="exclamation circle icon"></i></td>
+        <td><i class="times circle icon"></i></td>
         {% endif %}
         <td>{{ key }}</td>
       </tr>
