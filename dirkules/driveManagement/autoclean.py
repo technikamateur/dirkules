@@ -21,8 +21,9 @@ def autoclean():
         out, err = find.communicate()
         if "/" not in out:
             for element in out:
-                db.session.add(Cleaning(element))
-            db.session.commit()
+                pass
+                #db.session.add(Cleaning(element))
+            #db.session.commit()
         # remove all empty folders
         subprocess.run(
             "find \"" + path + "\" -type d -empty -exec rmdir {} +",

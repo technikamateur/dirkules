@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from dirkules import app
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
@@ -32,3 +32,11 @@ def partitions(part):
     part = part.replace("_", "/")
     parts = drico.getPartitions(part)
     return render_template('partitions.html', parts=parts)
+
+@app.route('/cleaning', methods=['GET'])
+def cleaning():
+    return render_template('cleaning.html')
+
+@app.route('/add_cleaning', methods=['GET'])
+def add_cleaning():
+        return redirect('/')

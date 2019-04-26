@@ -56,8 +56,10 @@ class Time(db.Model):
 class Cleaning(db.Model):
     __tablename__ = 'cleaning'
     id = db.Column(db.Integer, primary_key=True)
-    event = db.Column(db.String)
+    name = db.Column(db.String)
+    path = db.Column(db.String)
     time = db.Column(db.DateTime(timezone=True), default=func.now())
 
-    def __init__(self, event):
-        self.event = event
+    def __init__(self, name, path):
+        self.name = name
+        self.path = path
