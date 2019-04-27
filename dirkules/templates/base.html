@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 
 <head>
-  {% block head %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/semantic.min.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icon.min.css') }}" />
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}" />
-  <title>{% block title %}{% endblock %}</title>
-  {% endblock %}
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/semantic.min.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icon.min.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}"/>
+        <!-- JQuery -->
+        <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+        <!-- Semantic UI -->
+        <script src="{{ url_for('static', filename='js/semantic.min.js') }}"></script>
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
 </head>
 
 <body>
-  <nav class="ui mymenu inverted massive menu">
+<nav class="ui mymenu inverted massive menu">
     <a class="item" href="{{ url_for('index') }}">Startseite</a>
     <a class="item" href="/nzbget">NZBGet</a>
     <a class="item" href="{{ url_for('drives') }}">Festplatten</a>
-      <a class="item" href="{{ url_for('cleaning') }}">Cleaning</a>
+    <a class="item" href="{{ url_for('cleaning') }}">Cleaning</a>
     <div class="right menu">
-      <a class="ui item" href="{{ url_for('about') }}">über Dirkules</a>
+        <a class="ui item" href="{{ url_for('about') }}">über Dirkules</a>
     </div>
-  </nav>
-  {% block body %}
-  {% endblock %}
+</nav>
+{% block body %}
+{% endblock %}
 </body>
 
 </html>

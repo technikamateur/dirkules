@@ -37,7 +37,7 @@ class Partitions(db.Model):
     drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'))
     name = db.Column(db.String)
     fs = db.Column(db.String)
-    size =db.Column(db.String)
+    size = db.Column(db.String)
     uuid = db.Column(db.String)
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)
@@ -58,8 +58,12 @@ class Cleaning(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     path = db.Column(db.String)
+    # state 0 means inactive - do not execute
+    state = db.Column(db.Boolean)
+    # time means last execution
     time = db.Column(db.DateTime(timezone=True), default=func.now())
 
-    def __init__(self, name, path):
+    def __init__(self, name, path, state):
         self.name = name
         self.path = path
+        self.state = state

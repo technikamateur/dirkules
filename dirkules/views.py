@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from dirkules import app
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
@@ -37,6 +37,10 @@ def partitions(part):
 def cleaning():
     return render_template('cleaning.html')
 
-@app.route('/add_cleaning', methods=['GET'])
+@app.route('/add_cleaning', methods=['GET', 'POST'])
 def add_cleaning():
-        return redirect('/')
+        if request.method == 'POST':
+            print(request.form.getlist('jobname'))
+            print(request.form.getlist('path'))
+            print(request.form.getlist('check'))
+        return render_template('add_cleaning.html')
