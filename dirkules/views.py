@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, url_for, flash
-from dirkules import app
+from dirkules import app, db
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
 from dirkules.models import Drive, Cleaning
@@ -42,7 +42,8 @@ def cleaning():
     changestate = request.args.get('changestate')
     if not(remove is not None and changestate is not None):
         if remove is not None:
-            print("remove")
+            Cleaning.query.filter(Cleaning.id == int(remove)).delete()
+            db.session.commit()
         elif changestate is not None:
             print("change")
     else:

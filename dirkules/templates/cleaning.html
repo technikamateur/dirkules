@@ -49,13 +49,13 @@
                     <td>
                         <div class="buttonspace">
                             <a href="{{ url_for('cleaning', remove=(element.id)) }}">
-                                <div class="ui button">
-                                    <i class="plus icon"></i> Job entfernen
+                                <div class="ui negative basic button">
+                                    <i class="trash icon"></i> Job entfernen
                                 </div>
                             </a></div>
                         <a href="{{ url_for('cleaning', changestate=(element.id)) }}">
-                            <div class="ui button">
-                                <i class="plus icon"></i> Status ändern
+                            <div class="ui primary basic button">
+                                <i class="sync icon"></i> Status ändern
                             </div>
                         </a>
                     </td>
