@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from dirkules import app
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
@@ -38,6 +38,15 @@ def partitions(part):
 
 @app.route('/cleaning', methods=['GET'])
 def cleaning():
+    remove = request.args.get('remove')
+    changestate = request.args.get('changestate')
+    if not(remove is not None and changestate is not None):
+        if remove is not None:
+            print("remove")
+        elif changestate is not None:
+            print("change")
+    else:
+        flash("Auswahl nicht eindeutig!")
     elements = []
     for element in Cleaning.query.order_by(asc(Cleaning.name)).all():
         elements.append(viewManager.db_object_as_dict(element))

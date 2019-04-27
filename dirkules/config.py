@@ -19,3 +19,5 @@ SCHEDULER_EXECUTORS = {'default': {'type': 'threadpool', 'max_workers': 3}}
 SCHEDULER_JOB_DEFAULTS = {'coalesce': False, 'max_instances': 1}
 
 SCHEDULER_API_ENABLED = True
+
+SECRET_KEY = b'gf3iz3V!R3@Ny!ri'

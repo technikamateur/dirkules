@@ -1,15 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Cleaning{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
 {% block body %}
-    <div class="ui container">
-            <a href="{{ url_for('add_cleaning') }}">
-                <div class="ui primary labeled icon button">
-                    <i class="plus icon"></i> Ordner hinzufügen
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="tablebox">
+                <div class="ui negative message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Ein oder Mehrere Fehler sind aufgetreten
+                    </div>
+                    <ul class="list">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </a>
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="ui container">
+        <a href="{{ url_for('add_cleaning') }}">
+            <div class="ui primary labeled icon button">
+                <i class="plus icon"></i> Job hinzufügen
+            </div>
+        </a>
 
         <table class="ui celled fixed table">
             <thead>
@@ -24,14 +41,38 @@
 
             <tbody>
             {% for element in elements %}
-            <tr>
-                <td>{{ element.state }}</td>
-                <td>{{ element.name }}</td>
-                <td>{{ element.path }}</td>
-                <td>{{ element.time }}</td>
-            </tr>
+                <tr>
+                    <td>{{ element.state }}</td>
+                    <td>{{ element.name }}</td>
+                    <td>{{ element.path }}</td>
+                    <td>{{ element.time }}</td>
+                    <td>
+                        <div class="buttonspace">
+                            <a href="{{ url_for('cleaning', remove=(element.id)) }}">
+                                <div class="ui button">
+                                    <i class="plus icon"></i> Job entfernen
+                                </div>
+                            </a></div>
+                        <a href="{{ url_for('cleaning', changestate=(element.id)) }}">
+                            <div class="ui button">
+                                <i class="plus icon"></i> Status ändern
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+
             {% endfor %}
             </tbody>
         </table>
     </div>
+    <script>
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            })
+        ;
+    </script>
 {% endblock %}

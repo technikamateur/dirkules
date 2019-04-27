@@ -14,11 +14,16 @@ body {
 .tablebox {
     width: 50%;
     margin: auto;
+    padding-bottom: 1em;
 }
 
 .ui.mymenu.menu {
     background-color: #1b5e20;
     color: #fff;
+}
+
+.buttonspace {
+    padding-bottom: 0.5em;
 }
 
 /*fonts*/
