@@ -1,0 +1,29 @@
+{% macro render_field(field) %}
+    {% if field.type == 'StringField' %}
+        <div class="field">
+            {{ field.label }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="ui pointing below red basic label">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {{ field(**kwargs)|safe }}
+        </div>
+    {% else %}
+        <div class="field">
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="ui pointing below red basic label">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="ui checkbox">
+                {{ field(**kwargs)|safe }}
+                {{ field.label }}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

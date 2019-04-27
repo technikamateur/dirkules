@@ -37,7 +37,7 @@ class Partitions(db.Model):
     drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'))
     name = db.Column(db.String)
     fs = db.Column(db.String)
-    size = db.Column(db.String)
+    size =db.Column(db.String)
     uuid = db.Column(db.String)
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)

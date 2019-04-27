@@ -11,7 +11,7 @@
                 </div>
             </a>
 
-        <table class="ui celled table">
+        <table class="ui celled fixed table">
             <thead>
             <tr>
                 <th>Status</th>
@@ -23,12 +23,14 @@
             </thead>
 
             <tbody>
+            {% for element in elements %}
             <tr>
-                <td>Jill Lewis</td>
-                <td>May 11, 2014</td>
-                <td>jilsewris22@yahoo.com</td>
-                <td>Yes</td>
+                <td>{{ element.state }}</td>
+                <td>{{ element.name }}</td>
+                <td>{{ element.path }}</td>
+                <td>{{ element.time }}</td>
             </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>

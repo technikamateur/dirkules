@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 from dirkules import app
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
-from dirkules.models import Drive
+from dirkules.models import Drive, Cleaning
 import dirkules.viewManager.viewManager as viewManager
+from dirkules.validation.validators import CleaningForm
+from sqlalchemy import asc
 
 
 @app.route('/', methods=['GET'])
@@ -33,14 +35,19 @@ def partitions(part):
     parts = drico.getPartitions(part)
     return render_template('partitions.html', parts=parts)
 
+
 @app.route('/cleaning', methods=['GET'])
 def cleaning():
-    return render_template('cleaning.html')
+    elements = []
+    for element in Cleaning.query.order_by(asc(Cleaning.name)).all():
+        elements.append(viewManager.db_object_as_dict(element))
+    return render_template('cleaning.html', elements=elements)
+
 
 @app.route('/add_cleaning', methods=['GET', 'POST'])
 def add_cleaning():
-        if request.method == 'POST':
-            print(request.form.getlist('jobname'))
-            print(request.form.getlist('path'))
-            print(request.form.getlist('check'))
-        return render_template('add_cleaning.html')
+    form = CleaningForm(request.form)
+    if request.method == 'POST' and form.validate():
+        viewManager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
+        return redirect(url_for('cleaning'))
+    return render_template('add_cleaning.html', form=form)
