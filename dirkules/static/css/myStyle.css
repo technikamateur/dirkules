@@ -1,20 +1,25 @@
 
 body {
     font-family: sans-serif;
-    background-color: #F9F9F9;
+    /*background-color: #F9F9F9;*/
 }
 
 /*divs*/
 
 .title {
     text-align: center;
-    margin: 5em 0em 4em 0em;
+    /*margin: 5em 0em 4em 0em;*/
 }
 
 .tablebox {
     width: 50%;
     margin: auto;
     padding-bottom: 1em;
+}
+
+.infobox {
+    width: 50%;
+    margin: 2em auto 2em auto;
 }
 
 .ui.mymenu.menu {

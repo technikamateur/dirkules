@@ -21,13 +21,26 @@
             </div>
         {% endif %}
     {% endwith %}
+    <div class="infobox">
+        <div class="ui info message">
+            <i class="close icon"></i>
+            <div class="header">
+                Hinweis
+            </div>
+            <p>
+                Alle cleaning Jobs löschen sämtliche Dateien im angegebenen Pfad, welche länger als 180 Tage nicht
+                modifiziert wurden. Status "running" bedeutet, dass dieser Job regelmäßig ausgeführt wird.
+                "stopped" bedeutet, dass dieser Job niemals ausgeführt wird. Jobs können hinzugefügt und entfernt
+                werden. "Status ändern" setzt einen "running job" auf "stopped" bzw. umgekehrt.
+            </p>
+        </div>
+    </div>
     <div class="ui container">
         <a href="{{ url_for('add_cleaning') }}">
             <div class="ui primary labeled icon button">
                 <i class="plus icon"></i> Job hinzufügen
             </div>
         </a>
-
         <table class="ui celled fixed table">
             <thead>
             <tr>
@@ -42,7 +55,11 @@
             <tbody>
             {% for element in elements %}
                 <tr>
-                    <td>{{ element.state }}</td>
+                    {% if element.state %}
+                        <td><i class="play icon"></i> running</td>
+                    {% else %}
+                        <td><i class="stop icon"></i> stopped</td>
+                    {% endif %}
                     <td>{{ element.name }}</td>
                     <td>{{ element.path }}</td>
                     <td>{{ element.time }}</td>

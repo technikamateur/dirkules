@@ -5,7 +5,7 @@ import dirkules.serviceManagement.serviceManager as servMan
 from dirkules.models import Drive, Cleaning
 import dirkules.viewManager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm
-from sqlalchemy import asc
+from sqlalchemy import asc, collate
 
 
 @app.route('/', methods=['GET'])
@@ -22,6 +22,9 @@ def drives():
         dbDrives.append(d)
     return render_template('drives.html', drives=dbDrives)
 
+@app.route('/samba', methods=['GET'])
+def samba():
+    return render_template('samba.html')
 
 @app.route('/about', methods=['GET'])
 def about():
@@ -40,16 +43,23 @@ def partitions(part):
 def cleaning():
     remove = request.args.get('remove')
     changestate = request.args.get('changestate')
-    if not(remove is not None and changestate is not None):
+    if not (remove is not None and changestate is not None):
         if remove is not None:
             Cleaning.query.filter(Cleaning.id == int(remove)).delete()
             db.session.commit()
+            return redirect(request.path, code=302)
         elif changestate is not None:
-            print("change")
+            job = Cleaning.query.get(int(changestate))
+            if job.state == 0:
+                job.state = 1
+            else:
+                job.state = 0
+            db.session.commit()
+            return redirect(request.path, code=302)
     else:
         flash("Auswahl nicht eindeutig!")
     elements = []
-    for element in Cleaning.query.order_by(asc(Cleaning.name)).all():
+    for element in Cleaning.query.order_by(asc(collate(Cleaning.name, 'NOCASE'))).all():
         elements.append(viewManager.db_object_as_dict(element))
     return render_template('cleaning.html', elements=elements)
 
