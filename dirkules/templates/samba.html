@@ -4,5 +4,9 @@
 {{ super() }}
 {% endblock %}
 {% block body %}
-HAHA
+<a href="{{ url_for('samba_global') }}">
+            <div class="ui primary labeled icon button">
+                <i class="plus icon"></i> Samba Global conf
+            </div>
+        </a>
 {% endblock %}

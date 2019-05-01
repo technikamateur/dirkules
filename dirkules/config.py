@@ -3,6 +3,7 @@ import os
 from apscheduler.jobstores.memory import MemoryJobStore
 
 baseDir = os.path.abspath(os.path.dirname(__file__))
+staticDir = os.path.join(baseDir, 'static')
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(baseDir, 'dirkules.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False

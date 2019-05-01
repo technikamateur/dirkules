@@ -6,6 +6,7 @@ from dirkules.models import Drive, Cleaning
 import dirkules.viewManager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm
 from sqlalchemy import asc, collate
+from dirkules.config import staticDir
 
 
 @app.route('/', methods=['GET'])
@@ -22,9 +23,6 @@ def drives():
         dbDrives.append(d)
     return render_template('drives.html', drives=dbDrives)
 
-@app.route('/samba', methods=['GET'])
-def samba():
-    return render_template('samba.html')
 
 @app.route('/about', methods=['GET'])
 def about():
@@ -71,3 +69,19 @@ def add_cleaning():
         viewManager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
         return redirect(url_for('cleaning'))
     return render_template('add_cleaning.html', form=form)
+
+@app.route('/samba', methods=['GET'])
+def samba():
+    return render_template('samba.html')
+
+@app.route('/samba/global', methods=['GET'])
+def samba_global():
+    file = open(staticDir + "/conf/samba_global.conf")
+    conf = list()
+    while True:
+        line = file.readline()
+        if line != '':
+            conf.append(line.rstrip())
+        else:
+            break
+    return render_template('samba_global.html', conf=conf)
