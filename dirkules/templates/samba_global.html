@@ -11,5 +11,12 @@
                 {{ line }}<br>
             {% endfor %}
         </div>
+    <t2>Veränderbare Bestandteile der<i> Samba global conf</i></t2>
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post class="ui form error">
+            {{ render_field(form.workgroup) }}
+            {{ render_field(form.server_string) }}
+            <button class="ui button" type="submit"><i class="save icon"></i> Ändern</button>
+    </form>
     </div>
 {% endblock %}

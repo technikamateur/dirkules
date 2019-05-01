@@ -1,6 +1,10 @@
 {% macro render_field(field) %}
     {% if field.type == 'StringField' %}
+        {% if field.errors %}
+        <div class="field error">
+        {% else %}
         <div class="field">
+        {% endif %}
             {{ field.label }}
             {% if field.errors %}
                 {% for error in field.errors %}
@@ -12,7 +16,11 @@
             {{ field(**kwargs)|safe }}
         </div>
     {% else %}
+        {% if field.errors %}
+        <div class="field error">
+        {% else %}
         <div class="field">
+        {% endif %}
             {% if field.errors %}
                 {% for error in field.errors %}
                     <div class="ui pointing below red basic label">
