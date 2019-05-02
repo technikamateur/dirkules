@@ -79,8 +79,6 @@ def samba():
 
 @app.route('/samba/global', methods=['GET', 'POST'])
 def samba_global():
-    db.session.add(SambaShare("global"))
-    db.session.commit()
     form = samba_cleaning_form(request.form)
     if request.method == 'POST' and form.validate():
         print("Input:")
