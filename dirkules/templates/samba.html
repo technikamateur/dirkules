@@ -1,12 +1,34 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-<a href="{{ url_for('samba_global') }}">
-            <div class="ui primary labeled icon button">
-                <i class="plus icon"></i> Samba Global conf
-            </div>
-        </a>
+    <a href="{{ url_for('samba_global') }}">
+        <div class="ui primary labeled icon button">
+            <i class="plus icon"></i> Samba Global conf
+        </div>
+    </a>
+    <table class="ui celled fixed table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Schreibzugriff</th>
+            <th>Papierkorb</th>
+            <th>BtrFS Optimierungen</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for share in shares %}
+            <tr>
+                <td>{{ share.name }}</td>
+                <td>{{ share.writeable }}</td>
+                <td>{{ share.recycling }}</td>
+                <td>{{ share.btrfs }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

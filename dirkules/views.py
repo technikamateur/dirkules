@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for, flash
 from dirkules import app, db
 import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
-from dirkules.models import Drive, Cleaning
+from dirkules.models import Drive, Cleaning, SambaShare
 import dirkules.viewManager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form
 from sqlalchemy import asc, collate
@@ -72,10 +72,15 @@ def add_cleaning():
 
 @app.route('/samba', methods=['GET'])
 def samba():
-    return render_template('samba.html')
+    shares = []
+    for share in SambaShare.query.order_by(asc(collate(SambaShare.name, 'NOCASE'))).all():
+        shares.append(viewManager.db_object_as_dict(share))
+    return render_template('samba.html', shares=shares)
 
 @app.route('/samba/global', methods=['GET', 'POST'])
 def samba_global():
+    db.session.add(SambaShare("global"))
+    db.session.commit()
     form = samba_cleaning_form(request.form)
     if request.method == 'POST' and form.validate():
         print("Input:")
