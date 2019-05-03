@@ -4,7 +4,7 @@ import dirkules.driveManagement.driveController as drico
 import dirkules.serviceManagement.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare
 import dirkules.viewManager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, samba_cleaning_form
+from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
 from sqlalchemy import asc, collate
 from dirkules.config import staticDir
 
@@ -94,3 +94,10 @@ def samba_global():
         else:
             break
     return render_template('samba_global.html', form=form, conf=conf)
+
+@app.route('/samba/add', methods=['GET', 'POST'])
+def samba_add():
+    form = SambaAddForm(request.form)
+    if request.method == 'POST' and form.validate():
+        return redirect(url_for('samba'))
+    return render_template('samba_add.html', form=form)

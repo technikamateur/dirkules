@@ -1,37 +1,39 @@
 {% macro render_field(field) %}
     {% if field.type == 'StringField' %}
         {% if field.errors %}
-        <div class="field error">
+            <div class="field error">
         {% else %}
-        <div class="field">
+            <div class="field">
         {% endif %}
-            {{ field.label }}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    <div class="ui pointing below red basic label">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            {{ field(**kwargs)|safe }}
-        </div>
-    {% else %}
-        {% if field.errors %}
-        <div class="field error">
-        {% else %}
-        <div class="field">
-        {% endif %}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    <div class="ui pointing below red basic label">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <div class="ui checkbox">
-                {{ field(**kwargs)|safe }}
-                {{ field.label }}
+    {{ field.label }}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="ui pointing below red basic label">
+                {{ error }}
             </div>
-        </div>
+        {% endfor %}
+    {% endif %}
+    {{ field(**kwargs)|safe }}
+    </div>
+    {% elif field.type == 'BooleanField' %}
+        {% if field.errors %}
+            <div class="field error">
+        {% else %}
+            <div class="field">
+        {% endif %}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="ui pointing below red basic label">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="ui checkbox">
+        {{ field(**kwargs)|safe }}
+        {{ field.label }}
+    </div>
+    </div>
+    {% else %}
+        ERROR
     {% endif %}
 {% endmacro %}
