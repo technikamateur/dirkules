@@ -10,15 +10,23 @@
         <form method=post class="ui form error">
             <h4 class="ui dividing header">Allgemeine Informationen</h4>
             <div class="field">
-                {{ render_field(form.jobname) }}
-                {{ render_field(form.path) }}
-                {{ render_field(form.active) }}
+                {{ render_field(form.name) }}
+                 <div class="three fields">
+                    {{ render_field(form.writeable) }}
+                    {{ render_field(form.recycling) }}
+                    {{ render_field(form.btrfs) }}
+                 </div>
             </div>
             <h4 class="ui dividing header">Erweiterte Informationen</h4>
             <div class="field">
-
+                {{ render_field(form.path) }}
+                {{ render_field(form.user) }}
+                <div class="two fields">
+                    {{ render_field(form.create_mask) }}
+                    {{ render_field(form.dir_mask) }}
+                </div>
             </div>
-            <button class="ui button" type="submit"><i class="save icon"></i> Job speichern</button>
+            <button class="ui button" type="submit"><i class="plus icon"></i> Freigabe hinzufügen</button>
         </form>
     </div>
 {% endblock %}

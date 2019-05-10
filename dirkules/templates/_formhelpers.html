@@ -1,5 +1,5 @@
 {% macro render_field(field) %}
-    {% if field.type == 'StringField' %}
+    {% if (field.type == 'StringField' or field.type == 'IntegerField') %}
         {% if field.errors %}
             <div class="field error">
         {% else %}
