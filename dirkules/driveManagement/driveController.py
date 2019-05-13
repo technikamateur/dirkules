@@ -8,7 +8,6 @@ from sqlalchemy.sql.expression import exists
 def getAllDrives():
     drives = []
     driveDict = []
-    keys = ['device', 'name', 'smart', 'size', 'serial']
     keys = [
         'name', 'model', 'serial', 'size', 'rota', 'rm', 'hotplug', 'state',
         'smart'
@@ -46,7 +45,7 @@ def getAllDrives():
         driveDict.append(dict(zip(keys, values)))
     sortedDriveDict = sorted(driveDict, key=lambda drive: drive['name'])
 
-    #add to db
+    # add to db
     for drive in sortedDriveDict:
         driveObj = Drive(
             drive.get("name"), drive.get("model"), drive.get("serial"),
@@ -83,6 +82,37 @@ def smartPassed(device):
     return passed
 
 
+def part_for_disk(device):
+    # lsblk /dev/sdd -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
+    parts = []
+    keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
+
+    lsblk = subprocess.Popen(
+        ["lsblk " + device + " -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
+        stdout=subprocess.PIPE,
+        shell=True,
+        universal_newlines=True)
+    while True:
+        line = lsblk.stdout.readline()
+        if line != '':
+            parts.append(line.rstrip())
+        else:
+            break
+    lsblk.stdout.close()
+    del parts[1]
+    element_length = list()
+    counter = 0
+    pre_value = " "
+    for char in parts[1]:
+        if char != " " and pre_value == " ":
+            element_length.append(counter)
+        counter += 1
+        pre_value = char
+
+
+    return False
+
+
 def getPartitions(device):
     partDict = []  # ist eine Liste, enthält für jede part ein dict
     drives = []
@@ -109,7 +139,7 @@ def getPartitions(device):
         line = line.replace("*", "")
         newLine = ' '.join(line.split())
         newLine = newLine.split(" ")
-        if newLine[5] != "5":  #Ungültige Partitionen herausfiltern
+        if newLine[5] != "5":  # Ungültige Partitionen herausfiltern
             values = []
             values.append(newLine[0])
             # Für jede Partition muss nun blkid ausgeführt werden, um weitere Informationen zu erhalten

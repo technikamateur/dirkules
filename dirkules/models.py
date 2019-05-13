@@ -17,7 +17,7 @@ class Drive(db.Model):
     hotplug = db.Column(db.Boolean)
     state = db.Column(db.String)
     smart = db.Column(db.Boolean)
-    partitions = db.relationship("Partitions")
+    partitions = db.relationship('Partitions', order_by="Partitions.id", backref="drives", lazy="select")
 
     def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart):
         self.name = name
@@ -34,7 +34,7 @@ class Drive(db.Model):
 class Partitions(db.Model):
     __tablename__ = 'partitions'
     id = db.Column(db.Integer, primary_key=True)
-    drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'))
+    drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'), nullable=False)
     name = db.Column(db.String)
     fs = db.Column(db.String)
     size = db.Column(db.String)
