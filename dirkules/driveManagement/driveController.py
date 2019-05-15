@@ -85,10 +85,11 @@ def smartPassed(device):
 def part_for_disk(device):
     # lsblk /dev/sdd -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
     parts = []
+    partdict = list()
     keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
 
     lsblk = subprocess.Popen(
-        ["lsblk " + device + " -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
+        ["lsblk " + device + " -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -102,16 +103,28 @@ def part_for_disk(device):
     del parts[1]
     element_length = list()
     counter = 0
+    last_letter = 0
     pre_value = " "
-    for char in parts[1]:
+    for char in parts[0]:
         if char != " " and pre_value == " ":
             element_length.append(counter)
         counter += 1
         pre_value = char
-
-
-    return False
-
+        # size ist rechtsbuendig. Extra Behandlung
+        # TODO: Besser machen
+        if char == "S" and parts[0][last_letter] == "E":
+            del element_length[-1]
+            element_length.append((last_letter + 2))
+        if char != " ":
+            last_letter = counter - 1
+    element_length.append(len(parts[0]))
+    del parts[0]
+    for part in parts:
+        values = list()
+        for start, end in zip(element_length, element_length[1:]):
+            values.append(part[start:(end-1)].strip())
+        partdict.append(dict(zip(keys, values)))
+    print(partdict)
 
 def getPartitions(device):
     partDict = []  # ist eine Liste, enthält für jede part ein dict

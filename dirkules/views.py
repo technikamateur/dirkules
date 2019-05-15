@@ -72,6 +72,7 @@ def add_cleaning():
 
 @app.route('/samba', methods=['GET'])
 def samba():
+    drico.part_for_disk("/dev/sda")
     shares = []
     for share in SambaShare.query.order_by(asc(collate(SambaShare.name, 'NOCASE'))).all():
         shares.append(viewManager.db_object_as_dict(share))
