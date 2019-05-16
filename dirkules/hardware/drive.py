@@ -87,7 +87,7 @@ def part_for_disk(device):
     parts = []
     partdict = list()
     keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
-
+    device = "/dev/" + device
     lsblk = subprocess.Popen(
         ["lsblk " + device + " -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
         stdout=subprocess.PIPE,
@@ -122,9 +122,11 @@ def part_for_disk(device):
     for part in parts:
         values = list()
         for start, end in zip(element_length, element_length[1:]):
-            values.append(part[start:(end-1)].strip())
+            values.append(part[start:(end - 1)].strip())
         partdict.append(dict(zip(keys, values)))
-    print(partdict)
+
+    return partdict
+
 
 def getPartitions(device):
     partDict = []  # ist eine Liste, enthält für jede part ein dict

@@ -1,12 +1,13 @@
 from flask import Flask, render_template, redirect, request, url_for, flash
 from dirkules import app, db
-import dirkules.driveManagement.driveController as drico
+import dirkules.hardware.drive as drico
 import dirkules.serviceManagement.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare
-import dirkules.viewManager.viewManager as viewManager
+import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
 from sqlalchemy import asc, collate
 from dirkules.config import staticDir
+from dirkules.manager.driveManager import get_partitions
 
 
 @app.route('/', methods=['GET'])
@@ -72,7 +73,7 @@ def add_cleaning():
 
 @app.route('/samba', methods=['GET'])
 def samba():
-    drico.part_for_disk("/dev/sda")
+    get_partitions(1)
     shares = []
     for share in SambaShare.query.order_by(asc(collate(SambaShare.name, 'NOCASE'))).all():
         shares.append(viewManager.db_object_as_dict(share))
