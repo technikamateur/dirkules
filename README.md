@@ -20,5 +20,5 @@ Als dieser Nutzer folgende Befehle ausführen:
 - `gunicorn3 dirkules:app`
 
 ## Integrierte Projekte und Frameworks
-- [Materialize](https://github.com/Dogfalo/materialize) - licensed under MIT
+- [Semantic UI](https://github.com/Semantic-Org/Semantic-UI) - licensed under MIT
 - [Material Icons](https://github.com/google/material-design-icons) - licensed under Apache-2.0
