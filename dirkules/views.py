@@ -7,7 +7,7 @@ import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
 from sqlalchemy import asc, collate
 from dirkules.config import staticDir
-from dirkules.manager.driveManager import get_partitions
+import dirkules.manager.driveManager as driveManager
 
 
 @app.route('/', methods=['GET'])
@@ -33,9 +33,14 @@ def about():
 
 @app.route('/partitions/<part>', methods=['GET'])
 def partitions(part):
-    part = part.replace("_", "/")
-    parts = drico.getPartitions(part)
-    return render_template('partitions.html', parts=parts)
+    name = part.replace("_", "/")
+    drive = db.session.query(Drive).filter(Drive.name == name).first()
+    # load all partitions - apscheduler should do this in future
+    driveManager.get_partitions(drive.id)
+    dbparts = list()
+    for partition in drive.partitions:
+        dbparts.append(viewManager.db_object_as_dict(partition))
+    return render_template('partitions.html', parts=dbparts)
 
 
 @app.route('/cleaning', methods=['GET'])

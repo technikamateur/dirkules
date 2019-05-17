@@ -1,35 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block head %}
-  {{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-  <div class="title">
-    <t1>Partitionen</t1>
-  </div>
-  <div class="tablebox">
-    <table class="ui celled striped table">
-         <thead>
-           <tr>
-               <th>Partition</th>
-               <th>Label</th>
-               <th>UUID</th>
-               <th>Größe</th>
-               <th>Dateisystem</th>
-           </tr>
-         </thead>
+    <div class="title">
+        <t1>Partitionen</t1>
+    </div>
+    <div class="ui container">
+        <table class="ui celled striped table">
+            <thead>
+            <tr>
+                <th>Partition</th>
+                <th>Label</th>
+                <th>UUID</th>
+                <th>Größe</th>
+                <th>Dateisystem</th>
+                <th>Mountpoint</th>
+            </tr>
+            </thead>
 
-         <tbody>
-           {% for part in parts %}
-           <tr>
-             <td>{{part.name}}</td>
-             <td>{{part.label}}</td>
-             <td>{{part.uuid}}</td>
-             <td>{{part.size}}</td>
-             <td>{{part.fs}}</td>
-           </tr>
-           {% endfor %}
-         </tbody>
-       </table>
-   </div>
+            <tbody>
+            {% for part in parts %}
+                <tr>
+                    <td>{{ part.name }}</td>
+                    <td>{{ part.label }}</td>
+                    <td>{{ part.uuid }}</td>
+                    <td>{{ part.size|filesizeformat(true) }}</td>
+                    <td>{{ part.fs }}</td>
+                    <td>{{ part.mountpoint }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

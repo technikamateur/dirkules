@@ -16,5 +16,4 @@ def get_partitions(drive_id, force=False):
         else:
             print(part.get("name") + " NICHT in db")
             db.session.add(part_obj)
-    db.session.commit()
-    print(drive.partitions)
+            db.session.commit()
