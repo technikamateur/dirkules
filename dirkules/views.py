@@ -78,7 +78,6 @@ def add_cleaning():
 
 @app.route('/samba', methods=['GET'])
 def samba():
-    get_partitions(1)
     shares = []
     for share in SambaShare.query.order_by(asc(collate(SambaShare.name, 'NOCASE'))).all():
         shares.append(viewManager.db_object_as_dict(share))

@@ -1,40 +1,45 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-<div class="title">
-  <t1>Festplatten</t1>
-</div>
-<div class="tablebox">
-  <table class="ui celled striped table">
-    <thead>
-      <tr>
-        <th>Laufwerk</th>
-        <th>Name</th>
-        <th>Speicherplatz</th>
-        <th>SMART Status</th>
-        <th>Aktionen</th>
-      </tr>
-    </thead>
+    <div class="ui container">
+        <h1 class="ui header">Festplatten</h1>
+        <div class="ui divider"></div>
 
-    <tbody>
-      {% for drive in drives %}
-      <tr>
-        <td>{{drive.name}}</td>
-        <td>{{drive.model}}</td>
-        <td>{{drive.size|filesizeformat(true)}}</td>
-        <td>{{drive.smart}}</td>
-        <td>
-          <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}" class="ui button">
-            <i class="server icon"></i>
-            Partitionen
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+        <table class="ui very basic celled table">
+            <thead>
+            <tr>
+                <th>Laufwerk</th>
+                <th>Name</th>
+                <th>Speicherplatz</th>
+                <th>SMART</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for drive in drives %}
+                <tr>
+                    <td class="collapsing"><i class="hdd icon"></i> {{ drive.name }}</td>
+                    <td>{{ drive.model }}</td>
+                    <td>{{ drive.size|filesizeformat(true) }}</td>
+                    {% if drive.smart %}
+                        <td class="collapsing center aligned"><i class="large green checkmark icon"></i></td>
+                    {% else %}
+                        <td class="collapsing error center aligned"><i class="attention icon"></i></td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}"
+                           class="ui blue button">
+                            <i class="server icon"></i>
+                            Partitionen
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

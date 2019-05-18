@@ -20,9 +20,9 @@
       {% for key in service %}
       <tr>
         {% if service[key] %}
-        <td><i class="large green checkmark icon"></i></td>
+        <td><i class="collapsing large green checkmark icon"></i></td>
         {% else %}
-        <td><i class="times circle icon"></i></td>
+        <td class="collapsing error center aligned"><i class="attention icon"></i></td>
         {% endif %}
         <td>{{ key }}</td>
       </tr>
