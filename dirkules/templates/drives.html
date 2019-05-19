@@ -60,7 +60,11 @@
             <tbody>
             {% for storage in mem %}
                 <tr>
-                    <td class="collapsing"><i class="hdd icon"></i> {{ storage.label }}</td>
+                    {% if storage.label|length %}
+                    <td class="collapsing"><i class="download icon"></i> {{ storage.label }}</td>
+                    {% else %}
+                        <td class="collapsing"><i class="download icon"></i>Namenlos</td>
+                    {% endif %}
                     <td>{{ storage.part }}</td>
                     <td>{{ storage.fs }}</td>
                     <td class="collapsing">{{ storage.mpoint }}</td>
