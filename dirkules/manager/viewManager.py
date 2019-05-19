@@ -34,10 +34,10 @@ def usable_memory():
             value = value[0]
             if value.fs == "btrfs" or value.fs == "ext4":
                 final_part_dict.append(
-                    {"label": value.name, "part": parts, "fs": value.fs, "mpoint": value.mountpoint})
+                    {"label": value.label, "part": parts, "fs": value.fs, "mpoint": value.mountpoint})
         else:
             value = value[0]
             if value.fs == "btrfs" or value.fs == "ext4":
                 final_part_dict.append(
-                    {"label": value.name, "part": value.name, "fs": value.fs, "mpoint": value.mountpoint})
+                    {"label": value.label, "part": value.name, "fs": value.fs, "mpoint": value.mountpoint})
     return final_part_dict
