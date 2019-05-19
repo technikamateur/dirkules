@@ -18,11 +18,11 @@ def index():
 @app.route('/drives', methods=['GET'])
 def drives():
     dbDrives = []
-    print(Drive.query.all())
     for drive in Drive.query.all():
         d = viewManager.db_object_as_dict(drive)
         dbDrives.append(d)
-    return render_template('drives.html', drives=dbDrives)
+    dbmem = viewManager.usable_memory()
+    return render_template('drives.html', drives=dbDrives, mem=dbmem)
 
 
 @app.route('/about', methods=['GET'])

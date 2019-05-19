@@ -42,4 +42,31 @@
             </tbody>
         </table>
     </div>
+    <div class="ui divider"></div>
+    <div class="ui container">
+        <h1 class="ui header">Nutzbarer Speicher</h1>
+        <div class="ui divider"></div>
+
+        <table class="ui very basic celled table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Zugehörige Partitionen</th>
+                <th>Dateisystem</th>
+                <th>Mountpoint</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for storage in mem %}
+                <tr>
+                    <td class="collapsing"><i class="hdd icon"></i> {{ storage.label }}</td>
+                    <td>{{ storage.part }}</td>
+                    <td>{{ storage.fs }}</td>
+                    <td class="collapsing">{{ storage.mpoint }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
