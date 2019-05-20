@@ -9,24 +9,25 @@
         {% from "_formhelpers.html" import render_field %}
         <form method=post class="ui form error">
             <h4 class="ui dividing header">Allgemeine Informationen</h4>
-            <div class="field">
-                {{ render_field(form.name) }}
-                 <div class="three fields">
-                    {{ render_field(form.writeable) }}
-                    {{ render_field(form.recycling) }}
-                    {{ render_field(form.btrfs) }}
-                 </div>
+            {{ render_field(form.name) }}
+            <div class="fields">
+                {{ render_field(form.writeable) }}
+                {{ render_field(form.recycling) }}
+                {{ render_field(form.btrfs) }}
             </div>
             <h4 class="ui dividing header">Erweiterte Informationen</h4>
-            <div class="field">
-                {{ render_field(form.path) }}
-                {{ render_field(form.user) }}
-                <div class="two fields">
-                    {{ render_field(form.create_mask) }}
-                    {{ render_field(form.dir_mask) }}
-                </div>
+            {{ render_field(form.path) }}
+            {{ render_field(form.user) }}
+            <div class="fields">
+                {{ render_field(form.create_mask) }}
+                {{ render_field(form.dir_mask) }}
             </div>
             <button class="ui button" type="submit"><i class="plus icon"></i> Freigabe hinzufügen</button>
         </form>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('.ui.dropdown').dropdown();
+        });
+    </script>
 {% endblock %}

@@ -1,21 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Über Dirkules{% endblock %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-<div class="title">
-  <t1>Über Dirkules</t1>
-</div>
-<div class="tablebox">
-  <t3>Dirkules Version {{ version }}</t3>
-  <tnorm>
-    <p>
-      Dirkules - Benannt nach einem großartigen Mitbewohner. Immer zur Stelle, um deinen Server zu überwachen.
-    </p>
-    <p>
-      Das Projekt soll eine kleine, schnelle und einfache Weboberfläche erschaffen, welche es ermöglicht, die Wichtigesten Informationen sofort zu erfassen und ein paar kleine Einstellungen vorzunehmen.
-    </p>
-  </tnorm>
-</div>
+    <div class="title">
+        <h1>Über Dirkules</h1>
+    </div>
+    <div class="ui text container">
+        <h3>Dirkules Version {{ version }}</h3>
+        <p>
+            Dirkules - Benannt nach einem großartigen Mitbewohner. Immer zur Stelle, um deinen Server zu überwachen.
+        </p>
+        <p>
+            Das Projekt soll eine kleine, schnelle und einfache Weboberfläche erschaffen, welche es ermöglicht, die
+            Wichtigesten Informationen sofort zu erfassen und ein paar kleine Einstellungen vorzunehmen.<br>
+            Dirkules wurde hauptsächlich für die Verwaltung von BtrFS Volumes geschreiben, um alle modernen Features
+            dieses Dateisystems zu nutzen und leicht zugänglich zu machen.
+        </p>
+        <p>
+            Es ist dabei auf meine Anwendungsfälle zugeschnitten.
+        </p>
+        <div class="ui text center aligned container">
+            <h2>Entwickelt von Technikamateur</h2>
+            <a class="ui secondary basic button" href="https://github.com/technikamateur/dirkules">
+                <i class="code icon"></i>
+                Dirkules auf Github
+            </a>
+        </div>
+    </div>
 {% endblock %}

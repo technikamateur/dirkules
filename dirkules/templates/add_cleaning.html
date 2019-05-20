@@ -4,13 +4,13 @@
     {{ super() }}
 {% endblock %}
 {% block body %}
-    <div class="tablebox">
+    <div class="ui container">
         {% from "_formhelpers.html" import render_field %}
         <form method=post class="ui form error">
             {{ render_field(form.jobname) }}
             {{ render_field(form.path) }}
             {{ render_field(form.active) }}
-            <button class="ui button" type="submit"><i class="save icon"></i> Job speichern</button>
+            <button class="ui primary button" type="submit"><i class="save icon"></i> Job speichern</button>
         </form>
     </div>
     <script>

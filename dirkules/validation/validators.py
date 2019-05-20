@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, BooleanField, IntegerField, validators
+from wtforms import Form, StringField, BooleanField, IntegerField, SelectField, validators
 
 
 class CleaningForm(Form):
@@ -34,9 +34,7 @@ class SambaAddForm(Form):
     recycling = BooleanField("Papierkorb")
     btrfs = BooleanField("BtrFS Optimierungen (Vorsicht!)")
     # additional
-    path = StringField("Pfad", [validators.required(message="Bitte Feld ausfüllen!"),
-                                validators.Length(max=255, message="Eingabe zu lang")],
-                       render_kw={"placeholder": "/media/Bilder"})
+    path = SelectField("Pfad", choices=[("Label1", "Beispiel1"), ("Label2", "Beispiel2")])
     user = StringField("Berechtigte Nutzer", [validators.required(message="Bitte Feld ausfüllen!"),
                                               validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "sambadaniel"})

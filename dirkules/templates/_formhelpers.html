@@ -15,6 +15,23 @@
     {% endif %}
     {{ field(**kwargs)|safe }}
     </div>
+    {% elif field.type == 'SelectField' %}
+        <div class="field">
+        {% if field.errors %}
+            <div class="ui mymindrop selection dropdown error">
+        {% else %}
+            <div class="ui mymindrop selection dropdown">
+        {% endif %}
+    <input type="hidden" name="{{ field.id }}">
+    <i class="dropdown icon"></i>
+    <div class="default text">{{ field.label.text }}</div>
+    <div class="menu">
+        {% for value, human in field.choices %}
+            <div class="item" data-value="{{ value }}">{{ human }}</div>
+        {% endfor %}
+    </div>
+    </div>
+    </div>
     {% elif field.type == 'BooleanField' %}
         {% if field.errors %}
             <div class="field error">

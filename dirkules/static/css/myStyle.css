@@ -31,6 +31,10 @@ body {
     padding-bottom: 0.5em;
 }
 
+.ui.mymindrop.dropdown {
+  min-height: auto !important;
+}
+
 /*fonts*/
 
 t1 {
