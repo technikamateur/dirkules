@@ -53,6 +53,29 @@ class Partitions(db.Model):
         self.drive = drive
 
 
+class Pool(db.Model):
+    __tablename__ = 'pool'
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String)
+    size = db.Column(db.Integer)
+    free = db.Column(db.Integer)
+    raid = db.Column(db.String)
+    fs = db.Column(db.String)
+    mountpoint = db.Column(db.String)
+    mountopt = db.Column(db.String)
+    partitions = db.Column(db.String)
+
+    def __init__(self, label, size, free, raid, fs, mountpoint, mountopt, partitions):
+        self.label = label
+        self.size = size
+        self.free = free
+        self.raid = raid
+        self.fs = fs
+        self.mountpoint = mountpoint
+        self.mountopt = mountopt
+        self.partitions = partitions
+
+
 class Time(db.Model):
     __tablename__ = 'time'
     id = db.Column(db.Integer, primary_key=True)

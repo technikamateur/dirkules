@@ -24,7 +24,7 @@
                 <tr>
                     <td class="collapsing"><i class="hdd icon"></i> {{ drive.name }}</td>
                     <td>{{ drive.model }}</td>
-                    <td>{{ drive.size|filesizeformat(true) }}</td>
+                    <td class="right aligned">{{ drive.size|filesizeformat(true) }}</td>
                     {% if drive.smart %}
                         <td class="collapsing center aligned"><i class="large green checkmark icon"></i></td>
                     {% else %}
@@ -41,17 +41,17 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-    <div class="ui divider"></div>
-    <div class="ui container">
-        <h1 class="ui header">Nutzbarer Speicher</h1>
+
+        <h1 class="ui header">Pools</h1>
         <div class="ui divider"></div>
 
         <table class="ui very basic celled table">
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Zugehörige Partitionen</th>
+                <th>Größe</th>
+                <th>Frei</th>
+                <th>Typ</th>
                 <th>Dateisystem</th>
                 <th>Mountpoint</th>
             </tr>
@@ -60,14 +60,12 @@
             <tbody>
             {% for storage in mem %}
                 <tr>
-                    {% if storage.label|length %}
-                    <td class="collapsing"><i class="download icon"></i> {{ storage.label }}</td>
-                    {% else %}
-                        <td class="collapsing"><i class="download icon"></i>Namenlos</td>
-                    {% endif %}
-                    <td>{{ storage.part }}</td>
+                    <td><i class="download icon"></i> {{ storage.label }}</td>
+                    <td class="right aligned">{{ storage.size|filesizeformat(true) }}</td>
+                    <td class="right aligned">{{ storage.free|filesizeformat(true) }}</td>
+                    <td>{{ storage.raid }}</td>
                     <td>{{ storage.fs }}</td>
-                    <td class="collapsing">{{ storage.mpoint }}</td>
+                    <td>{{ storage.mountpoint }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for, flash
 from dirkules import app, db
 import dirkules.hardware.drive as drico
 import dirkules.serviceManagement.serviceManager as servMan
-from dirkules.models import Drive, Cleaning, SambaShare
+from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
 from sqlalchemy import asc, collate
@@ -18,11 +18,15 @@ def index():
 @app.route('/drives', methods=['GET'])
 def drives():
     dbDrives = []
+    db_pools = list()
+    driveManager.pool_gen()
     for drive in Drive.query.all():
         d = viewManager.db_object_as_dict(drive)
         dbDrives.append(d)
-    dbmem = viewManager.usable_memory()
-    return render_template('drives.html', drives=dbDrives, mem=dbmem)
+    for pool in Pool.query.all():
+        d = viewManager.db_object_as_dict(pool)
+        db_pools.append(d)
+    return render_template('drives.html', drives=dbDrives, mem=db_pools)
 
 
 @app.route('/about', methods=['GET'])
