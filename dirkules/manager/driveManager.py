@@ -13,7 +13,11 @@ def get_partitions(drive_id, force=False):
         existence = db.session.query(
             exists().where(and_(Partitions.uuid == part.get("uuid"), Partitions.name == part.get("name")))).scalar()
         if not existence:
-            part_obj = Partitions(drive.id, part.get("name"), part.get("label"), part.get("fs"), int(part.get("size")),
+            if part.get("label") == "":
+                label = "none"
+            else:
+                label = part.get("label")
+            part_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
                                   part.get("uuid"), part.get("mount"), drive)
             print(part.get("name") + " NICHT in db")
             db.session.add(part_obj)
@@ -35,6 +39,7 @@ def pool_gen():
         else:
             raid = "unknown RAID"
         parts = ""
+        print(value[0])
         for part in value:
             parts = parts + str(part.id) + ","
         parts = parts[:-1]
@@ -44,7 +49,7 @@ def pool_gen():
         # TODO: Warning: If a partition has been added to a raid, the disk will still exist
         # because not removed and the pool will be displayed twice, because not same part constallation
         if (value.fs == "btrfs" or value.fs == "ext4") and not existence:
-            pool_obj = Pool("not implemented", value.size, 154554, raid, value.fs, value.mountpoint,
+            pool_obj = Pool(value.label, value.size, 154554, raid, value.fs, value.mountpoint,
                             "not implemented", parts)
             db.session.add(pool_obj)
             db.session.commit()

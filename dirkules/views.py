@@ -1,7 +1,6 @@
-from flask import Flask, render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash
 from dirkules import app, db
-import dirkules.hardware.drive as drico
-import dirkules.serviceManagement.serviceManager as servMan
+import dirkules.manager.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
