@@ -7,7 +7,7 @@ Debian basiertes Betriebssystem mit folgenden installierten Paketen:
 - python3
 - python3-pip
 - gunicorn3
-- hwinfo
+- curl
 
 ## Installation
 Bitte einen eigenen Benutzer anlegen. Diesem folgende root-Rechte (ohne Passwort) einräumen:
