@@ -77,7 +77,7 @@ def getAllDrives():
         for drive in old_drives:
             drive.missing = True
             db.session.commit()
-        communicator.old_drive(old_drives)
+        communicator.missing_drive(old_drives)
 
 
 

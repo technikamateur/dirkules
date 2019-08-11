@@ -10,6 +10,6 @@ class TelegramCom():
         my_url = self.api_url + self.token + "/sendMessage?chat_id=" + self.chat_id + "&text=" + message
         response = urllib.request.urlopen(my_url).read()
 
-    def old_drive(self, drive):
+    def missing_drive(self, drive):
         message = "Folgende Festplatte wurde nicht gefunden: " + str(drive)
         self.send_message(message)
