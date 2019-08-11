@@ -61,6 +61,8 @@ def getAllDrives():
             # drive in db, update last visited
             drive = db.session.query(Drive).filter(Drive.serial == driveObj.serial).scalar()
             drive.last_update = current_time
+            if drive.missing:
+                drive.missing = False
             db.session.commit()
             pass
         else:
@@ -71,7 +73,11 @@ def getAllDrives():
     # check for old entries alias removed drives
     # old drive is list element
     old_drives = db.session.query(Drive).filter(Drive.last_update != current_time).all()
-    communicator.old_drive(old_drives[0])
+    if old_drives:
+        for drive in old_drives:
+            drive.missing = True
+            db.session.commit()
+        communicator.old_drive(old_drives)
 
 
 

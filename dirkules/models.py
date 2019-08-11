@@ -18,9 +18,10 @@ class Drive(db.Model):
     state = db.Column(db.String)
     smart = db.Column(db.Boolean)
     last_update = db.Column(DateTime)
+    missing = db.Column(db.Boolean)
     partitions = db.relationship('Partitions', order_by="Partitions.id", backref="drive", lazy="select")
 
-    def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart, time):
+    def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart, time, missing=False):
         self.name = name
         self.model = model
         self.serial = serial
@@ -31,6 +32,7 @@ class Drive(db.Model):
         self.state = state
         self.smart = smart
         self.last_update = time
+        self.missing = missing
 
     def __repr__(self):
         return self.name

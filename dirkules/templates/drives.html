@@ -22,7 +22,11 @@
             <tbody>
             {% for drive in drives %}
                 <tr>
-                    <td class="collapsing"><i class="hdd icon"></i> {{ drive.name }}</td>
+                    {% if drive.missing %}
+                        <td class="collapsing error"><i class="attention icon"></i> Laufwerk nicht gefunden: {{ drive.name }}</td>
+                    {% else %}
+                        <td class="collapsing"><i class="hdd icon"></i> {{ drive.name }}</td>
+                    {% endif %}
                     <td>{{ drive.model }}</td>
                     <td class="right aligned">{{ drive.size|filesizeformat(true) }}</td>
                     {% if drive.smart %}
