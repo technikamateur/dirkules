@@ -60,7 +60,7 @@ def getAllDrives():
         if ret:
             # drive in db, update last visited
             drive = db.session.query(Drive).filter(Drive.serial == driveObj.serial).scalar()
-            #drive.last_update = current_time
+            drive.last_update = current_time
             db.session.commit()
             pass
         else:
