@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 dirkules.db
 .idea
+telegram_config.py

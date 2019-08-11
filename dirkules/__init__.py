@@ -3,6 +3,7 @@ import dirkules.config as config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_apscheduler import APScheduler
+import dirkules.com
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -13,6 +14,7 @@ db.create_all()
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
+communicator = com.TelegramCom(app)
 
 
 #@app.before_first_request

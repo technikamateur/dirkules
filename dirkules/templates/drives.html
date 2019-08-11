@@ -54,6 +54,7 @@
                 <th>Typ</th>
                 <th>Dateisystem</th>
                 <th>Mountpoint</th>
+                <th>Disks</th>
             </tr>
             </thead>
 
@@ -66,6 +67,7 @@
                     <td>{{ storage.raid }}</td>
                     <td>{{ storage.fs }}</td>
                     <td>{{ storage.mountpoint }}</td>
+                    <td>{{ storage.drives }}</td>
                 </tr>
             {% endfor %}
             </tbody>

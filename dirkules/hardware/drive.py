@@ -3,6 +3,8 @@ import subprocess
 from dirkules.models import Drive
 from dirkules import db
 from sqlalchemy.sql.expression import exists
+import datetime
+from dirkules import communicator
 
 
 def getAllDrives():
@@ -45,23 +47,32 @@ def getAllDrives():
         driveDict.append(dict(zip(keys, values)))
     sortedDriveDict = sorted(driveDict, key=lambda drive: drive['name'])
 
+    current_time = datetime.datetime.now()
+
     # add to db
     for drive in sortedDriveDict:
         driveObj = Drive(
             drive.get("name"), drive.get("model"), drive.get("serial"),
             drive.get("size"), drive.get("rota"), drive.get("rm"),
-            drive.get("hotplug"), drive.get("state"), drive.get("smart"))
+            drive.get("hotplug"), drive.get("state"), drive.get("smart"), current_time)
         ret = db.session.query(
             exists().where(Drive.serial == driveObj.serial)).scalar()
         if ret:
-            print(drive.get("name") + " in db")
-            print("Mache nichts...")
+            # drive in db, update last visited
+            drive = db.session.query(Drive).filter(Drive.serial == driveObj.serial).scalar()
+            #drive.last_update = current_time
+            db.session.commit()
+            pass
         else:
-            print(drive.get("name") + " NICHT in db")
+            # drive not in db. add new drive
             db.session.add(driveObj)
             db.session.commit()
 
-    return sortedDriveDict
+    # check for old entries alias removed drives
+    # old drive is list element
+    old_drives = db.session.query(Drive).filter(Drive.last_update != current_time).all()
+    communicator.old_drive(old_drives[0])
+
 
 
 def smartPassed(device):

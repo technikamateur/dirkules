@@ -27,6 +27,7 @@ def get_partitions(drive_id, force=False):
 def pool_gen():
     part_dict = dict()
     final_part_dict = list()
+    # creates map uuid is key, partitions are values
     for part in Partitions.query.all():
         if part.uuid in part_dict:
             part_dict[part.uuid].append(part)
@@ -38,18 +39,17 @@ def pool_gen():
             raid = "Single"
         else:
             raid = "unknown RAID"
-        parts = ""
-        print(value[0])
+        drives = ""
         for part in value:
-            parts = parts + str(part.id) + ","
-        parts = parts[:-1]
+            drives = drives + str(Drive.query.get(part.drive_id)) + ","
+        drives = drives[:-1]
         value = value[0]
-        existence = db.session.query(exists().where(Pool.partitions == parts)).scalar()
+        existence = db.session.query(exists().where(Pool.drives == drives)).scalar()
         # FS is ext4 or BtrFS and there is no element in db with such a part constalation
         # TODO: Warning: If a partition has been added to a raid, the disk will still exist
         # because not removed and the pool will be displayed twice, because not same part constallation
         if (value.fs == "btrfs" or value.fs == "ext4") and not existence:
             pool_obj = Pool(value.label, value.size, 154554, raid, value.fs, value.mountpoint,
-                            "not implemented", parts)
+                            "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()

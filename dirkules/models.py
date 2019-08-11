@@ -17,9 +17,10 @@ class Drive(db.Model):
     hotplug = db.Column(db.Boolean)
     state = db.Column(db.String)
     smart = db.Column(db.Boolean)
+    last_update = db.Column(DateTime)
     partitions = db.relationship('Partitions', order_by="Partitions.id", backref="drive", lazy="select")
 
-    def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart):
+    def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart, time):
         self.name = name
         self.model = model
         self.serial = serial
@@ -29,6 +30,10 @@ class Drive(db.Model):
         self.hotplug = hotplug
         self.state = state
         self.smart = smart
+        self.last_update = time
+
+    def __repr__(self):
+        return self.name
 
 
 class Partitions(db.Model):
@@ -63,9 +68,9 @@ class Pool(db.Model):
     fs = db.Column(db.String)
     mountpoint = db.Column(db.String)
     mountopt = db.Column(db.String)
-    partitions = db.Column(db.String)
+    drives = db.Column(db.String)
 
-    def __init__(self, label, size, free, raid, fs, mountpoint, mountopt, partitions):
+    def __init__(self, label, size, free, raid, fs, mountpoint, mountopt, drives):
         self.label = label
         self.size = size
         self.free = free
@@ -73,7 +78,7 @@ class Pool(db.Model):
         self.fs = fs
         self.mountpoint = mountpoint
         self.mountopt = mountopt
-        self.partitions = partitions
+        self.drives = drives
 
 
 class Time(db.Model):

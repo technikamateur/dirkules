@@ -1,4 +1,5 @@
 import os
+from dirkules.telegram_config import *
 #from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.jobstores.memory import MemoryJobStore
 
