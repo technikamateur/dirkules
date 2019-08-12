@@ -35,6 +35,15 @@ body {
   min-height: auto !important;
 }
 
+.topspacer {
+    margin-top: 3em;
+}
+
+.ui.header {
+    margin-top: 1em;
+}
+
+
 /*fonts*/
 
 t1 {

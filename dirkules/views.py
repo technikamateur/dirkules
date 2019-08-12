@@ -22,11 +22,26 @@ def drives():
     for drive in Drive.query.all():
         d = viewManager.db_object_as_dict(drive)
         dbDrives.append(d)
+    return render_template('drives.html', drives=dbDrives)
+
+@app.route('/pools', methods=['GET'])
+def pools():
+    db_pools = list()
+    driveManager.pool_gen()
     for pool in Pool.query.all():
         d = viewManager.db_object_as_dict(pool)
         db_pools.append(d)
-    return render_template('drives.html', drives=dbDrives, mem=db_pools)
+    return render_template('pools.html', pools=db_pools)
 
+@app.route('/pool/<pool>', methods=['GET'])
+def pool(pool):
+    db_pool = db.session.query(Drive).get(pool)
+    return render_template(pool.html, pool=db_pool)
+
+@app.route('/pools/add', methods=['GET'])
+def add_pool():
+    db_pool = db.session.query(Drive).get(pool)
+    return render_template(pool.html, pool=db_pool)
 
 @app.route('/about', methods=['GET'])
 def about():

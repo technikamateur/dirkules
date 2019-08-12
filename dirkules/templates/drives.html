@@ -45,36 +45,5 @@
             {% endfor %}
             </tbody>
         </table>
-
-        <h1 class="ui header">Pools</h1>
-        <div class="ui divider"></div>
-
-        <table class="ui very basic celled table">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Größe</th>
-                <th>Frei</th>
-                <th>Typ</th>
-                <th>Dateisystem</th>
-                <th>Mountpoint</th>
-                <th>Disks</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {% for storage in mem %}
-                <tr>
-                    <td><i class="download icon"></i> {{ storage.label }}</td>
-                    <td class="right aligned">{{ storage.size|filesizeformat(true) }}</td>
-                    <td class="right aligned">{{ storage.free|filesizeformat(true) }}</td>
-                    <td>{{ storage.raid }}</td>
-                    <td>{{ storage.fs }}</td>
-                    <td>{{ storage.mountpoint }}</td>
-                    <td>{{ storage.drives }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
     </div>
 {% endblock %}
