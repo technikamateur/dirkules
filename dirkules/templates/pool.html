@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Pool Details{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+    <div class="topspacer"></div>
+    <div class="ui container">
+        <h1 class="ui dividing header">Details</h1>
+        <div class="topspacer"></div>
+        <div class="ui container">
+            <table class="ui very basic collapsing celled table">
+                <thead>
+                <tr>
+                    <th>Kategorie</th>
+                    <th>Informationen</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>Label</td>
+                    <td>{{ pool.label }}</td>
+                </tr>
+                <tr>
+                    <td>Gesamtgröße</td>
+                    <td>{{ pool.size|filesizeformat(true) }}</td>
+                </tr>
+                <tr>
+                    <td>Verfügbarer Speicher</td>
+                    <td>{{ pool.free|filesizeformat(true) }}</td>
+                </tr>
+                <tr>
+                    <td>Dateisystem</td>
+                    <td>{{ pool.fs }}</td>
+                </tr>
+                <tr>
+                    <td>RAID-Level</td>
+                    <td>{{ pool.raid }}</td>
+                </tr>
+                <tr>
+                    <td>Mountpoint</td>
+                    <td>{{ pool.mountpoint }}</td>
+                </tr>
+                <tr>
+                    <td>Mountoptions</td>
+                    <td>{{ pool.mountopt }}</td>
+                </tr>
+                <tr>
+                    <td>Zugehörige Laufwerke</td>
+                    <td>{{ pool.drives }}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    {% if health %}
+                        <td class="collapsing"><i class="large green checkmark icon"></i>healthy</td>
+                    {% else %}
+                        <td class="collapsing error"><i class="attention icon"></i>kritisch</td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

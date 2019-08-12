@@ -2,6 +2,7 @@ from dirkules import db
 from dirkules.models import Drive, Partitions, Pool
 from dirkules.hardware import drive as hardware_drives
 from sqlalchemy.sql.expression import exists, and_
+import dirkules.hardware.btrfsTools as btrfsTools
 
 
 # get partitions from hardware (method) and store in db
@@ -48,8 +49,12 @@ def pool_gen():
         # FS is ext4 or BtrFS and there is no element in db with such a part constalation
         # TODO: Warning: If a partition has been added to a raid, the disk will still exist
         # because not removed and the pool will be displayed twice, because not same part constallation
+        if value.fs == "btrfs":
+            memory_map = btrfsTools.get_space(value.mountpoint)
+            # ext4 wont work
         if (value.fs == "btrfs" or value.fs == "ext4") and not existence:
-            pool_obj = Pool(value.label, value.size, 154554, raid, value.fs, value.mountpoint,
+            pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("free"), raid, value.fs,
+                            value.mountpoint,
                             "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()

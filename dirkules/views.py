@@ -35,8 +35,9 @@ def pools():
 
 @app.route('/pool/<pool>', methods=['GET'])
 def pool(pool):
-    db_pool = db.session.query(Drive).get(pool)
-    return render_template(pool.html, pool=db_pool)
+    db_pool = Pool.query.get(pool)
+    pool_health = viewManager.get_pool_health(db_pool.drives)
+    return render_template('pool.html', pool=db_pool, health=pool_health)
 
 @app.route('/pools/add', methods=['GET'])
 def add_pool():
