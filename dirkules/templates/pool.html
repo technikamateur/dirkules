@@ -51,11 +51,11 @@
                     <td>{{ pool.drives }}</td>
                 </tr>
                 <tr>
-                    <td>Status</td>
+                    <td>Gesundheit</td>
                     {% if health %}
-                        <td class="collapsing"><i class="large green checkmark icon"></i>healthy</td>
+                        <td class="positive"><i class="icon checkmark"></i>Gesund</td>
                     {% else %}
-                        <td class="collapsing error"><i class="attention icon"></i>kritisch</td>
+                        <td class="negative"><i class="attention icon"></i>Kritisch</td>
                     {% endif %}
                 </tr>
                 </tbody>
