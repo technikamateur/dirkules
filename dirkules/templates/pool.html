@@ -27,7 +27,11 @@
                     <td>{{ pool.size|filesizeformat(true) }}</td>
                 </tr>
                 <tr>
-                    <td>Verfügbarer Speicher</td>
+                    <td>Nutzbarer Speicher</td>
+                    <td>{{ pool.usable|filesizeformat(true) }}</td>
+                </tr>
+                <tr>
+                    <td>Freier Speicher</td>
                     <td>{{ pool.free|filesizeformat(true) }}</td>
                 </tr>
                 <tr>
@@ -61,5 +65,6 @@
                 </tbody>
             </table>
         </div>
+    Es fehlt noch Data ratio, Metadata ratio
     </div>
 {% endblock %}

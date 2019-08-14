@@ -65,6 +65,7 @@ class Pool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String)
     size = db.Column(db.Integer)
+    usable = db.Column(db.Integer)
     free = db.Column(db.Integer)
     raid = db.Column(db.String)
     fs = db.Column(db.String)
@@ -72,9 +73,10 @@ class Pool(db.Model):
     mountopt = db.Column(db.String)
     drives = db.Column(db.String)
 
-    def __init__(self, label, size, free, raid, fs, mountpoint, mountopt, drives):
+    def __init__(self, label, size, usable, free, raid, fs, mountpoint, mountopt, drives):
         self.label = label
         self.size = size
+        self.usable = usable
         self.free = free
         self.raid = raid
         self.fs = fs

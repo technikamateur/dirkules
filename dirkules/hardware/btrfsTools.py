@@ -28,6 +28,7 @@ def get_space(label):
             values[0] = int(newLine[2])
         elif newLine[0] == "Free":
             values[2] = int(newLine[2])
-        # usable missing
+        elif newLine[0] == "Data" and newLine[1] == "ratio:":
+            values[1] = int(values[0]/float(newLine[2]))
     memory_map = (dict(zip(keys, values)))
     return memory_map

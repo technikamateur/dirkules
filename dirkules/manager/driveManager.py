@@ -51,9 +51,8 @@ def pool_gen():
         # because not removed and the pool will be displayed twice, because not same part constellation
         if value.fs == "btrfs" and not existence:
             memory_map = btrfsTools.get_space(value.mountpoint)
-            pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("free"), raid, value.fs,
-                            value.mountpoint,
-                            "not implemented", drives)
+            pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("usable"), memory_map.get("free"), raid,
+                            value.fs, value.mountpoint, "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()
 
@@ -62,8 +61,7 @@ def pool_gen():
                 free_space = ext4Tools.get_free_space(value.name)
             else:
                 free_space = 2
-            pool_obj = Pool(value.label, value.size, free_space, raid, value.fs,
-                            value.mountpoint,
+            pool_obj = Pool(value.label, value.size, value.size, free_space, raid, value.fs, value.mountpoint,
                             "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()
