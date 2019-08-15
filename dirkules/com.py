@@ -1,7 +1,8 @@
 import urllib.request
 
+
 class TelegramCom():
-    def __init__(self,app):
+    def __init__(self, app):
         self.token = app.config["TOKEN"]
         self.chat_id = app.config["CHAT_ID"]
         self.api_url = "https://api.telegram.org/bot"
@@ -12,4 +13,12 @@ class TelegramCom():
 
     def missing_drive(self, drive):
         message = "Folgende Festplatte wurde nicht gefunden: " + str(drive)
+        self.send_message(message)
+
+    def smart_changed(self, drive, new):
+        message = "Die SMART Werte der Festplatte " + str(drive) + " wurden geaendert zu "
+        if new:
+            message = message + "GUT."
+        else:
+            message = message + "SCHLECHT."
         self.send_message(message)

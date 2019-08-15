@@ -51,23 +51,43 @@ def getAllDrives():
 
     # add to db
     for drive in sortedDriveDict:
-        driveObj = Drive(
+        drive_obj = Drive(
             drive.get("name"), drive.get("model"), drive.get("serial"),
             drive.get("size"), drive.get("rota"), drive.get("rm"),
             drive.get("hotplug"), drive.get("state"), drive.get("smart"), current_time)
         ret = db.session.query(
-            exists().where(Drive.serial == driveObj.serial)).scalar()
+            exists().where(Drive.serial == drive_obj.serial)).scalar()
         if ret:
             # drive in db, update last visited
-            drive = db.session.query(Drive).filter(Drive.serial == driveObj.serial).scalar()
-            drive.last_update = current_time
-            if drive.missing:
-                drive.missing = False
-            db.session.commit()
-            pass
+            drive = db.session.query(Drive).filter(Drive.serial == drive_obj.serial).scalar()
+            # but first it should be checked if those objects are identical
+            if drive == drive_obj:
+                # objects are identical
+                drive.last_update = current_time
+                if drive.missing:
+                    drive.missing = False
+                db.session.commit()
+            else:
+                # objects are diffrent why?
+                if drive.name != drive_obj.name:
+                    # name has changed: e.g. from sda to sdb
+                    drive.name = drive_obj.name
+                    drive.last_update = current_time
+                    db.session.commit()
+                elif drive.smart != drive_obj.smart:
+                    # smart value has changed
+                    drive.smart = drive_obj.smart
+                    drive.last_update = current_time
+                    db.session.commit()
+                    if drive_obj.smart:
+                        communicator.smart_changed(drive.serial, True)
+                    else:
+                        communicator.smart_changed(drive.serial, False)
+                else:
+                    print("Drive " + drive.serial + " has changed for unknown reason!")
         else:
             # drive not in db. add new drive
-            db.session.add(driveObj)
+            db.session.add(drive_obj)
             db.session.commit()
 
     # check for old entries alias removed drives
@@ -78,7 +98,6 @@ def getAllDrives():
             drive.missing = True
             db.session.commit()
         communicator.missing_drive(old_drives)
-
 
 
 def smartPassed(device):

@@ -37,6 +37,15 @@ class Drive(db.Model):
     def __repr__(self):
         return self.name
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.name == other.name and self.smart == other.smart
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class Partitions(db.Model):
     __tablename__ = 'partitions'
