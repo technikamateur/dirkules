@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 import subprocess
-from dirkules.models import Drive
-from dirkules import db
-from sqlalchemy.sql.expression import exists
-import datetime
-from dirkules import communicator
 
 
 def getAllDrives():
@@ -45,59 +40,8 @@ def getAllDrives():
         values.append("running")
         values.append(smartPassed("/dev/" + values[0]))
         driveDict.append(dict(zip(keys, values)))
-    sortedDriveDict = sorted(driveDict, key=lambda drive: drive['name'])
-
-    current_time = datetime.datetime.now()
-
-    # add to db
-    for drive in sortedDriveDict:
-        drive_obj = Drive(
-            drive.get("name"), drive.get("model"), drive.get("serial"),
-            drive.get("size"), drive.get("rota"), drive.get("rm"),
-            drive.get("hotplug"), drive.get("state"), drive.get("smart"), current_time)
-        ret = db.session.query(
-            exists().where(Drive.serial == drive_obj.serial)).scalar()
-        if ret:
-            # drive in db, update last visited
-            drive = db.session.query(Drive).filter(Drive.serial == drive_obj.serial).scalar()
-            # but first it should be checked if those objects are identical
-            if drive == drive_obj:
-                # objects are identical
-                drive.last_update = current_time
-                if drive.missing:
-                    drive.missing = False
-                db.session.commit()
-            else:
-                # objects are diffrent why?
-                if drive.name != drive_obj.name:
-                    # name has changed: e.g. from sda to sdb
-                    drive.name = drive_obj.name
-                    drive.last_update = current_time
-                    db.session.commit()
-                elif drive.smart != drive_obj.smart:
-                    # smart value has changed
-                    drive.smart = drive_obj.smart
-                    drive.last_update = current_time
-                    db.session.commit()
-                    if drive_obj.smart:
-                        communicator.smart_changed(drive.serial, True)
-                    else:
-                        communicator.smart_changed(drive.serial, False)
-                else:
-                    print("Drive " + drive.serial + " has changed for unknown reason!")
-        else:
-            # drive not in db. add new drive
-            db.session.add(drive_obj)
-            db.session.commit()
-
-    # check for old entries alias removed drives
-    # old drive is list element
-    old_drives = db.session.query(Drive).filter(Drive.last_update != current_time).all()
-    if old_drives:
-        for drive in old_drives:
-            drive.missing = True
-            db.session.commit()
-        communicator.missing_drive(old_drives)
+    sorted_drive_dict = sorted(driveDict, key=lambda drive: drive['name'])
+    return sorted_drive_dict
 
 
 def smartPassed(device):
