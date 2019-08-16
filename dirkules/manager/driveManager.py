@@ -105,6 +105,7 @@ def pool_gen():
         # TODO: Warning: If a partition has been added to a raid, the disk will still exist
         # because not removed and the pool will be displayed twice, because not same part constellation
         if value.fs == "btrfs" and not existence:
+            # TODO: should be checked if drive/raid is mounted (label not empty)
             memory_map = btrfsTools.get_space(value.mountpoint)
             pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("usable"), memory_map.get("free"),
                             raid,
@@ -113,6 +114,7 @@ def pool_gen():
             db.session.commit()
 
         if value.fs == "ext4" and not existence:
+            # TODO: Better
             if value.mountpoint:
                 free_space = ext4Tools.get_free_space(value.name)
             else:
