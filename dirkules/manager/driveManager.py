@@ -92,9 +92,9 @@ def pool_gen():
 
     for key, value in part_dict.items():
         if len(value) == 1:
-            raid = "Single"
+            raid = "single"
         else:
-            raid = "unknown RAID"
+            raid = "unbekannt"
         drives = ""
         for part in value:
             drives = drives + str(Drive.query.get(part.drive_id)) + ","
@@ -105,21 +105,24 @@ def pool_gen():
         # TODO: Warning: If a partition has been added to a raid, the disk will still exist
         # because not removed and the pool will be displayed twice, because not same part constellation
         if value.fs == "btrfs" and not existence:
-            # TODO: should be checked if drive/raid is mounted (label not empty)
-            memory_map = btrfsTools.get_space(value.mountpoint)
-            pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("usable"), memory_map.get("free"),
-                            raid,
-                            value.fs, value.mountpoint, "not implemented", drives)
+            if value.mountpoint:
+                memory_map = btrfsTools.get_space(value.mountpoint)
+                raid_map = btrfsTools.get_raid(value.mountpoint)
+            else:
+                memory_map = (dict(zip(['total', 'free'], [int(value.size), 2])))
+                raid_map = btrfsTools.get_raid(value.mountpoint)
+            pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("free"), raid_map.get("data_raid"),
+                            raid_map.get("data_ratio"), raid_map.get("meta_raid"), raid_map.get("meta_ratio"), value.fs,
+                            value.mountpoint, "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()
 
         if value.fs == "ext4" and not existence:
-            # TODO: Better
             if value.mountpoint:
                 free_space = ext4Tools.get_free_space(value.name)
             else:
                 free_space = 2
-            pool_obj = Pool(value.label, value.size, value.size, free_space, raid, value.fs, value.mountpoint,
+            pool_obj = Pool(value.label, value.size, free_space, raid, 1.00, raid, 1.00, value.fs, value.mountpoint,
                             "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()

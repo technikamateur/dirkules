@@ -74,20 +74,25 @@ class Pool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String)
     size = db.Column(db.Integer)
-    usable = db.Column(db.Integer)
     free = db.Column(db.Integer)
-    raid = db.Column(db.String)
+    data_raid = db.Column(db.String)
+    meta_raid = db.Column(db.String)
+    data_ratio = db.Column(db.Float)
+    meta_ratio = db.Column(db.Float)
     fs = db.Column(db.String)
     mountpoint = db.Column(db.String)
     mountopt = db.Column(db.String)
     drives = db.Column(db.String)
 
-    def __init__(self, label, size, usable, free, raid, fs, mountpoint, mountopt, drives):
+    def __init__(self, label, size, free, data_raid, data_ratio, meta_raid, meta_ratio, fs, mountpoint, mountopt,
+                 drives):
         self.label = label
         self.size = size
-        self.usable = usable
         self.free = free
-        self.raid = raid
+        self.data_raid = data_raid
+        self.data_ratio = data_ratio
+        self.meta_raid = meta_raid
+        self.meta_ratio = meta_ratio
         self.fs = fs
         self.mountpoint = mountpoint
         self.mountopt = mountopt

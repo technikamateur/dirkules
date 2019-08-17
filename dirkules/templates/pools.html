@@ -9,12 +9,24 @@
         <h1 class="ui dividing header">Aktionen</h1>
         <div class="ui container">
             <a href="{{ url_for('add_pool') }}">
-            <div class="ui primary labeled icon button">
-                <i class="plus icon"></i> Neuen Pool erstellen
-            </div>
-        </a>
+                <div class="ui primary labeled icon button">
+                    <i class="plus icon"></i> Neuen Pool erstellen
+                </div>
+            </a>
         </div>
         <h1 class="ui dividing header">Übersicht</h1>
+        <div class="infobox">
+            <div class="ui info message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Hinweis
+                </div>
+                <p>
+                    Ein Pool muss eingehängt sein, um alle Informationen, wie Größe, RAID-Level und Mountoptions,
+                    korrekt einzulesen.
+                </p>
+            </div>
+        </div>
         <div class="ui segment">
             <table class="ui very basic celled table">
                 <thead>
@@ -35,10 +47,18 @@
                     <tr>
                         <td><i class="download icon"></i> {{ pool.label }}</td>
                         <td class="right aligned">{{ pool.size|filesizeformat(true) }}</td>
-                        <td class="right aligned">{{ pool.free|filesizeformat(true) }}</td>
-                        <td>{{ pool.raid }}</td>
+                        {% if pool.free == 2 %}
+                            <td class="right aligned">unbekannt</td>
+                        {% else %}
+                            <td class="right aligned">{{ pool.free|filesizeformat(true) }}</td>
+                        {% endif %}
+                        <td>{{ pool.data_raid }}</td>
                         <td>{{ pool.fs }}</td>
-                        <td>{{ pool.mountpoint }}</td>
+                        {% if pool.mountpoint|length %}
+                            <td>{{ pool.mountpoint }}</td>
+                        {% else %}
+                            <td>nicht eingehängt</td>
+                        {% endif %}
                         <td>{{ pool.drives }}</td>
                         <td>
                             <a href="{{ url_for('pool', pool=(pool.id)) }}"

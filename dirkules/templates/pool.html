@@ -8,63 +8,126 @@
     <div class="ui container">
         <h1 class="ui dividing header">Details</h1>
         <div class="topspacer"></div>
-        <div class="ui container">
-            <table class="ui very basic collapsing celled table">
-                <thead>
-                <tr>
-                    <th>Kategorie</th>
-                    <th>Informationen</th>
-                </tr>
-                </thead>
+        <div class="ui grid">
+            <div class="eight wide column">
+                <table class="ui very basic collapsing celled table">
+                    <thead>
+                    <tr>
+                        <th>Kategorie</th>
+                        <th>Informationen</th>
+                    </tr>
+                    </thead>
 
-                <tbody>
-                <tr>
-                    <td>Label</td>
-                    <td>{{ pool.label }}</td>
-                </tr>
-                <tr>
-                    <td>Gesamtgröße</td>
-                    <td>{{ pool.size|filesizeformat(true) }}</td>
-                </tr>
-                <tr>
-                    <td>Nutzbarer Speicher</td>
-                    <td>{{ pool.usable|filesizeformat(true) }}</td>
-                </tr>
-                <tr>
-                    <td>Freier Speicher</td>
-                    <td>{{ pool.free|filesizeformat(true) }}</td>
-                </tr>
-                <tr>
-                    <td>Dateisystem</td>
-                    <td>{{ pool.fs }}</td>
-                </tr>
-                <tr>
-                    <td>RAID-Level</td>
-                    <td>{{ pool.raid }}</td>
-                </tr>
-                <tr>
-                    <td>Mountpoint</td>
-                    <td>{{ pool.mountpoint }}</td>
-                </tr>
-                <tr>
-                    <td>Mountoptions</td>
-                    <td>{{ pool.mountopt }}</td>
-                </tr>
-                <tr>
-                    <td>Zugehörige Laufwerke</td>
-                    <td>{{ pool.drives }}</td>
-                </tr>
-                <tr>
-                    <td>Gesundheit</td>
-                    {% if health %}
-                        <td class="positive"><i class="icon checkmark"></i>Gesund</td>
-                    {% else %}
-                        <td class="negative"><i class="attention icon"></i>Kritisch</td>
-                    {% endif %}
-                </tr>
-                </tbody>
-            </table>
+                    <tbody>
+                    <tr>
+                        <td>Label</td>
+                        <td>{{ pool.label }}</td>
+                    </tr>
+                    <tr>
+                        <td>Gesamtgröße</td>
+                        <td>{{ pool.size|filesizeformat(true) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nutzbarer Speicher</td>
+                        <td>{{ (pool.size/pool.data_ratio)|filesizeformat(true) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Freier Speicher</td>
+                        {% if pool.free == 2 %}
+                            <td>unbekannt</td>
+                        {% else %}
+                            <td>{{ pool.free|filesizeformat(true) }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Dateisystem</td>
+                        <td>{{ pool.fs }}</td>
+                    </tr>
+                    <tr>
+                        <td>Data-RAID</td>
+                        <td>{{ pool.data_raid }}</td>
+                    </tr>
+                    <tr>
+                        <td>Data-Ratio</td>
+                        <td>{{ pool.data_ratio }}</td>
+                    </tr>
+                    <tr>
+                        <td>Metadata-RAID</td>
+                        <td>{{ pool.meta_raid }}</td>
+                    </tr>
+                    <tr>
+                        <td>Metadata-Ratio</td>
+                        <td>{{ pool.meta_ratio }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mountpoint</td>
+                        {% if pool.mountpoint|length %}
+                            <td>{{ pool.mountpoint }}</td>
+                        {% else %}
+                            <td>nicht eingehängt</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Mountoptions</td>
+                        {% if pool.mountpoint|length %}
+                            <td>{{ pool.mountopt }}</td>
+                        {% else %}
+                            <td>nicht eingehängt</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Zugehörige Laufwerke</td>
+                        <td>{{ pool.drives }}</td>
+                    </tr>
+                    <tr>
+                        <td>Gesundheit</td>
+                        {% if health %}
+                            <td class="positive"><i class="icon checkmark"></i>Gesund</td>
+                        {% else %}
+                            <td class="negative"><i class="attention icon"></i>Kritisch</td>
+                        {% endif %}
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="eight wide column">
+                {% if pool.data_raid != pool.meta_raid %}
+                    <div class="ui yellow message">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            RAID nicht korrekt konfiguriert
+                        </div>
+                        <p>
+                            Die RAID Level von Data und Metadata unterscheiden sich. Normalerweise sollten beide gleich
+                            konfiguriert werden, da es sonst unter Umständen zu <b>Datenverlust</b> kommen kann, wenn ein
+                            Laufwerk ausfällt.<br>
+                            Solltest du einen guten Grund dafür haben, ignoriere einfach diese Meldung.
+                        </p>
+                    </div>
+                {% endif %}
+                {% if health %}
+                    <div class="ui positive message">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Guter Zustand
+                        </div>
+                        <p>
+                            Der Pool befindet sich in einem guten Zustand. Es steht die volle Leistung zur Verfügung.
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="ui negative message">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Kritischer Zustand
+                        </div>
+                        <p>
+                            Mindetstens ein Laufwerk befindet sich in einem schlechten Zustand! Du solltest
+                            dieses schnellstmöglich tauschen.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    Es fehlt noch Data ratio, Metadata ratio
     </div>
 {% endblock %}
