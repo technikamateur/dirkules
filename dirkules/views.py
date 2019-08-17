@@ -55,7 +55,7 @@ def partitions(part):
     name = part.replace("_", "/")
     drive = db.session.query(Drive).filter(Drive.name == name).first()
     # load all partitions - apscheduler should do this in future
-    driveManager.get_partitions(drive.id)
+    driveManager.get_partitions(drive.name)
     dbparts = list()
     for partition in drive.partitions:
         dbparts.append(viewManager.db_object_as_dict(partition))

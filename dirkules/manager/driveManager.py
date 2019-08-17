@@ -8,24 +8,23 @@ import datetime
 from dirkules import communicator
 
 
-# get partitions from hardware (method) and store in db
-# contains all logic like replacing, removing in future
-def get_partitions(drive_id, force=False):
-    drive = db.session.query(Drive).get(drive_id)
+# all partitions with given drive_name will be deleted and freshly added
+# this is much faster than querying all partitions for a specific drive and check for changes
+def get_partitions(drive_name):
+    drive = db.session.query(Drive).filter(Drive.name == drive_name).scalar()
+    db.session.query(Partitions).filter(Partitions.drive_id == drive.id).delete(synchronize_session=False)
+    db.session.expire_all()
+    db.session.commit()
     partdict = hardware_drives.part_for_disk(drive.name)
     for part in partdict:
-        existence = db.session.query(
-            exists().where(and_(Partitions.uuid == part.get("uuid"), Partitions.name == part.get("name")))).scalar()
-        if not existence:
-            if part.get("label") == "":
-                label = "none"
-            else:
-                label = part.get("label")
-            part_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
-                                  part.get("uuid"), part.get("mount"), drive)
-            print(part.get("name") + " NICHT in db")
-            db.session.add(part_obj)
-            db.session.commit()
+        if part.get("label") == "":
+            label = "none"
+        else:
+            label = part.get("label")
+        partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
+                                   part.get("uuid"), part.get("mount"), drive)
+        db.session.add(partition_obj)
+        db.session.commit()
 
 
 def get_drives():
@@ -101,9 +100,7 @@ def pool_gen():
         drives = drives[:-1]
         value = value[0]
         existence = db.session.query(exists().where(and_(Pool.drives == drives, Pool.fs == value.fs))).scalar()
-        # FS is ext4 or BtrFS and there is no element in db with such a part constellation
-        # TODO: Warning: If a partition has been added to a raid, the disk will still exist
-        # because not removed and the pool will be displayed twice, because not same part constellation
+        # TODO: btrfs fi usage is sometimes called with too few arguments. raid_map in else tree should not be called.
         if value.fs == "btrfs" and not existence:
             if value.mountpoint:
                 memory_map = btrfsTools.get_space(value.mountpoint)
