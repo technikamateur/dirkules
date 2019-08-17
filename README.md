@@ -11,7 +11,9 @@ Debian basiertes Betriebssystem mit folgenden installierten Paketen:
 
 ## Installation
 Bitte einen eigenen Benutzer anlegen. Diesem folgende root-Rechte (ohne Passwort) einräumen:
-- ausführen von `smartctl`
+- `smartctl`
+- `lsblk`
+- `btrfs`
 
 Als dieser Nutzer folgende Befehle ausführen:
 - `git clone https://github.com/technikamateur/dirkules.git`
