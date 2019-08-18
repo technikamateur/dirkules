@@ -28,7 +28,7 @@ def get_partitions(drive_name):
 
 def get_drives():
     current_time = datetime.datetime.now()
-    drive_dict = hardware_drives.getAllDrives()
+    drive_dict = hardware_drives.get_all_drives()
     for drive in drive_dict:
         drive_obj = Drive(
             drive.get("name"), drive.get("model"), drive.get("serial"),

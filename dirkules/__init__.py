@@ -11,22 +11,13 @@ db = SQLAlchemy(app)
 
 import dirkules.models
 
+# create db if not exists
 db.create_all()
+# start communication
+communicator = com.TelegramCom(app)
+# start scheduler
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
-communicator = com.TelegramCom(app)
-
-# @app.before_first_request
-from dirkules import tasks
-
-# from dirkules.models import Time
-# from sqlalchemy.orm.exc import NoResultFound
-#
-# try:
-#     Time.query.one()
-# except NoResultFound:
-#     db.session.add(Time("Drives"))
-#     db.session.commit()
-
+# import views
 import dirkules.views

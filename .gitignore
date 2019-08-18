@@ -105,3 +105,4 @@ venv.bak/
 dirkules.db
 .idea
 telegram_config.py
+dirkules_tasks.db

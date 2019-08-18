@@ -2,9 +2,9 @@
 import subprocess
 
 
-def getAllDrives():
+def get_all_drives():
     drives = []
-    driveDict = []
+    drive_dict = []
     keys = [
         'name', 'model', 'serial', 'size', 'rota', 'rm', 'hotplug', 'state',
         'smart'
@@ -24,27 +24,27 @@ def getAllDrives():
     lsblk.stdout.close()
     del drives[0]
     for line in drives:
-        newLine = ' '.join(line.split())
-        newLine = newLine.split(" ")
-        while len(newLine) > 7:
-            newLine[1] = newLine[1] + " " + newLine[2]
-            del newLine[2]
+        new_line = ' '.join(line.split())
+        new_line = new_line.split(" ")
+        while len(new_line) > 7:
+            new_line[1] = new_line[1] + " " + new_line[2]
+            del new_line[2]
         values = []
         for i in range(len(keys) - 2):
-            if newLine[i] == "0":
+            if new_line[i] == "0":
                 values.append(False)
-            elif newLine[i] == "1":
+            elif new_line[i] == "1":
                 values.append(True)
             else:
-                values.append(newLine[i])
+                values.append(new_line[i])
         values.append("running")
-        values.append(smartPassed("/dev/" + values[0]))
-        driveDict.append(dict(zip(keys, values)))
-    sorted_drive_dict = sorted(driveDict, key=lambda drive: drive['name'])
+        values.append(get_smart("/dev/" + values[0]))
+        drive_dict.append(dict(zip(keys, values)))
+    sorted_drive_dict = sorted(drive_dict, key=lambda drive: drive['name'])
     return sorted_drive_dict
 
 
-def smartPassed(device):
+def get_smart(device):
     passed = False
     smartctl = subprocess.Popen(["smartctl -H " + device],
                                 stdout=subprocess.PIPE,
@@ -65,7 +65,7 @@ def smartPassed(device):
 def part_for_disk(device):
     # lsblk /dev/sdd -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
     parts = []
-    partdict = list()
+    part_dict = list()
     keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
     device = "/dev/" + device
     lsblk = subprocess.Popen(
@@ -103,6 +103,6 @@ def part_for_disk(device):
         values = list()
         for start, end in zip(element_length, element_length[1:]):
             values.append(part[start:(end - 1)].strip())
-        partdict.append(dict(zip(keys, values)))
+        part_dict.append(dict(zip(keys, values)))
 
-    return partdict
+    return part_dict
