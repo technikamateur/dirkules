@@ -1,7 +1,8 @@
 import subprocess
 
+
 def service_state():
-    service = {}
+    service = dict()
     result = subprocess.Popen(["ps", "-A"], stdout=subprocess.PIPE)
     out, err = result.communicate()
     if ('nzbget' in str(out)):

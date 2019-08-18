@@ -16,6 +16,7 @@ def create_cleaning_obj(jobname, path, active):
     db.session.add(job)
     db.session.commit()
 
+
 def get_pool_health(drive_list):
     drive_split = drive_list.split(",")
     health = True

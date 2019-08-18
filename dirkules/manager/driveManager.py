@@ -13,7 +13,6 @@ from dirkules import communicator
 def get_partitions(drive_name):
     drive = db.session.query(Drive).filter(Drive.name == drive_name).scalar()
     db.session.query(Partitions).filter(Partitions.drive_id == drive.id).delete(synchronize_session=False)
-    db.session.expire_all()
     db.session.commit()
     partdict = hardware_drives.part_for_disk(drive.name)
     for part in partdict:
@@ -100,14 +99,14 @@ def pool_gen():
         drives = drives[:-1]
         value = value[0]
         existence = db.session.query(exists().where(and_(Pool.drives == drives, Pool.fs == value.fs))).scalar()
-        # TODO: btrfs fi usage is sometimes called with too few arguments. raid_map in else tree should not be called.
         if value.fs == "btrfs" and not existence:
             if value.mountpoint:
                 memory_map = btrfsTools.get_space(value.mountpoint)
                 raid_map = btrfsTools.get_raid(value.mountpoint)
             else:
                 memory_map = (dict(zip(['total', 'free'], [int(value.size), 2])))
-                raid_map = btrfsTools.get_raid(value.mountpoint)
+                raid_map = (dict(zip(['data_raid', 'data_ratio', 'meta_raid', 'meta_ratio'],
+                                     ['unbekannt', '1.00', 'unbekannt', '1.00'])))
             pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("free"), raid_map.get("data_raid"),
                             raid_map.get("data_ratio"), raid_map.get("meta_raid"), raid_map.get("meta_ratio"), value.fs,
                             value.mountpoint, "not implemented", drives)

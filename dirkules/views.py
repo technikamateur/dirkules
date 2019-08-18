@@ -4,7 +4,6 @@ import dirkules.manager.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
-from sqlalchemy import asc, collate
 from dirkules.config import staticDir
 import dirkules.manager.driveManager as driveManager
 
@@ -24,6 +23,7 @@ def drives():
         dbDrives.append(d)
     return render_template('drives.html', drives=dbDrives)
 
+
 @app.route('/pools', methods=['GET'])
 def pools():
     db_pools = list()
@@ -33,16 +33,19 @@ def pools():
         db_pools.append(d)
     return render_template('pools.html', pools=db_pools)
 
+
 @app.route('/pool/<pool>', methods=['GET'])
 def pool(pool):
     db_pool = Pool.query.get(pool)
     pool_health = viewManager.get_pool_health(db_pool.drives)
     return render_template('pool.html', pool=db_pool, health=pool_health)
 
+
 @app.route('/pools/add', methods=['GET'])
 def add_pool():
     db_pool = db.session.query(Drive).get(pool)
     return render_template(pool.html, pool=db_pool)
+
 
 @app.route('/about', methods=['GET'])
 def about():
@@ -82,7 +85,7 @@ def cleaning():
     else:
         flash("Auswahl nicht eindeutig!")
     elements = []
-    for element in Cleaning.query.order_by(asc(collate(Cleaning.name, 'NOCASE'))).all():
+    for element in Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all():
         elements.append(viewManager.db_object_as_dict(element))
     return render_template('cleaning.html', elements=elements)
 
@@ -95,12 +98,14 @@ def add_cleaning():
         return redirect(url_for('cleaning'))
     return render_template('add_cleaning.html', form=form)
 
+
 @app.route('/samba', methods=['GET'])
 def samba():
     shares = []
-    for share in SambaShare.query.order_by(asc(collate(SambaShare.name, 'NOCASE'))).all():
+    for share in SambaShare.query.order_by(db.asc(db.collate(SambaShare.name, 'NOCASE'))).all():
         shares.append(viewManager.db_object_as_dict(share))
     return render_template('samba.html', shares=shares)
+
 
 @app.route('/samba/global', methods=['GET', 'POST'])
 def samba_global():
@@ -119,6 +124,7 @@ def samba_global():
         else:
             break
     return render_template('samba_global.html', form=form, conf=conf)
+
 
 @app.route('/samba/add', methods=['GET', 'POST'])
 def samba_add():

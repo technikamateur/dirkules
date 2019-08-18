@@ -10,16 +10,15 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 
 import dirkules.models
+
 db.create_all()
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 communicator = com.TelegramCom(app)
 
-
-#@app.before_first_request
+# @app.before_first_request
 from dirkules import tasks
-
 
 # from dirkules.models import Time
 # from sqlalchemy.orm.exc import NoResultFound

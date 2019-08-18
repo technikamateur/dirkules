@@ -14,16 +14,16 @@ def autoclean():
             "find \"" + path +
             "\" -type f -mtime +180 -delete -exec echo {} \\;"
         ],
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE,
-                                shell=True,
-                                universal_newlines=True)
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            universal_newlines=True)
         out, err = find.communicate()
         if "/" not in out:
             for element in out:
                 pass
-                #db.session.add(Cleaning(element))
-            #db.session.commit()
+                # db.session.add(Cleaning(element))
+            # db.session.commit()
         # remove all empty folders
         subprocess.run(
             "find \"" + path + "\" -type d -empty -exec rmdir {} +",

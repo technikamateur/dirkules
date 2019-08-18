@@ -4,10 +4,9 @@
     {{ super() }}
 {% endblock %}
 {% block body %}
+    <div class="topspacer"></div>
     <div class="ui container">
-        <h1 class="ui header">Festplatten</h1>
-        <div class="ui divider"></div>
-
+        <h1 class="ui dividing header">Festplatten</h1>
         <table class="ui very basic celled table">
             <thead>
             <tr>
@@ -23,7 +22,8 @@
             {% for drive in drives %}
                 <tr>
                     {% if drive.missing %}
-                        <td class="collapsing error"><i class="attention icon"></i> Laufwerk nicht gefunden: {{ drive.name }}</td>
+                        <td class="collapsing error"><i class="attention icon"></i> Laufwerk nicht
+                            gefunden: {{ drive.name }}</td>
                     {% else %}
                         <td class="collapsing"><i class="hdd icon"></i> {{ drive.name }}</td>
                     {% endif %}

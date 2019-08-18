@@ -1,8 +1,4 @@
 from dirkules import db
-from sqlalchemy import Table, Column, Integer, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
 
 
 class Drive(db.Model):
@@ -17,7 +13,7 @@ class Drive(db.Model):
     hotplug = db.Column(db.Boolean)
     state = db.Column(db.String)
     smart = db.Column(db.Boolean)
-    last_update = db.Column(DateTime)
+    last_update = db.Column(db.DateTime)
     missing = db.Column(db.Boolean)
     partitions = db.relationship('Partitions', order_by="Partitions.id", backref="drive", lazy="select")
 
@@ -117,7 +113,7 @@ class Cleaning(db.Model):
     # state 0 means inactive - do not execute
     state = db.Column(db.Boolean)
     # time means last execution
-    time = db.Column(db.DateTime(timezone=True), default=func.now())
+    time = db.Column(db.DateTime(timezone=True), default=db.func.now())
 
     def __init__(self, name, path, state):
         self.name = name

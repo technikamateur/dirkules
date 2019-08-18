@@ -23,4 +23,4 @@ def get_free_space(name):
         newLine = ' '.join(line.split())
         newLine = newLine.split(" ")
         if name in newLine[0]:
-            return int(newLine[3][:-1])*1024
+            return int(newLine[3][:-1]) * 1024
