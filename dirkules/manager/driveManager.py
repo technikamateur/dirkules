@@ -1,7 +1,6 @@
 from dirkules import db
 from dirkules.models import Drive, Partitions, Pool
 from dirkules.hardware import drive as hardware_drives
-from sqlalchemy.sql.expression import exists, and_
 import dirkules.hardware.btrfsTools as btrfsTools
 import dirkules.hardware.ext4Tools as ext4Tools
 import datetime
@@ -35,7 +34,7 @@ def get_drives():
             drive.get("size"), drive.get("rota"), drive.get("rm"),
             drive.get("hotplug"), drive.get("state"), drive.get("smart"), current_time)
         ret = db.session.query(
-            exists().where(Drive.serial == drive_obj.serial)).scalar()
+            db.exists().where(Drive.serial == drive_obj.serial)).scalar()
         if ret:
             # drive in db, update last visited
             drive = db.session.query(Drive).filter(Drive.serial == drive_obj.serial).scalar()
@@ -77,6 +76,7 @@ def get_drives():
             drive.missing = True
             db.session.commit()
         communicator.missing_drive(old_drives)
+    db.session.close()
 
 
 def pool_gen():
@@ -98,7 +98,7 @@ def pool_gen():
             drives = drives + str(Drive.query.get(part.drive_id)) + ","
         drives = drives[:-1]
         value = value[0]
-        existence = db.session.query(exists().where(and_(Pool.drives == drives, Pool.fs == value.fs))).scalar()
+        existence = db.session.query(db.exists().where(db.and_(Pool.drives == drives, Pool.fs == value.fs))).scalar()
         if value.fs == "btrfs" and not existence:
             if value.mountpoint:
                 memory_map = btrfsTools.get_space(value.mountpoint)
