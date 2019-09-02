@@ -74,9 +74,8 @@ def get_drives():
     if old_drives:
         for drive in old_drives:
             drive.missing = True
-            db.session.commit()
         communicator.missing_drive(old_drives)
-    db.session.close()
+    db.session.commit()
 
 
 def pool_gen():

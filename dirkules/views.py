@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from dirkules import app, db
 import dirkules.manager.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
@@ -7,6 +7,14 @@ from dirkules.validation.validators import CleaningForm, samba_cleaning_form, Sa
 from dirkules.config import staticDir
 import dirkules.manager.driveManager as driveManager
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', error=str(e)), 404
+
+@app.route('/404', methods=['GET'])
+def test_404():
+    abort(404, description="Resource not found")
 
 @app.route('/', methods=['GET'])
 def index():
