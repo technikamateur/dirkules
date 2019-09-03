@@ -8,6 +8,8 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 baseDir = os.path.abspath(os.path.dirname(__file__))
 staticDir = os.path.join(baseDir, 'static')
 
+LOG_LEVEL = "DEBUG"
+
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(baseDir, 'dirkules.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
