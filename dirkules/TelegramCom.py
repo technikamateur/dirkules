@@ -1,7 +1,7 @@
 import urllib.request
 
 
-class TelegramCom():
+class TelegramCom:
     def __init__(self, app):
         self.token = app.config["TOKEN"]
         self.chat_id = app.config["CHAT_ID"]
