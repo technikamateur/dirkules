@@ -12,9 +12,11 @@ import dirkules.manager.driveManager as driveManager
 def page_not_found(e):
     return render_template('404.html', error=str(e)), 404
 
+
 @app.route('/404', methods=['GET'])
 def test_404():
     abort(404, description="Resource not found")
+
 
 @app.route('/', methods=['GET'])
 def index():
