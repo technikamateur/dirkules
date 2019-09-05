@@ -5,7 +5,6 @@ from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
 from dirkules.config import staticDir
-import dirkules.manager.driveManager as driveManager
 
 
 @app.errorhandler(404)
@@ -25,23 +24,14 @@ def index():
 
 @app.route('/drives', methods=['GET'])
 def drives():
-    dbDrives = []
-    db_pools = list()
-    driveManager.pool_gen()
-    for drive in Drive.query.all():
-        d = viewManager.db_object_as_dict(drive)
-        dbDrives.append(d)
-    return render_template('drives.html', drives=dbDrives)
+    drives = Drive.query.all()
+    return render_template('drives.html', drives=drives)
 
 
 @app.route('/pools', methods=['GET'])
 def pools():
-    db_pools = list()
-    driveManager.pool_gen()
-    for pool in Pool.query.all():
-        d = viewManager.db_object_as_dict(pool)
-        db_pools.append(d)
-    return render_template('pools.html', pools=db_pools)
+    pools = Pool.query.all()
+    return render_template('pools.html', pools=pools)
 
 
 @app.route('/pool/<pool>', methods=['GET'])
@@ -66,13 +56,8 @@ def about():
 @app.route('/partitions/<part>', methods=['GET'])
 def partitions(part):
     name = part.replace("_", "/")
-    drive = db.session.query(Drive).filter(Drive.name == name).first()
-    # load all partitions - apscheduler should do this in future
-    driveManager.get_partitions(drive.name)
-    dbparts = list()
-    for partition in drive.partitions:
-        dbparts.append(viewManager.db_object_as_dict(partition))
-    return render_template('partitions.html', parts=dbparts)
+    drive = db.session.query(Drive).filter(Drive.name == name).scalar()
+    return render_template('partitions.html', parts=drive.partitions)
 
 
 @app.route('/cleaning', methods=['GET'])
@@ -81,22 +66,28 @@ def cleaning():
     changestate = request.args.get('changestate')
     if not (remove is not None and changestate is not None):
         if remove is not None:
-            Cleaning.query.filter(Cleaning.id == int(remove)).delete()
-            db.session.commit()
-            return redirect(request.path, code=302)
+            try:
+                remove = int(remove)
+                Cleaning.query.filter(Cleaning.id == remove).delete()
+                db.session.commit()
+                return redirect(request.path, code=302)
+            except ValueError:
+                flash("Value Error: remove")
         elif changestate is not None:
-            job = Cleaning.query.get(int(changestate))
-            if job.state == 0:
-                job.state = 1
-            else:
-                job.state = 0
-            db.session.commit()
-            return redirect(request.path, code=302)
+            try:
+                changestate = int(changestate)
+                job = Cleaning.query.get(changestate)
+                if job.state == 0:
+                    job.state = 1
+                else:
+                    job.state = 0
+                db.session.commit()
+                return redirect(request.path, code=302)
+            except ValueError:
+                flash("Value Error: changestate")
     else:
-        flash("Auswahl nicht eindeutig!")
-    elements = []
-    for element in Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all():
-        elements.append(viewManager.db_object_as_dict(element))
+        flash("Value Error: remove and changestate set")
+    elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
     return render_template('cleaning.html', elements=elements)
 
 
@@ -111,9 +102,7 @@ def add_cleaning():
 
 @app.route('/samba', methods=['GET'])
 def samba():
-    shares = []
-    for share in SambaShare.query.order_by(db.asc(db.collate(SambaShare.name, 'NOCASE'))).all():
-        shares.append(viewManager.db_object_as_dict(share))
+    shares = SambaShare.query.order_by(db.asc(db.collate(SambaShare.name, 'NOCASE'))).all()
     return render_template('samba.html', shares=shares)
 
 

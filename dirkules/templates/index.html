@@ -1,33 +1,46 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block body %}
-<div class="title">
-  <t1>Willkommen!</t1>
-</div>
-<div class="tablebox">
-  <table class="ui celled table">
-    <thead>
-      <tr>
-        <th>Status</th>
-        <th>Service</th>
-      </tr>
-    </thead>
+    <div class="topspacer"></div>
+    <div class="ui container">
+        <h1 class="ui dividing header center aligned">Willkommen bei Dirkules</h1>
+        <div class="infobox">
+            <div class="ui info message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Bitte beachten
+                </div>
+                <p>
+                    Ich übernehme keine Garantie oder Haftung für Fehlfunktionen.<br>Die Benutzung erfolgt auf
+                    eigenes Risiko!<br>Dennoch wünsche ich viel Spaß, Dirkules wird sein Bestes geben ;)
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="ui container">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Service</th>
+            </tr>
+            </thead>
 
-    <tbody>
-      {% for key in service %}
-      <tr>
-        {% if service[key] %}
-        <td><i class="collapsing positive icon checkmark"></i></td>
-        {% else %}
-        <td class="collapsing negative center aligned"><i class="attention icon"></i></td>
-        {% endif %}
-        <td>{{ key }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+            <tbody>
+            {% for key in service %}
+                <tr>
+                    {% if service[key] %}
+                        <td><i class="collapsing positive icon checkmark"></i></td>
+                    {% else %}
+                        <td class="collapsing negative center aligned"><i class="attention icon"></i></td>
+                    {% endif %}
+                    <td>{{ key }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

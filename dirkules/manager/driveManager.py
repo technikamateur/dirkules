@@ -9,20 +9,20 @@ from dirkules import communicator
 
 # all partitions with given drive_name will be deleted and freshly added
 # this is much faster than querying all partitions for a specific drive and check for changes
-def get_partitions(drive_name):
-    drive = db.session.query(Drive).filter(Drive.name == drive_name).scalar()
-    db.session.query(Partitions).filter(Partitions.drive_id == drive.id).delete(synchronize_session=False)
+def get_partitions():
+    drives = Drive.query.all()
+    Partitions.query.delete()
+    for drive in drives:
+        part_dict = hardware_drives.part_for_disk(drive.name)
+        for part in part_dict:
+            if part.get("label") == "":
+                label = "none"
+            else:
+                label = part.get("label")
+            partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
+                                       part.get("uuid"), part.get("mount"), drive)
+            db.session.add(partition_obj)
     db.session.commit()
-    partdict = hardware_drives.part_for_disk(drive.name)
-    for part in partdict:
-        if part.get("label") == "":
-            label = "none"
-        else:
-            label = part.get("label")
-        partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
-                                   part.get("uuid"), part.get("mount"), drive)
-        db.session.add(partition_obj)
-        db.session.commit()
 
 
 def get_drives():
@@ -121,3 +121,5 @@ def pool_gen():
                             "not implemented", drives)
             db.session.add(pool_obj)
             db.session.commit()
+    # TODO: too much commits
+    db.session.commit()

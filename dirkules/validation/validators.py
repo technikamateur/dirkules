@@ -11,7 +11,7 @@ class CleaningForm(Form):
                                 validators.none_of('\\', "Bitte kein \\"),
                                 validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "/media/downloads/"})
-    active = BooleanField("Sofort aktvieren (Vorsicht!)", render_kw={"placeholder": "/media/downloads/"})
+    active = BooleanField("Sofort aktvieren (Vorsicht!)")
 
 
 class samba_cleaning_form(Form):
