@@ -2,7 +2,6 @@
 import subprocess
 
 
-
 def autoclean(path):
     # remove all files older than 180 days
     find = subprocess.Popen([
@@ -22,7 +21,7 @@ def autoclean(path):
     err_rmdir = False
     try:
         subprocess.run(
-            "find \"" + path + "\" -type d -empty -exec rmdir {} +",
+            "find " + path + " -mindepth 1 -type d -empty -delete",
             shell=True, check=True)
     except subprocess.CalledProcessError:
         err_rmdir = True

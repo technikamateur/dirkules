@@ -1,6 +1,7 @@
 import os
 from dirkules.models import Cleaning
 from dirkules.hardware import autoclean
+from dirkules import db
 
 
 def clean_folders():
@@ -10,3 +11,4 @@ def clean_folders():
             print(result)
             print(result[0])
             print(result[1])
+    db.session.commit()
