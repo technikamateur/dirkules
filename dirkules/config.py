@@ -2,13 +2,12 @@ import os
 from dirkules.telegram_config import *
 import datetime
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+from logging.config import dictConfig
 
 # from apscheduler.jobstores.memory import MemoryJobStore
 
 baseDir = os.path.abspath(os.path.dirname(__file__))
 staticDir = os.path.join(baseDir, 'static')
-
-LOG_LEVEL = "DEBUG"
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(baseDir, 'dirkules.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -39,3 +38,33 @@ JOBS = [
         'seconds': 3600
     }
 ]
+
+# Logging testing
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers':
+        {'wsgi': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://flask.logging.wsgi_errors_stream',
+            'formatter': 'default'
+        },
+            'file': {
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'formatter': 'default',
+                'filename': 'dirkules.log',
+                'when': 'midnight',
+                'interval': 1,
+                'backupCount': 90,
+            }
+        },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['wsgi', 'file']
+    }
+})
+
+# every handler can have it's own level. root level means global level if none is defined for handler.
+# handler will be called on every logging event.
