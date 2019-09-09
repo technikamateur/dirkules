@@ -42,27 +42,37 @@ JOBS = [
 # Logging testing
 dictConfig({
     'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers':
-        {'wsgi': {
+    'formatters': {
+        'default': {
+            'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+        },
+        'telegram': {
+            'format': '%(levelname)s#%(module)s#%(message)s',
+        }},
+    'handlers': {
+        'wsgi': {
             'class': 'logging.StreamHandler',
             'stream': 'ext://flask.logging.wsgi_errors_stream',
             'formatter': 'default'
         },
-            'file': {
-                'class': 'logging.handlers.TimedRotatingFileHandler',
-                'formatter': 'default',
-                'filename': 'dirkules.log',
-                'when': 'midnight',
-                'interval': 1,
-                'backupCount': 90,
-            }
+        'file': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'default',
+            'filename': 'dirkules.log',
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 90,
         },
+        'telegram': {
+            'class': 'dirkules.Telegram_Log_New.TelegramHandler',
+            'formatter': 'telegram',
+            'token': TOKEN,
+            'chat_id': CHAT_ID,
+        }
+    },
     'root': {
         'level': 'DEBUG',
-        'handlers': ['wsgi', 'file']
+        'handlers': ['wsgi', 'file', 'telegram']
     }
 })
 
