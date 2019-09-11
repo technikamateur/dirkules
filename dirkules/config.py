@@ -1,8 +1,9 @@
 import os
 from dirkules.telegram_config import *
 import datetime
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from logging.config import dictConfig
+from apscheduler.jobstores.base import ConflictingIdError
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
 # from apscheduler.jobstores.memory import MemoryJobStore
 
@@ -12,16 +13,25 @@ staticDir = os.path.join(baseDir, 'static')
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(baseDir, 'dirkules.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
 # The SCHEDULER_JOB_DEFAULTS configuration is per job, that means each job can execute at most 3 threads at the same time.
 # The SCHEDULER_EXECUTORS is a global configuration, in this case, only 1 thread will be used for all the jobs.
 # I believe the best way for you is to use max_workers: 1 when running locally
 
-SCHEDULER_JOBSTORES = {'default': SQLAlchemyJobStore(url='sqlite:///' + os.path.join(baseDir, 'dirkules_tasks.db'))}
+class SQLJobStore(SQLAlchemyJobStore):
+    def add_job(self, job):
+        try:
+            super().add_job(job)
+        except ConflictingIdError:
+            pass
+
+
+SCHEDULER_JOBSTORES = {'default': SQLJobStore(url='sqlite:///' + os.path.join(baseDir, 'dirkules_tasks.db'))}
 # SCHEDULER_JOBSTORES = {'default': MemoryJobStore()}
 
 SCHEDULER_EXECUTORS = {'default': {'type': 'threadpool', 'max_workers': 3}}
 
-SCHEDULER_JOB_DEFAULTS = {'coalesce': False, 'max_instances': 1}
+SCHEDULER_JOB_DEFAULTS = {'coalesce': True, 'max_instances': 1}
 
 SCHEDULER_API_ENABLED = True
 
@@ -36,6 +46,13 @@ JOBS = [
         'next_run_time': datetime.datetime.now(),
         'replace_existing': True,
         'seconds': 3600
+    },
+    {
+        'id': 'cleaning',
+        'func': 'dirkules.tasks:cleaning',
+        'trigger': 'cron',
+        'replace_existing': False,
+        'hour': 12
     }
 ]
 
@@ -64,10 +81,11 @@ dictConfig({
             'backupCount': 90,
         },
         'telegram': {
-            'class': 'dirkules.Telegram_Log_New.TelegramHandler',
+            'class': 'dirkules.TelegramLogging.TelegramHandler',
             'formatter': 'telegram',
             'token': TOKEN,
             'chat_id': CHAT_ID,
+            'level': 'WARNING',
         }
     },
     'root': {
