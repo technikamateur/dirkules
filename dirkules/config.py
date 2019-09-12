@@ -34,7 +34,7 @@ SCHEDULER_JOB_DEFAULTS = {'coalesce': True, 'max_instances': 1}
 SCHEDULER_API_ENABLED = True
 
 # should not be here in final version
-SECRET_KEY = b'gf3iz3V!R3@Ny!ri'
+SECRET_KEY = b'gf3iz3V!R3@Nj!ri'
 
 JOBS = [
     {

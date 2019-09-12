@@ -1,5 +1,5 @@
+from flask_wtf import csrf, CSRFProtect
 import dirkules.config as config
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_apscheduler import APScheduler
@@ -7,6 +7,8 @@ from flask_apscheduler import APScheduler
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 import dirkules.models
 

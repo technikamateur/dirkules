@@ -7,6 +7,7 @@
     <div class="ui container">
         {% from "_formhelpers.html" import render_field %}
         <form method=post class="ui form error">
+            {{ form.hidden_tag() }}
             {{ render_field(form.jobname) }}
             {{ render_field(form.path) }}
             {{ render_field(form.active) }}

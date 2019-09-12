@@ -1,6 +1,7 @@
 from flask import render_template, redirect, request, url_for, flash, abort
 from dirkules import app, db
 import dirkules.manager.serviceManager as servMan
+import dirkules.manager.cleaning as cleaningMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
 from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm
@@ -64,6 +65,7 @@ def partitions(part):
 def cleaning():
     remove = request.args.get('remove')
     changestate = request.args.get('changestate')
+    service = request.args.get('service')
     if not (remove is not None and changestate is not None):
         if remove is not None:
             try:
@@ -87,8 +89,27 @@ def cleaning():
                 flash("Value Error: changestate")
     else:
         flash("Value Error: remove and changestate set")
+    if service is not None:
+        try:
+            service = str(service)
+            if service == "start":
+                if not cleaningMan.running():
+                    cleaningMan.enable()
+                    return redirect(request.path, code=302)
+                else:
+                    flash("Error: Cleaning Service already running.")
+            elif service == "pause":
+                if cleaningMan.running():
+                    cleaningMan.disable()
+                    return redirect(request.path, code=302)
+                else:
+                    flash("Error: Cleaning Service already paused.")
+            else:
+                raise ValueError
+        except ValueError:
+            flash("Value Error: service")
     elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning.html', elements=elements)
+    return render_template('cleaning.html', elements=elements, task_running=cleaningMan.running())
 
 
 @app.route('/add_cleaning', methods=['GET', 'POST'])

@@ -41,6 +41,19 @@
                 <i class="plus icon"></i> Job hinzufügen
             </div>
         </a>
+        {% if task_running %}
+            <a href="{{ url_for('cleaning', service="pause") }}">
+                <div class="ui negative labeled icon button">
+                    <i class="pause icon"></i> Service pausieren
+                </div>
+            </a>
+        {% else %}
+            <a href="{{ url_for('cleaning', service="start") }}">
+                <div class="ui positive labeled icon button">
+                    <i class="play icon"></i> Service starten
+                </div>
+            </a>
+        {% endif %}
         <table class="ui celled fixed table">
             <thead>
             <tr>
