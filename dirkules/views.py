@@ -3,7 +3,7 @@ from dirkules import app, db
 import dirkules.manager.serviceManager as servMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, samba_cleaning_form, SambaAddForm
+from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm
 from dirkules.config import staticDir
 
 
@@ -108,7 +108,7 @@ def samba():
 
 @app.route('/samba/global', methods=['GET', 'POST'])
 def samba_global():
-    form = samba_cleaning_form(request.form)
+    form = SambaCleaningForm(request.form)
     if request.method == 'POST' and form.validate():
         print("Input:")
         print(form.workgroup.data)

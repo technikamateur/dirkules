@@ -26,8 +26,8 @@
     <i class="dropdown icon"></i>
     <div class="default text">{{ field.label.text }}</div>
     <div class="menu">
-        {% for value, human in field.choices %}
-            <div class="item" data-value="{{ value }}">{{ human }}</div>
+        {% for value, label in field.choices %}
+            <div class="item" data-value="{{ value }}">{{ label }}</div>
         {% endfor %}
     </div>
     </div>

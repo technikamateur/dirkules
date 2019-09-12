@@ -5,8 +5,6 @@ from logging.config import dictConfig
 from apscheduler.jobstores.base import ConflictingIdError
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
-# from apscheduler.jobstores.memory import MemoryJobStore
-
 baseDir = os.path.abspath(os.path.dirname(__file__))
 staticDir = os.path.join(baseDir, 'static')
 
@@ -18,6 +16,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # The SCHEDULER_EXECUTORS is a global configuration, in this case, only 1 thread will be used for all the jobs.
 # I believe the best way for you is to use max_workers: 1 when running locally
 
+# This is needed to use replace existing FLag False but results in ignoring the Flag True too :(
 class SQLJobStore(SQLAlchemyJobStore):
     def add_job(self, job):
         try:
@@ -27,7 +26,6 @@ class SQLJobStore(SQLAlchemyJobStore):
 
 
 SCHEDULER_JOBSTORES = {'default': SQLJobStore(url='sqlite:///' + os.path.join(baseDir, 'dirkules_tasks.db'))}
-# SCHEDULER_JOBSTORES = {'default': MemoryJobStore()}
 
 SCHEDULER_EXECUTORS = {'default': {'type': 'threadpool', 'max_workers': 3}}
 

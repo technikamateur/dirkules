@@ -1,27 +1,27 @@
-from dirkules import db
+from dirkules import db, app
 from dirkules.models import Drive, Partitions, Pool
 from dirkules.hardware import drive as hardware_drives
 import dirkules.hardware.btrfsTools as btrfsTools
 import dirkules.hardware.ext4Tools as ext4Tools
 import datetime
-from dirkules import communicator
 
 
 # all partitions with given drive_name will be deleted and freshly added
 # this is much faster than querying all partitions for a specific drive and check for changes
 def get_partitions():
     drives = Drive.query.all()
-    Partitions.query.delete()
     for drive in drives:
-        part_dict = hardware_drives.part_for_disk(drive.name)
-        for part in part_dict:
-            if part.get("label") == "":
-                label = "none"
-            else:
-                label = part.get("label")
-            partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
-                                       part.get("uuid"), part.get("mount"), drive)
-            db.session.add(partition_obj)
+        if not drive.missing:
+            Partitions.query.filter(Partitions.drive_id == drive.id).delete()
+            part_dict = hardware_drives.part_for_disk(drive.name)
+            for part in part_dict:
+                if part.get("label") == "":
+                    label = "none"
+                else:
+                    label = part.get("label")
+                partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
+                                           part.get("uuid"), part.get("mount"), drive)
+                db.session.add(partition_obj)
     db.session.commit()
 
 
@@ -44,29 +44,29 @@ def get_drives():
                 drive.last_update = current_time
                 if drive.missing:
                     drive.missing = False
-                db.session.commit()
             else:
                 # objects are diffrent why?
                 if drive.name != drive_obj.name:
                     # name has changed: e.g. from sda to sdb
                     drive.name = drive_obj.name
                     drive.last_update = current_time
-                    db.session.commit()
                 elif drive.smart != drive_obj.smart:
                     # smart value has changed
                     drive.smart = drive_obj.smart
                     drive.last_update = current_time
-                    db.session.commit()
                     if drive_obj.smart:
-                        communicator.smart_changed(drive.serial, True)
+                        app.logger.error(
+                            "SMART Value of {} ({}) has changed to: GOOD. But, you should be careful!".format(
+                                drive.name, drive.model))
                     else:
-                        communicator.smart_changed(drive.serial, False)
+                        app.logger.error(
+                            "SMART Value of {} ({}) has changed to: BAD. You should act now!".format(
+                                drive.name, drive.model))
                 else:
-                    print("Drive " + drive.serial + " has changed for unknown reason!")
+                    app.logger.critical("Drive " + drive.serial + " has changed for unknown reason!")
         else:
             # drive not in db. add new drive
             db.session.add(drive_obj)
-            db.session.commit()
 
     # check for old entries alias removed drives
     # old drive is list element
@@ -74,7 +74,7 @@ def get_drives():
     if old_drives:
         for drive in old_drives:
             drive.missing = True
-        communicator.missing_drive(old_drives)
+        app.logger.error("During a drive rescan: Following Drives could not be found: {}.".format(old_drives))
     db.session.commit()
 
 

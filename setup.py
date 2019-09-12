@@ -10,7 +10,7 @@ setup(
         'Flask-SQLAlchemy',
         'Flask-APScheduler',
         'APScheduler',
-        'Flask-WTF', 'requests'
+        'Flask-WTF', 'requests', 'wtforms'
 
     ],
 )

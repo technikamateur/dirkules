@@ -1,7 +1,8 @@
-from wtforms import Form, StringField, BooleanField, IntegerField, SelectField, validators
+from wtforms import StringField, BooleanField, IntegerField, SelectField, validators, RadioField
+from flask_wtf import FlaskForm
 
 
-class CleaningForm(Form):
+class CleaningForm(FlaskForm):
     jobname = StringField("Job Name", [validators.required(message="Bitte Feld ausfüllen!"),
                                        validators.none_of('123456789/\\.',
                                                           "Bitte ausschließlich Buchstaben eingeben!"),
@@ -14,7 +15,7 @@ class CleaningForm(Form):
     active = BooleanField("Sofort aktvieren (Vorsicht!)")
 
 
-class samba_cleaning_form(Form):
+class SambaCleaningForm(FlaskForm):
     workgroup = StringField("workgroup", [validators.required(message="Bitte Feld ausfüllen!"),
                                           validators.Regexp('^[a-z]+$', message="Bitte nur Kleinbuchstaben eingeben."),
                                           validators.Length(max=255, message="Eingabe zu lang")],
@@ -26,7 +27,7 @@ class samba_cleaning_form(Form):
                                 render_kw={"placeholder": "Nichts..."})
 
 
-class SambaAddForm(Form):
+class SambaAddForm(FlaskForm):
     name = StringField("Name der Freigabe", [validators.required(message="Bitte Feld ausfüllen!"),
                                              validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "Bilder"})
@@ -34,7 +35,7 @@ class SambaAddForm(Form):
     recycling = BooleanField("Papierkorb")
     btrfs = BooleanField("BtrFS Optimierungen (Vorsicht!)")
     # additional
-    path = SelectField("Pfad", choices=[("Label1", "Beispiel1"), ("Label2", "Beispiel2")])
+    path = SelectField("Pfad", choices=[("Value1", "Label1"), ("Value2", "Label2")])
     user = StringField("Berechtigte Nutzer", [validators.required(message="Bitte Feld ausfüllen!"),
                                               validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "sambadaniel"})
@@ -46,3 +47,8 @@ class SambaAddForm(Form):
                                             validators.NumberRange(min=4, max=4,
                                                                    message="Bitte 4 Zahlen eingeben!")],
                             render_kw={"placeholder": "0700"})
+
+
+class PoolAddForm(FlaskForm):
+    raid_selection = RadioField("RAID Auswahl", choices=[(1, "Single"), (2, "RAID1")],
+                                validators=[validators.required(message="Bitte eine Auswahl treffen!")])
