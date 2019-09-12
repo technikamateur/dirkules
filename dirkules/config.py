@@ -83,7 +83,7 @@ dictConfig({
             'formatter': 'telegram',
             'token': TOKEN,
             'chat_id': CHAT_ID,
-            'level': 'WARNING',
+            'level': 'ERROR',
         }
     },
     'root': {

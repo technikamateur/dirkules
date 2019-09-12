@@ -6,15 +6,6 @@
 {% block body %}
     <div class="topspacer"></div>
     <div class="ui container">
-        <h1 class="ui dividing header">Aktionen</h1>
-        <div class="ui container">
-            <a href="{{ url_for('add_pool') }}">
-                <div class="ui primary labeled icon button">
-                    <i class="plus icon"></i> Neuen Pool erstellen
-                </div>
-            </a>
-        </div>
-        <h1 class="ui dividing header">Übersicht</h1>
         <div class="infobox">
             <div class="ui info message">
                 <i class="close icon"></i>
@@ -27,50 +18,53 @@
                 </p>
             </div>
         </div>
-        <div class="ui segment">
-            <table class="ui very basic celled table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Größe</th>
-                    <th>Frei</th>
-                    <th>Typ</th>
-                    <th>Dateisystem</th>
-                    <th>Mountpoint</th>
-                    <th>Disks</th>
-                    <th>Aktionen</th>
-                </tr>
-                </thead>
+        <a href="{{ url_for('add_pool') }}">
+            <div class="ui primary labeled icon button">
+                <i class="plus icon"></i> Neuen Pool erstellen
+            </div>
+        </a>
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Größe</th>
+                <th>Frei</th>
+                <th>Typ</th>
+                <th>Dateisystem</th>
+                <th>Mountpoint</th>
+                <th>Disks</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
 
-                <tbody>
-                {% for pool in pools %}
-                    <tr>
-                        <td><i class="download icon"></i> {{ pool.label }}</td>
-                        <td class="right aligned">{{ pool.size|filesizeformat(true) }}</td>
-                        {% if pool.free == 2 %}
-                            <td class="right aligned">unbekannt</td>
-                        {% else %}
-                            <td class="right aligned">{{ pool.free|filesizeformat(true) }}</td>
-                        {% endif %}
-                        <td>{{ pool.data_raid }}</td>
-                        <td>{{ pool.fs }}</td>
-                        {% if pool.mountpoint|length %}
-                            <td>{{ pool.mountpoint }}</td>
-                        {% else %}
-                            <td>nicht eingehängt</td>
-                        {% endif %}
-                        <td>{{ pool.drives }}</td>
-                        <td>
-                            <a href="{{ url_for('pool', pool=(pool.id)) }}"
-                               class="ui primary basic button">
-                                <i class="eye icon"></i>
-                                Details
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <tbody>
+            {% for pool in pools %}
+                <tr>
+                    <td><i class="download icon"></i> {{ pool.label }}</td>
+                    <td class="right aligned">{{ pool.size|filesizeformat(true) }}</td>
+                    {% if pool.free == 2 %}
+                        <td class="right aligned">unbekannt</td>
+                    {% else %}
+                        <td class="right aligned">{{ pool.free|filesizeformat(true) }}</td>
+                    {% endif %}
+                    <td>{{ pool.data_raid }}</td>
+                    <td>{{ pool.fs }}</td>
+                    {% if pool.mountpoint|length %}
+                        <td>{{ pool.mountpoint }}</td>
+                    {% else %}
+                        <td>nicht eingehängt</td>
+                    {% endif %}
+                    <td>{{ pool.drives }}</td>
+                    <td>
+                        <a href="{{ url_for('pool', pool=(pool.id)) }}"
+                           class="ui primary basic button">
+                            <i class="eye icon"></i>
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

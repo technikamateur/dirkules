@@ -10,12 +10,7 @@ from dirkules.config import staticDir
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html', error=str(e)), 404
-
-
-@app.route('/404', methods=['GET'])
-def test_404():
-    abort(404, description="Resource not found")
+    return render_template('404.html', error=str(e))
 
 
 @app.route('/', methods=['GET'])
@@ -38,6 +33,8 @@ def pools():
 @app.route('/pool/<pool>', methods=['GET'])
 def pool(pool):
     db_pool = Pool.query.get(pool)
+    if db_pool is None:
+        abort(404, description="Pool with ID {} could not be found.".format(pool))
     pool_health = viewManager.get_pool_health(db_pool.drives)
     return render_template('pool.html', pool=db_pool, health=pool_health)
 

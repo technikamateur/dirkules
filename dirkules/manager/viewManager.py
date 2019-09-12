@@ -19,9 +19,8 @@ def create_cleaning_obj(jobname, path, active):
 
 def get_pool_health(drive_list):
     drive_split = drive_list.split(",")
-    health = True
     for drive in drive_split:
         db_drive = db.session.query(Drive).filter(Drive.name == drive).scalar()
         if db_drive.smart is not True:
-            health = False
-    return health
+            return False
+    return True
