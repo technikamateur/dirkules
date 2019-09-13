@@ -57,7 +57,6 @@ def about():
 def partitions(part):
     name = part.replace("_", "/")
     drive = db.session.query(Drive).filter(Drive.name == name).scalar()
-    print(drive.partitions)
     return render_template('partitions.html', parts=drive.partitions)
 
 
