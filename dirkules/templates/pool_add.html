@@ -10,8 +10,46 @@
         <form method=post class="ui form error">
             {{ form.hidden_tag() }}
             {{ render_field(form.name) }}
-            {{ render_field(form.raid_config) }}
+            <div class="inline fields">
+                {{ render_field(form.raid_config) }}
+            </div>
             {{ render_field(form.drives) }}
+            <h4 class="ui dividing header">Mountoptions</h4>
+            <div class="ui message">
+                <div class="header">Hinweis</div>
+                <ul class="list">
+                    <li>Die Mountoption "defaults" wird automatisch gesetzt</li>
+                    <li>"ssd" nur setzten, wenn alle Laufwerke des Pools SSDs sind</li>
+                    <li>"autodefrag" bitte nur verwenden, wenn alle Laufwerke des Pools HDDs sind</li>
+                </ul>
+            </div>
+            <div class="fields">
+                {{ render_field(form.ssd) }}
+                {{ render_field(form.autodefrag) }}
+                {{ render_field(form.inode_cache) }}
+            </div>
+            <h4 class="ui dividing header">Space Cache</h4>
+            <div class="ui message">
+                <div class="header">Hinweis</div>
+                <p>Version 1 ist die ursprüngliche Implementierung. Durch einmaliges einhängen mit der Mountoption
+                    <i>"nospace_cache"</i> lässt es sich deaktivieren.<br>Version 2 ist die Weiterenwicklung, die
+                    besonders auf großen Dateisystemen Geschwindigkeitsvorteile bringt. Vorsicht beim mounten mit
+                    älteren Kernel Versionen. Zum deaktivieren muss die Mountoption <i>"clear_cache,nospace_cache"</i>
+                    verwendet werden.</p>
+            </div>
+            <div class="inline fields">
+                {{ render_field(form.space_cache) }}
+            </div>
+            <h4 class="ui dividing header">Kompression</h4>
+            <div class="ui message">
+                <div class="header">Hinweis</div>
+                <p>"zlib" ist stabiler und ab <i>btrfs-progs 0.19</i> verfügbar.<br>"lzo" ist schneller und leicht
+                    höhere Kompression auf, ist jedoch erst ab Kernel Version 3.x verfügbar. Es kann jedoch zum
+                    einfrieren des Systems führen.</p>
+            </div>
+            <div class="inline fields">
+                {{ render_field(form.compression) }}
+            </div>
             {{ render_field(form.submit) }}
         </form>
         <div class="Box" style="display:none">HALLO</div>

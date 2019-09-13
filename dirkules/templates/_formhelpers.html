@@ -59,8 +59,9 @@
     </div>
     </div>
     {% elif field.type == 'RadioField' %}
-        <div class="inline fields">
-            <label>{{ field.label }}</label>
+            {% if field.label.text is defined and field.label.text|length %}
+                <label>{{ field.label.text }}</label>
+            {% endif %}
             {% for value, label in field.choices %}
                 <div class="field">
                     <div class="ui radio checkbox">
@@ -73,7 +74,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
     {% elif field.type == 'SubmitField' %}
         <a onclick="history.back(-1)">
             <div class="ui button">

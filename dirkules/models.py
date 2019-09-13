@@ -1,3 +1,5 @@
+import datetime
+
 from dirkules import db
 
 
@@ -113,7 +115,7 @@ class Cleaning(db.Model):
     # state 0 means inactive - do not execute
     state = db.Column(db.Boolean)
     # time means last execution
-    time = db.Column(db.DateTime(timezone=True), default=db.func.now())
+    time = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now)
 
     def __init__(self, name, path, state):
         self.name = name

@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField, \
     SelectMultipleField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from dirkules.models import Drive
 
 
@@ -89,4 +88,11 @@ class PoolAddForm(FlaskForm):
                              coerce=int)
     drives = CustomMultipleField("Festplatte", choices=get_empty_drives(),
                                  validators=[validators.required(message="Bitte eine Auswahl treffen!")])
+    inode_cache = BooleanField("inode_cache")
+    space_cache = RadioField("", choices=[(1, "Deaktiviert"), (2, "v1"), (3, "v2")],
+                             coerce=int)
+    ssd = BooleanField("ssd")
+    autodefrag = BooleanField("autodefrag")
+    compression = RadioField("", choices=[(1, "Keine"), (2, "zlib"), (3, "lzo")],
+                             coerce=int)
     submit = SubmitField("Pool erstellen")
