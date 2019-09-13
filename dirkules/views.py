@@ -4,7 +4,7 @@ import dirkules.manager.serviceManager as servMan
 import dirkules.manager.cleaning as cleaningMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm
+from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm, PoolAddForm
 from dirkules.config import staticDir
 
 
@@ -39,10 +39,12 @@ def pool(pool):
     return render_template('pool.html', pool=db_pool, health=pool_health)
 
 
-@app.route('/pools/add', methods=['GET'])
+@app.route('/pools/add', methods=['GET', 'POST'])
 def add_pool():
-    db_pool = db.session.query(Drive).get(pool)
-    return render_template(pool.html, pool=db_pool)
+    form = PoolAddForm(request.form)
+    if request.method == 'POST' and form.validate():
+        return redirect(url_for('pools'))
+    return render_template('pool_add.html', form=form)
 
 
 @app.route('/about', methods=['GET'])
@@ -55,6 +57,7 @@ def about():
 def partitions(part):
     name = part.replace("_", "/")
     drive = db.session.query(Drive).filter(Drive.name == name).scalar()
+    print(drive.partitions)
     return render_template('partitions.html', parts=drive.partitions)
 
 

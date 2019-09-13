@@ -1,5 +1,8 @@
-from wtforms import StringField, BooleanField, IntegerField, SelectField, validators, RadioField
 from flask_wtf import FlaskForm
+from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField, \
+    SelectMultipleField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from dirkules.models import Drive
 
 
 class CleaningForm(FlaskForm):
@@ -13,6 +16,7 @@ class CleaningForm(FlaskForm):
                                 validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "/media/downloads/"})
     active = BooleanField("Sofort aktvieren (Vorsicht!)")
+    submit = SubmitField("Job speichern")
 
 
 class SambaCleaningForm(FlaskForm):
@@ -49,6 +53,40 @@ class SambaAddForm(FlaskForm):
                             render_kw={"placeholder": "0700"})
 
 
+def get_empty_drives():
+    drives = Drive.query.all()
+    choices = list()
+    for drive in drives:
+        label = drive.name + ": " + drive.model + " (" + sizeof_fmt(drive.size) + ")"
+        choices.append((drive.name, label))
+    return choices
+
+
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
+
+
+class CustomMultipleField(SelectMultipleField):
+    def pre_validate(self, form):
+        if self.data:
+            values = list(c[0] for c in self.choices)
+            # values_in_data is a list containing all values which are a part of self.data
+            # for example: 'sda' is in ['sda,sdb','sdc']
+            values_in_data = [value for value in values for d in self.data if value in d]
+            if not values_in_data:
+                raise ValueError(self.gettext("'%(value)s' is not a valid choice for this field") % dict(value=self.data))
+
+
 class PoolAddForm(FlaskForm):
-    raid_selection = RadioField("RAID Auswahl", choices=[(1, "Single"), (2, "RAID1")],
-                                validators=[validators.required(message="Bitte eine Auswahl treffen!")])
+    name = StringField("Name", [validators.required(message="Bitte Feld ausfüllen!"),
+                                validators.Length(max=255, message="Eingabe zu lang")],
+                       render_kw={"placeholder": "whirlpool"})
+    raid_config = RadioField("RAID Konfiguration", choices=[(1, "Single"), (2, "RAID0"), (3, "RAID1")],
+                             coerce=int)
+    drives = CustomMultipleField("Festplatte", choices=get_empty_drives(),
+                                 validators=[validators.required(message="Bitte eine Auswahl treffen!")])
+    submit = SubmitField("Pool erstellen")

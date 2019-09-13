@@ -15,7 +15,7 @@
     {% endif %}
     {{ field(**kwargs)|safe }}
     </div>
-    {% elif field.type == 'SelectField' %}
+    {% elif field.type == 'SelectField' or field.type =='QuerySelectField' %}
         <div class="field">
         {% if field.errors %}
             <div class="ui mymindrop selection dropdown error">
@@ -26,9 +26,17 @@
     <i class="dropdown icon"></i>
     <div class="default text">{{ field.label.text }}</div>
     <div class="menu">
-        {% for value, label in field.choices %}
-            <div class="item" data-value="{{ value }}">{{ label }}</div>
-        {% endfor %}
+        {% if field.type == 'SelectField' %}
+            {% for value, label in field.choices %}
+                <div class="item" data-value="{{ value }}">{{ label }}</div>
+            {% endfor %}
+        {% else %}
+            {% for drive in query %}
+                <div class="item" data-value="{{ drive.name }}">{{ drive.name }}: {{ drive.model }}
+                    ({{ drive.size|filesizeformat(true) }})
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
     </div>
     </div>
@@ -48,6 +56,53 @@
     <div class="ui checkbox">
         {{ field(**kwargs)|safe }}
         {{ field.label }}
+    </div>
+    </div>
+    {% elif field.type == 'RadioField' %}
+        <div class="inline fields">
+            <label>{{ field.label }}</label>
+            {% for value, label in field.choices %}
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        {% if value == 1 %}
+                            <input type="radio" name="{{ field.id }}" value="{{ value }}" checked="">
+                        {% else %}
+                            <input type="radio" name="{{ field.id }}" value="{{ value }}">
+                        {% endif %}
+                        <label>{{ label }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif field.type == 'SubmitField' %}
+        <a onclick="history.back(-1)">
+            <div class="ui button">
+                Zurück
+            </div>
+        </a>
+        <button class="ui primary button" type="submit">{{ field.label }}</button>
+    {% elif field.type == 'SelectMultipleField' or field.type == 'CustomMultipleField' %}
+        <div class="inline field">
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="ui pointing below red basic label">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if field.errors %}
+            <div class="ui fluid multiple search selection dropdown error">
+        {% else %}
+            <div class="ui fluid multiple search selection dropdown">
+        {% endif %}
+    <input type="hidden" name="{{ field.id }}">
+    <i class="dropdown icon"></i>
+    <div class="default text">{{ field.label.text }}</div>
+    <div class="menu">
+        {% for value, label in field.choices %}
+            <div class="item" data-value="{{ value }}">{{ label }}</div>
+        {% endfor %}
+    </div>
     </div>
     </div>
     {% else %}

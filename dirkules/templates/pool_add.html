@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Pool erstellen{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+    <div class="topspacer"></div>
+    <div class="ui container">
+        {% from "_formhelpers.html" import render_field %}
+        <form method=post class="ui form error">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.name) }}
+            {{ render_field(form.raid_config) }}
+            {{ render_field(form.drives) }}
+            {{ render_field(form.submit) }}
+        </form>
+        <div class="Box" style="display:none">HALLO</div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            $('.ui.checkbox')
+                .checkbox()
+            ;
+            $('.ui.dropdown')
+                .dropdown({
+                    allowAdditions: true
+                })
+            ;
+
+            if ($('input[name="Radio"]').attr("value") != "1") {
+                $(".Box").show('slow');
+            }
+            if ($('input[name="Radio"]').attr("value") != "1") {
+                $(".Box").hide('slow');
+            }
+
+            $('input[type="radio"]').click(function () {
+                if ($(this).attr("value") == "1") {
+                    $(".Box").hide('slow');
+                }
+                if ($(this).attr("value") != "1") {
+                    $(".Box").show('slow');
+
+                }
+            });
+        });
+    </script>
+{% endblock %}
