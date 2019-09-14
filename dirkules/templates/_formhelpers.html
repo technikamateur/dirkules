@@ -40,40 +40,44 @@
     </div>
     </div>
     </div>
-    {% elif field.type == 'BooleanField' %}
+    {% elif field.type == 'BooleanField' or field.type == 'ToggleBooleanField' %}
         {% if field.errors %}
             <div class="field error">
         {% else %}
             <div class="field">
         {% endif %}
-    {% if field.errors %}
-        {% for error in field.errors %}
-            <div class="ui pointing below red basic label">
-                {{ error }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <div class="ui checkbox">
-        {{ field(**kwargs)|safe }}
-        {{ field.label }}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="ui pointing below red basic label">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if field.type == 'BooleanField' %}
+            <div class="ui checkbox">
+        {% else %}
+            <div class="ui toggle checkbox">
+        {% endif %}
+    {{ field(**kwargs)|safe }}
+    {{ field.label }}
     </div>
     </div>
     {% elif field.type == 'RadioField' %}
-            {% if field.label.text is defined and field.label.text|length %}
-                <label>{{ field.label.text }}</label>
-            {% endif %}
-            {% for value, label in field.choices %}
-                <div class="field">
-                    <div class="ui radio checkbox">
-                        {% if value == 1 %}
-                            <input type="radio" name="{{ field.id }}" value="{{ value }}" checked="">
-                        {% else %}
-                            <input type="radio" name="{{ field.id }}" value="{{ value }}">
-                        {% endif %}
-                        <label>{{ label }}</label>
-                    </div>
+        {% if field.label.text is defined and field.label.text|length %}
+            <label>{{ field.label.text }}</label>
+        {% endif %}
+        {% for value, label in field.choices %}
+            <div class="field">
+                <div class="ui radio checkbox">
+                    {% if value == 1 %}
+                        <input type="radio" name="{{ field.id }}" value="{{ value }}" checked="">
+                    {% else %}
+                        <input type="radio" name="{{ field.id }}" value="{{ value }}">
+                    {% endif %}
+                    <label>{{ label }}</label>
                 </div>
-            {% endfor %}
+            </div>
+        {% endfor %}
     {% elif field.type == 'SubmitField' %}
         <a onclick="history.back(-1)">
             <div class="ui button">
@@ -81,7 +85,7 @@
             </div>
         </a>
         <button class="ui primary button" type="submit">{{ field.label }}</button>
-    {% elif field.type == 'SelectMultipleField' or field.type == 'CustomMultipleField' %}
+    {% elif field.type == 'SemanticMultiSelectField' %}
         <div class="inline field">
         {% if field.errors %}
             {% for error in field.errors %}

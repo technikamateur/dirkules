@@ -42,7 +42,9 @@ def pool(pool):
 @app.route('/pools/add', methods=['GET', 'POST'])
 def add_pool():
     form = PoolAddForm(request.form)
+    form.drives.choices = viewManager.get_empty_drives()
     if request.method == 'POST' and form.validate():
+        viewManager.create_btrfs_pool(form)
         return redirect(url_for('pools'))
     return render_template('pool_add.html', form=form)
 

@@ -60,3 +60,7 @@ def get_raid(label):
             values[2] = newLine[3]
     raid_map = (dict(zip(keys, values)))
     return raid_map
+
+
+def create_pool():
+    pass

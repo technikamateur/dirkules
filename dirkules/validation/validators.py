@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField, \
-    SelectMultipleField
+from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField
 from dirkules.models import Drive
 
 
@@ -52,32 +51,20 @@ class SambaAddForm(FlaskForm):
                             render_kw={"placeholder": "0700"})
 
 
-def get_empty_drives():
-    drives = Drive.query.all()
-    choices = list()
-    for drive in drives:
-        label = drive.name + ": " + drive.model + " (" + sizeof_fmt(drive.size) + ")"
-        choices.append((drive.name, label))
-    return choices
 
 
-def sizeof_fmt(num, suffix='B'):
-    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
-        if abs(num) < 1024.0:
-            return "%3.1f%s%s" % (num, unit, suffix)
-        num /= 1024.0
-    return "%.1f%s%s" % (num, 'Yi', suffix)
-
-
-class CustomMultipleField(SelectMultipleField):
+class SemanticMultiSelectField(SelectField):
     def pre_validate(self, form):
-        if self.data:
-            values = list(c[0] for c in self.choices)
-            # values_in_data is a list containing all values which are a part of self.data
-            # for example: 'sda' is in ['sda,sdb','sdc']
-            values_in_data = [value for value in values for d in self.data if value in d]
+        if self.choices is not None:
+            values_in_data = [value for value, _ in self.choices if value in self.data]
             if not values_in_data:
-                raise ValueError(self.gettext("'%(value)s' is not a valid choice for this field") % dict(value=self.data))
+                raise ValueError(self.gettext('{} is not a valid choice'.format(self.data)))
+        else:
+            raise ValueError(self.gettext('There are no elements available but this field is required.'))
+
+
+class ToggleBooleanField(BooleanField):
+    pass
 
 
 class PoolAddForm(FlaskForm):
@@ -86,8 +73,8 @@ class PoolAddForm(FlaskForm):
                        render_kw={"placeholder": "whirlpool"})
     raid_config = RadioField("RAID Konfiguration", choices=[(1, "Single"), (2, "RAID0"), (3, "RAID1")],
                              coerce=int)
-    drives = CustomMultipleField("Festplatte", choices=get_empty_drives(),
-                                 validators=[validators.required(message="Bitte eine Auswahl treffen!")])
+    drives = SemanticMultiSelectField("Festplatte",
+                                      validators=[validators.required(message="Bitte eine Auswahl treffen!")])
     inode_cache = BooleanField("inode_cache")
     space_cache = RadioField("", choices=[(1, "Deaktiviert"), (2, "v1"), (3, "v2")],
                              coerce=int)
@@ -95,4 +82,6 @@ class PoolAddForm(FlaskForm):
     autodefrag = BooleanField("autodefrag")
     compression = RadioField("", choices=[(1, "Keine"), (2, "zlib"), (3, "lzo")],
                              coerce=int)
+    okay = ToggleBooleanField("Ich kenne das Risiko und formatiere oben angegebene Laufwerke.",
+                              validators=[validators.required(message="Bitte das Risiko akzeptieren.")])
     submit = SubmitField("Pool erstellen")
