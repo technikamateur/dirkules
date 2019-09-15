@@ -50,15 +50,22 @@ def is_system_drive(drive):
             return True
     return False
 
+
 def create_btrfs_pool(form):
-    label = form.name.data
+    label = str(form.name.data)
+    drives = list()
+    str_drives = form.drives.data.split(",")
+    for d in str_drives:
+        drives.append(Drive.query.filter(Drive.name == d).scalar())
     if int(form.raid_config.data) == 1:
         raid = "single"
     elif int(form.raid_config.data) == 2:
         raid = "raid0"
     elif int(form.raid_config.data) == 3:
         raid = "raid1"
-    drives = form.drives.data.split(",")
+    # if only one drive has been selected: always use single
+    if len(drives) == 1:
+        raid = "single"
     mount_options = ["defaults"]
     if bool(form.inode_cache.data):
         mount_options.append("inode_cache")
@@ -66,3 +73,27 @@ def create_btrfs_pool(form):
         mount_options.append("space_cache=v1")
     elif int(form.space_cache.data) == 3:
         mount_options.append("space_cache=v2")
+    if int(form.compression.data) == 2:
+        mount_options.append("compress=zlib")
+    elif int(form.compression.data) == 3:
+        mount_options.append("compress=lzo")
+    if pure_ssd(drives) and not pure_hdd(drives):
+        mount_options.append("ssd")
+    elif pure_hdd(drives) and not pure_ssd(drives):
+        mount_options.append("autodefrag")
+    # now we are ready to create the pool.
+    # Warning: drives contains objects, not names!! Use drive.name
+
+
+def pure_ssd(drives):
+    for d in drives:
+        if d.rota or d.hotplug:
+            return False
+    return True
+
+
+def pure_hdd(drives):
+    for d in drives:
+        if not d.rota or d.hotplug:
+            return False
+    return True

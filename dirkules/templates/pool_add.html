@@ -43,9 +43,9 @@
             <h4 class="ui dividing header">Kompression</h4>
             <div class="ui message">
                 <div class="header">Hinweis</div>
-                <p>"zlib" ist stabiler und ab <i>btrfs-progs 0.19</i> verfügbar.<br>"lzo" ist schneller und leicht
-                    höhere Kompression auf, ist jedoch erst ab Kernel Version 3.x verfügbar. Es kann jedoch zum
-                    einfrieren des Systems führen.</p>
+                <p>ZLIB - langsam, stabil, hohe Kompression<br>
+                    LZO - schnelle Kompression, schlechteres Kompressionsverhältnis als ZLIB
+                </p>
             </div>
             <div class="inline fields">
                 {{ render_field(form.compression) }}
