@@ -14,6 +14,7 @@ Bitte einen eigenen Benutzer anlegen. Diesem folgende root-Rechte (ohne Passwort
 - `smartctl`
 - `lsblk`
 - `btrfs`
+- `find`
 
 Als dieser Nutzer folgende Befehle ausführen:
 - `git clone https://github.com/technikamateur/dirkules.git`
