@@ -1,5 +1,8 @@
+import datetime
+import subprocess
+from time import sleep
 from flask import render_template, redirect, request, url_for, flash, abort
-from dirkules import app, db
+from dirkules import app, db, scheduler
 import dirkules.manager.serviceManager as servMan
 import dirkules.manager.cleaning as cleaningMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
@@ -11,6 +14,11 @@ from dirkules.config import staticDir
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', error=str(e))
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html', error=str(e))
 
 
 @app.route('/', methods=['GET'])
@@ -44,7 +52,14 @@ def add_pool():
     form = PoolAddForm(request.form)
     form.drives.choices = viewManager.get_empty_drives()
     if request.method == 'POST' and form.validate():
-        viewManager.create_btrfs_pool(form)
+        try:
+            viewManager.create_btrfs_pool(form)
+        except subprocess.CalledProcessError as e:
+            abort(500, description="While creating a pool, the following exception occured: {}".format(e))
+        except subprocess.TimeoutExpired as e:
+            abort(500, description="Pool creation took too long: {}".format(e))
+        scheduler.get_job("refresh_disks").modify(next_run_time=datetime.datetime.now())
+        sleep(1)
         return redirect(url_for('pools'))
     return render_template('pool_add.html', form=form)
 

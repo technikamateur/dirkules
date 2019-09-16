@@ -63,14 +63,15 @@ def get_raid(label):
 
 
 def create_pool(label, drives, raid, mount_options):
-    btrfs_drives = ""
+    btrfs_partitions = ""
     for d in drives:
         drive_name = "/dev/" + d.name
         # stderr and stdout not captured
         subprocess.run(["sgdisk", "-Z", drive_name], shell=False, timeout=20, check=True)
         subprocess.run(["wipefs", "-a", drive_name], shell=False, timeout=20, check=True)
         subprocess.run(["sgdisk", "-o", drive_name], shell=False, timeout=20, check=True)
-        subprocess.run(["sgdisk", "-N", 1, drive_name], shell=False, timeout=20, check=True)
-        btrfs_drives = btrfs_drives + drive_name + " "
-
-    subprocess.run(["mkfs.btrfs", "-f", "-L", label, "-d", raid, btrfs_drives], shell=False, timeout=20, check=True)
+        subprocess.run(["sgdisk", "-N", "1", drive_name], shell=False, timeout=20, check=True)
+        btrfs_partitions = btrfs_partitions + drive_name + "1" + " "
+    btrfs_partitions = btrfs_partitions[:-1]
+    subprocess.run(["mkfs.btrfs", "-f", "-L", label, "-d", raid, btrfs_partitions], shell=False, timeout=20, check=True)
+    # add entry to fstab

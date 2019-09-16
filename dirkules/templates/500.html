@@ -1,8 +1,8 @@
 {% extends "error_page_skeleton.html" %}
-{% block title %}Ooops - 404{% endblock %}
+{% block title %}Ooops - 500{% endblock %}
 {% block messagebox %}
-    <h1>404</h1>
-    <h3>Page not found</h3>
+    <h1>500</h1>
+    <h3>Internal Server Error</h3>
     {% if error|length %}
         <p>{{ error }}</p>
     {% endif %}

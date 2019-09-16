@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import inspect
 from dirkules import db
+from dirkules.hardware.btrfsTools import create_pool
 from dirkules.models import Cleaning, Partitions, Drive
 
 
@@ -83,6 +84,7 @@ def create_btrfs_pool(form):
         mount_options.append("autodefrag")
     # now we are ready to create the pool.
     # Warning: drives contains objects, not names!! Use drive.name
+    create_pool(label, drives, raid, mount_options)
 
 
 def pure_ssd(drives):

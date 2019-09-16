@@ -78,6 +78,7 @@ def get_drives():
     db.session.commit()
 
 
+# TODO: not able to remove or update pools
 def pool_gen():
     part_dict = dict()
     # creates map uuid is key, partitions are values
