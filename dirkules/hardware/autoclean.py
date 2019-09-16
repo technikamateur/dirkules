@@ -5,7 +5,7 @@ import subprocess
 def autoclean(path):
     # remove all files older than 180 days
     find = subprocess.Popen([
-        "find \"" + path +
+        "sudo find \"" + path +
         "\" -type f -mtime +180 -delete -exec echo {} \\;"
     ],
         stdout=subprocess.PIPE,

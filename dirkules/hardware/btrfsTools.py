@@ -8,7 +8,7 @@ import subprocess
 def get_space(label):
     lines = list()
     btrfs_usage = subprocess.Popen(
-        ["btrfs fi usage -b -T " + label],
+        ["sudo btrfs fi usage -b -T " + label],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -35,7 +35,7 @@ def get_space(label):
 def get_raid(label):
     lines = list()
     btrfs_usage = subprocess.Popen(
-        ["btrfs fi usage -T " + label],
+        ["sudo btrfs fi usage -T " + label],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)

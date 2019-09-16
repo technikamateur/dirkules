@@ -11,7 +11,7 @@ def get_all_drives():
     ]
 
     lsblk = subprocess.Popen(
-        ["lsblk -I 8 -d -b -o NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG"],
+        ["sudo lsblk -I 8 -d -b -o NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG"],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -46,7 +46,7 @@ def get_all_drives():
 
 def get_smart(device):
     passed = False
-    smartctl = subprocess.Popen(["smartctl -H " + device],
+    smartctl = subprocess.Popen(["sudo smartctl -H " + device],
                                 stdout=subprocess.PIPE,
                                 shell=True,
                                 universal_newlines=True)
@@ -69,7 +69,7 @@ def part_for_disk(device):
     keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
     device = "/dev/" + device
     lsblk = subprocess.Popen(
-        ["lsblk " + device + " -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
+        ["sudo lsblk " + device + " -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
