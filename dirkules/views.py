@@ -28,14 +28,12 @@ def index():
 
 @app.route('/drives', methods=['GET'])
 def drives():
-    drives = Drive.query.all()
-    return render_template('drives.html', drives=drives)
+    return render_template('drives.html', drives=Drive.query.all())
 
 
 @app.route('/pools', methods=['GET'])
 def pools():
-    pools = Pool.query.all()
-    return render_template('pools.html', pools=pools)
+    return render_template('pools.html', pools=Pool.query.all())
 
 
 @app.route('/pool/<pool>', methods=['GET'])
