@@ -18,15 +18,6 @@ def create_cleaning_obj(jobname, path, active):
     db.session.commit()
 
 
-def get_pool_health(drive_list):
-    drive_split = drive_list.split(",")
-    for drive in drive_split:
-        db_drive = db.session.query(Drive).filter(Drive.name == drive).scalar()
-        if db_drive.smart is not True:
-            return False
-    return True
-
-
 def get_empty_drives():
     drives = Drive.query.all()
     choices = list()

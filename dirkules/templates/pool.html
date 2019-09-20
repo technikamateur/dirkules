@@ -81,7 +81,7 @@
                     </tr>
                     <tr>
                         <td>Gesundheit</td>
-                        {% if health %}
+                        {% if pool.healthy %}
                             <td class="positive"><i class="icon checkmark"></i>Gesund</td>
                         {% else %}
                             <td class="negative"><i class="attention icon"></i>Kritisch</td>
@@ -105,7 +105,7 @@
                         </p>
                     </div>
                 {% endif %}
-                {% if health %}
+                {% if pool.healthy %}
                     <div class="ui positive message">
                         <i class="close icon"></i>
                         <div class="header">

@@ -81,9 +81,10 @@ class Pool(db.Model):
     mountpoint = db.Column(db.String)
     mountopt = db.Column(db.String)
     drives = db.Column(db.String)
+    healthy = db.Column(db.Boolean)
 
     def __init__(self, label, size, free, data_raid, data_ratio, meta_raid, meta_ratio, fs, mountpoint, mountopt,
-                 drives):
+                 drives, healthy):
         self.label = label
         self.size = size
         self.free = free
@@ -95,6 +96,7 @@ class Pool(db.Model):
         self.mountpoint = mountpoint
         self.mountopt = mountopt
         self.drives = drives
+        self.healthy = healthy
 
 
 class Time(db.Model):
