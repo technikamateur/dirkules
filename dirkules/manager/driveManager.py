@@ -123,6 +123,12 @@ def pool_gen():
 
 
 def get_pool_health(drive_list):
+    """
+    :param drive_list: contains drives which belongs to pool
+    :type drive_list: list
+    :return: the total health of the pool, based on drives health
+    :rtype: boolean
+    """
     drive_split = drive_list.split(",")
     for drive in drive_split:
         db_drive = db.session.query(Drive).filter(Drive.name == drive).scalar()
