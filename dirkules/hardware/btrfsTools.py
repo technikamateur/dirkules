@@ -63,6 +63,19 @@ def get_raid(label):
 
 
 def create_pool(label, drives, raid, mount_options):
+    """
+    Formats given drives and creates a pool
+    :param label: Label for pool
+    :type label: str
+    :param drives: contains all drives, which should be added to the pool
+    :type drives: list
+    :param raid: RAID Level of pool
+    :type raid: str
+    :param mount_options: contains all mount options, which will be added to fstab
+    :type mount_options: str
+    :return:
+    :rtype:
+    """
     btrfs_partitions = ""
     for d in drives:
         drive_name = "/dev/" + d.name
