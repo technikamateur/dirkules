@@ -18,7 +18,7 @@ class Drive(db.Model):
     last_update = db.Column(db.DateTime)
     missing = db.Column(db.Boolean)
     partitions = db.relationship('Partitions', order_by="Partitions.id", backref='drive', lazy="select",
-                                 passive_deletes=True)
+                                 cascade="all, delete-orphan")
 
     def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart, time, missing=False):
         self.name = name
@@ -49,7 +49,7 @@ class Drive(db.Model):
 class Partitions(db.Model):
     __tablename__ = 'partitions'
     id = db.Column(db.Integer, primary_key=True)
-    drive_id = db.Column(db.Integer, db.ForeignKey('drive.id', ondelete='CASCADE'), nullable=False)
+    drive_id = db.Column(db.Integer, db.ForeignKey('drive.id'), nullable=False)
     name = db.Column(db.String)
     fs = db.Column(db.String)
     size = db.Column(db.Integer)
