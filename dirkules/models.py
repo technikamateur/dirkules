@@ -4,7 +4,7 @@ from dirkules import db
 
 
 class Drive(db.Model):
-    __tablename__ = 'drives'
+    __tablename__ = 'drive'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     model = db.Column(db.String)
@@ -17,7 +17,8 @@ class Drive(db.Model):
     smart = db.Column(db.Boolean)
     last_update = db.Column(db.DateTime)
     missing = db.Column(db.Boolean)
-    partitions = db.relationship('Partitions', order_by="Partitions.id", backref="drive", lazy="select")
+    partitions = db.relationship('Partitions', order_by="Partitions.id", backref='drive', lazy="select",
+                                 passive_deletes=True)
 
     def __init__(self, name, model, serial, size, rota, rm, hotplug, state, smart, time, missing=False):
         self.name = name
@@ -48,7 +49,7 @@ class Drive(db.Model):
 class Partitions(db.Model):
     __tablename__ = 'partitions'
     id = db.Column(db.Integer, primary_key=True)
-    drive_id = db.Column(db.Integer, db.ForeignKey('drives.id'), nullable=False)
+    drive_id = db.Column(db.Integer, db.ForeignKey('drive.id', ondelete='CASCADE'), nullable=False)
     name = db.Column(db.String)
     fs = db.Column(db.String)
     size = db.Column(db.Integer)
@@ -56,8 +57,7 @@ class Partitions(db.Model):
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)
 
-    def __init__(self, drive_id, name, label, fs, size, uuid, mpoint, drive):
-        self.drive_id = drive_id
+    def __init__(self, name, label, fs, size, uuid, mpoint, drive):
         self.name = name
         self.label = label
         self.fs = fs

@@ -19,8 +19,9 @@ def get_partitions():
                     label = "none"
                 else:
                     label = part.get("label")
-                partition_obj = Partitions(drive.id, part.get("name"), label, part.get("fs"), int(part.get("size")),
+                partition_obj = Partitions(part.get("name"), label, part.get("fs"), int(part.get("size")),
                                            part.get("uuid"), part.get("mount"), drive)
+                drive.partitions.append(partition_obj)
                 db.session.add(partition_obj)
     db.session.commit()
 
