@@ -4,6 +4,7 @@ from time import sleep
 from flask import render_template, redirect, request, url_for, flash, abort
 from dirkules import app, db, scheduler
 import dirkules.manager.serviceManager as servMan
+import dirkules.manager.driveManager as driveMan
 import dirkules.manager.cleaning as cleaningMan
 from dirkules.models import Drive, Cleaning, SambaShare, Pool
 import dirkules.manager.viewManager as viewManager
@@ -28,6 +29,16 @@ def index():
 
 @app.route('/drives', methods=['GET'])
 def drives():
+    delete = request.args.get('delete')
+    if delete is not None:
+        try:
+            drive = driveMan.get_drive_by_id(int(delete))
+            driveMan.delete_drive(drive)
+        except ValueError:
+            abort(500, description="Expected int, but got {}.".format(delete))
+        except LookupError:
+            abort(500, description="Invalid drive id {}".format(delete))
+
     return render_template('drives.html', drives=Drive.query.all())
 
 

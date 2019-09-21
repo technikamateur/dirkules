@@ -135,3 +135,33 @@ def get_pool_health(drive_list):
         if db_drive.smart is not True:
             return False
     return True
+
+
+def delete_drive(drive):
+    """
+    removes a given drive object (including cascades) from db
+    :param drive: The drive
+    :type drive: Drive
+    :return: nothing
+    :rtype:
+    """
+    try:
+        db.session.delete(drive)
+        db.session.commit()
+    except:
+        db.session.rollback()
+
+
+def get_drive_by_id(drive_id):
+    """
+    returns drive object for given id
+    :param drive_id: id of drive (primary key)
+    :type drive_id: int
+    :return: Drive object
+    :rtype: Drive
+    """
+    drive = Drive.query.get(drive_id)
+    if drive is not None:
+        return drive
+    else:
+        raise LookupError

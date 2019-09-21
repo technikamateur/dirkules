@@ -1,10 +1,8 @@
 import datetime
-
 from dirkules import db
 
 
 class Drive(db.Model):
-    __tablename__ = 'drive'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     model = db.Column(db.String)
@@ -47,9 +45,8 @@ class Drive(db.Model):
 
 
 class Partitions(db.Model):
-    __tablename__ = 'partitions'
     id = db.Column(db.Integer, primary_key=True)
-    drive_id = db.Column(db.Integer, db.ForeignKey('drive.id'), nullable=False)
+    drive_id = db.Column(db.Integer, db.ForeignKey('drive.id'))
     name = db.Column(db.String)
     fs = db.Column(db.String)
     size = db.Column(db.Integer)
@@ -68,7 +65,6 @@ class Partitions(db.Model):
 
 
 class Pool(db.Model):
-    __tablename__ = 'pool'
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String)
     size = db.Column(db.Integer)
@@ -100,7 +96,6 @@ class Pool(db.Model):
 
 
 class Time(db.Model):
-    __tablename__ = 'time'
     id = db.Column(db.Integer, primary_key=True)
     desc = db.Column(db.String)
     time = db.Column(db.Integer, default=0, onupdate=1)
@@ -110,7 +105,6 @@ class Time(db.Model):
 
 
 class Cleaning(db.Model):
-    __tablename__ = 'cleaning'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     path = db.Column(db.String)
@@ -126,7 +120,6 @@ class Cleaning(db.Model):
 
 
 class SambaShare(db.Model):
-    __tablename__ = 'samba_share'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     writeable = db.Column(db.Boolean)
@@ -142,7 +135,6 @@ class SambaShare(db.Model):
 
 
 class SambaOptions(db.Model):
-    __tablename__ = 'samba_options'
     id = db.Column(db.Integer, primary_key=True)
     option = db.Column(db.String, nullable=False)
     value = db.Column(db.String, nullable=False)

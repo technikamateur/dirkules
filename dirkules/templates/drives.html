@@ -36,9 +36,14 @@
                     {% endif %}
                     <td>
                         <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}"
-                           class="ui blue button">
+                           class="ui primary basic button">
                             <i class="server icon"></i>
                             Partitionen
+                        </a>
+                        <a href="{{ url_for('drives', delete=drive.id) }}">
+                            <div class="ui orange basic button" data-tooltip="Use this, if drive doesn't exist anymore." data-position="top left">
+                                <i class="trash icon"></i> Aus Datenbank löschen
+                            </div>
                         </a>
                     </td>
                 </tr>
