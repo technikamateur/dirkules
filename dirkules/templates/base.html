@@ -28,6 +28,23 @@
         <a class="ui item" href="{{ url_for('about') }}">über Dirkules</a>
     </div>
 </nav>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="tablebox">
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Ein oder Mehrere Fehler sind aufgetreten
+                </div>
+                <ul class="list">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{% endwith %}
 {% block body %}
 {% endblock %}
 <script>

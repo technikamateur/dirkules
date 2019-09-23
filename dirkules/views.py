@@ -80,8 +80,12 @@ def about():
 
 @app.route('/partitions/<part>', methods=['GET'])
 def partitions(part):
-    name = part.replace("_", "/")
-    drive = db.session.query(Drive).filter(Drive.name == name).scalar()
+    try:
+        drive = driveMan.get_drive_by_id(int(part))
+    except ValueError:
+        abort(500, description="Expected int, but got {}.".format(part))
+    except LookupError:
+        abort(500, description="Invalid drive id {}".format(part))
     return render_template('partitions.html', parts=drive.partitions)
 
 

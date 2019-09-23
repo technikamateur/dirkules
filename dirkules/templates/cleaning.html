@@ -4,23 +4,6 @@
     {{ super() }}
 {% endblock %}
 {% block body %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="tablebox">
-                <div class="ui negative message">
-                    <i class="close icon"></i>
-                    <div class="header">
-                        Ein oder Mehrere Fehler sind aufgetreten
-                    </div>
-                    <ul class="list">
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        {% endif %}
-    {% endwith %}
     <div class="infobox">
         <div class="ui info message">
             <i class="close icon"></i>

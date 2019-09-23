@@ -35,7 +35,7 @@
                         <td class="collapsing error center aligned"><i class="attention icon"></i></td>
                     {% endif %}
                     <td>
-                        <a href="{{ url_for('partitions', part=(drive.name | replace("/", "_"))) }}"
+                        <a href="{{ url_for('partitions', part=drive.id) }}"
                            class="ui primary basic button">
                             <i class="server icon"></i>
                             Partitionen
