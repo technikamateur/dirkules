@@ -8,11 +8,7 @@ from dirkules import db, app, scheduler
 def clean_folders():
     for folder in Cleaning.query.all():
         if folder.state and os.path.isdir(folder.path):
-            result = autoclean.autoclean(folder.path)
-            if result[1] != '':
-                app.logger.error("Deleting old files exited with errors: {}".format(result[1]))
-            elif result[2]:
-                app.logger.error("Removing empty folders exited with errors. No further information available.")
+            autoclean.autoclean(folder.path)
             folder.time = datetime.datetime.now()
         elif folder.state and not os.path.isdir(folder.path):
             app.logger.error('Folder not found: {}'.format(folder.path))
