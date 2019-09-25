@@ -9,6 +9,7 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 csrf = CSRFProtect()
 csrf.init_app(app)
+app_version = app.config["VERSION"]
 
 import dirkules.models
 

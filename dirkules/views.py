@@ -2,7 +2,7 @@ import datetime
 import subprocess
 from time import sleep
 from flask import render_template, redirect, request, url_for, flash, abort
-from dirkules import app, db, scheduler
+from dirkules import app, db, scheduler, app_version
 import dirkules.manager.serviceManager as servMan
 import dirkules.manager.driveManager as driveMan
 import dirkules.manager.cleaning as cleaningMan
@@ -74,8 +74,7 @@ def add_pool():
 
 @app.route('/about', methods=['GET'])
 def about():
-    version = "1.0"
-    return render_template('about.html', version=version)
+    return render_template('about.html', version=app_version)
 
 
 @app.route('/partitions/<part>', methods=['GET'])

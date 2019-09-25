@@ -5,6 +5,8 @@ from logging.config import dictConfig
 from apscheduler.jobstores.base import ConflictingIdError
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
+VERSION = "1.0"
+
 baseDir = os.path.abspath(os.path.dirname(__file__))
 staticDir = os.path.join(baseDir, 'static')
 
