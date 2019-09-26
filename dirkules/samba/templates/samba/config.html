@@ -16,7 +16,7 @@
     <form method=post class="ui form error">
             {{ render_field(form.workgroup) }}
             {{ render_field(form.server_string) }}
-            <button class="ui button" type="submit"><i class="save icon"></i> Ändern</button>
+            {{ render_field(form.submit) }}
     </form>
     </div>
 {% endblock %}

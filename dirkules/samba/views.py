@@ -4,7 +4,7 @@ from dirkules.config import staticDir
 from flask import render_template, url_for, request, redirect
 from dirkules.samba import bp_samba
 from dirkules.samba.models import SambaShare
-from dirkules.validation.validators import SambaCleaningForm, SambaAddForm
+from dirkules.samba.validation import SambaConfigForm, SambaAddForm
 
 
 @bp_samba.route('/', methods=['GET'])
@@ -15,7 +15,7 @@ def index():
 
 @bp_samba.route('/config', methods=['GET', 'POST'])
 def config():
-    form = SambaCleaningForm(request.form)
+    form = SambaConfigForm(request.form)
     if request.method == 'POST' and form.validate():
         print("Input:")
         print(form.workgroup.data)

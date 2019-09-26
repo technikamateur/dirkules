@@ -8,8 +8,7 @@ import dirkules.manager.driveManager as driveMan
 import dirkules.manager.cleaning as cleaningMan
 from dirkules.models import Drive, Cleaning, Pool
 import dirkules.manager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm, PoolAddForm
-from dirkules.config import staticDir
+from dirkules.validation.validators import CleaningForm, PoolAddForm
 
 
 @app.errorhandler(404)
