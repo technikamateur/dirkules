@@ -12,6 +12,7 @@ csrf.init_app(app)
 app_version = app.config["VERSION"]
 
 import dirkules.models
+import dirkules.samba.models
 
 # create db if not exists
 db.create_all()
@@ -21,3 +22,6 @@ scheduler.init_app(app)
 scheduler.start()
 # import views
 import dirkules.views
+
+from dirkules.samba import bp_samba as bp_samba
+app.register_blueprint(bp_samba, url_prefix='/samba')

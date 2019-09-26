@@ -6,14 +6,19 @@
 {% block body %}
     <div class="topspacer"></div>
     <div class="ui container">
-        <a href="{{ url_for('samba_global') }}">
+        <a href="{{ url_for('.config') }}">
             <div class="ui primary labeled icon button">
-                <i class="edit icon"></i> Samba global
+                <i class="edit icon"></i> Konfigurieren
             </div>
         </a>
-        <a href="{{ url_for('samba_add') }}">
+        <a href="{{ url_for('.add') }}">
             <div class="ui primary labeled icon button">
-                <i class="plus icon"></i> Samba add
+                <i class="plus icon"></i> Freigabe hinzufügen
+            </div>
+        </a>
+    <a href="{{ url_for('.index') }}">
+            <div class="ui primary labeled icon button">
+                <i class="magic icon"></i> Generieren
             </div>
         </a>
         <table class="ui celled fixed table">
