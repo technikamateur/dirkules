@@ -3,6 +3,7 @@ from dirkules import db
 from dirkules.config import staticDir
 from flask import render_template, url_for, request, redirect
 from dirkules.samba import bp_samba
+from dirkules.samba.manager import set_samba_global
 from dirkules.samba.models import SambaShare
 from dirkules.samba.validation import SambaConfigForm, SambaAddForm
 
@@ -17,10 +18,8 @@ def index():
 def config():
     form = SambaConfigForm(request.form)
     if request.method == 'POST' and form.validate():
-        print("Input:")
-        print(form.workgroup.data)
-        print(form.server_string.data)
-        return redirect(url_for('samba_global'))
+        set_samba_global(form.workgroup.data, form.server_string.data)
+        return redirect(url_for('.index'))
     file = open(staticDir + "/conf/samba_global.conf")
     conf = list()
     while True:
