@@ -80,6 +80,7 @@ def get_drives():
 
 def pool_gen():
     part_dict = dict()
+    Pool.query.delete()
     # creates map uuid is key, partitions are values
     for part in Partitions.query.all():
         if part.uuid in part_dict:
@@ -97,7 +98,9 @@ def pool_gen():
             drives = drives + str(Drive.query.get(part.drive_id)) + ","
         drives = drives[:-1]
         value = value[0]
-        Pool.query.delete()
+        missing = absent_drive(drives)
+        if missing is not None:
+            missing = ",".join(str(x.name) for x in missing)
         if value.fs == "btrfs":
             if value.mountpoint:
                 memory_map = btrfsTools.get_space(value.mountpoint)
@@ -108,7 +111,7 @@ def pool_gen():
                                      ['unbekannt', '1.00', 'unbekannt', '1.00'])))
             pool_obj = Pool(value.label, memory_map.get("total"), memory_map.get("free"), raid_map.get("data_raid"),
                             raid_map.get("data_ratio"), raid_map.get("meta_raid"), raid_map.get("meta_ratio"), value.fs,
-                            value.mountpoint, "not implemented", drives, get_pool_health(drives))
+                            value.mountpoint, "not implemented", drives, get_pool_health(drives), missing)
             db.session.add(pool_obj)
 
         elif value.fs == "ext4":
@@ -117,7 +120,7 @@ def pool_gen():
             else:
                 free_space = 2
             pool_obj = Pool(value.label, value.size, free_space, raid, 1.00, raid, 1.00, value.fs, value.mountpoint,
-                            "not implemented", drives)
+                            "not implemented", drives, get_pool_health(drives), missing)
             db.session.add(pool_obj)
     db.session.commit()
 
@@ -135,6 +138,23 @@ def get_pool_health(drive_list):
         if db_drive.smart is not True:
             return False
     return True
+
+
+def absent_drive(drive_list):
+    """
+    :param drive_list: contains drives which belongs to pool
+    :return: List of absent drives or None
+    """
+    missing = list()
+    drive_split = drive_list.split(",")
+    for drive in drive_split:
+        db_drive = db.session.query(Drive).filter(Drive.name == drive).scalar()
+        if db_drive.missing:
+            missing.append(db_drive)
+    if not missing:
+        return None
+    else:
+        return missing
 
 
 def delete_drive(drive):

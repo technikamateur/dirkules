@@ -78,9 +78,10 @@ class Pool(db.Model):
     mountopt = db.Column(db.String)
     drives = db.Column(db.String)
     healthy = db.Column(db.Boolean)
+    missing = db.Column(db.String)
 
     def __init__(self, label, size, free, data_raid, data_ratio, meta_raid, meta_ratio, fs, mountpoint, mountopt,
-                 drives, healthy):
+                 drives, healthy, missing):
         self.label = label
         self.size = size
         self.free = free
@@ -93,6 +94,7 @@ class Pool(db.Model):
         self.mountopt = mountopt
         self.drives = drives
         self.healthy = healthy
+        self.missing = missing
 
 
 class Time(db.Model):
