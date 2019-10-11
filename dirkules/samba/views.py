@@ -20,7 +20,7 @@ def config():
     if request.method == 'POST' and form.validate():
         set_samba_global(form.workgroup.data, form.server_string.data)
         return redirect(url_for('.index'))
-    file = open(staticDir + "/conf/samba_global.conf")
+    file = open(staticDir + "/conf/samba_global.conf", "r")
     conf = list()
     while True:
         line = file.readline()
