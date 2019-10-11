@@ -35,5 +35,10 @@ def config():
 def add():
     form = SambaAddForm(request.form)
     if request.method == 'POST' and form.validate():
-        return redirect(url_for('samba'))
+        return redirect(url_for('.index'))
     return render_template('samba/add.html', form=form)
+
+
+@bp_samba.route('/generate')
+def generate():
+    return redirect(url_for('.index'))
