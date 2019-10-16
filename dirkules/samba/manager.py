@@ -1,4 +1,4 @@
-from dirkules.config import staticDir, version
+from dirkules.config import staticDir, VERSION
 
 from dirkules import db
 
