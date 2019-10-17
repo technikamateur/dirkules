@@ -29,8 +29,10 @@ from dirkules.samba import bp_samba as bp_samba
 
 app.register_blueprint(bp_samba, url_prefix='/samba')
 
+from dirkules.models import Drive
+
 
 @app.before_request
 def check_drives():
-    if db.session.query("Drive").first() is None:
+    if Drive.query.first() is None:
         scheduler.get_job("refresh_disks").modify(next_run_time=datetime.datetime.now())
