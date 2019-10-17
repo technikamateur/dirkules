@@ -1,4 +1,6 @@
-from flask_wtf import csrf, CSRFProtect
+import datetime
+
+from flask_wtf import CSRFProtect
 import dirkules.config as config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -24,4 +26,11 @@ scheduler.start()
 import dirkules.views
 
 from dirkules.samba import bp_samba as bp_samba
+
 app.register_blueprint(bp_samba, url_prefix='/samba')
+
+
+@app.before_request
+def check_drives():
+    if db.query("Drive").first() is None:
+        scheduler.get_job("refresh_disks").modify(next_run_time=datetime.datetime.now())
