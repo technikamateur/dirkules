@@ -32,5 +32,5 @@ app.register_blueprint(bp_samba, url_prefix='/samba')
 
 @app.before_request
 def check_drives():
-    if db.query("Drive").first() is None:
+    if db.session.query("Drive").first() is None:
         scheduler.get_job("refresh_disks").modify(next_run_time=datetime.datetime.now())
