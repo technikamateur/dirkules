@@ -8,7 +8,7 @@ import subprocess
 def get_free_space(name):
     lines = list()
     df = subprocess.Popen(
-        ["df -B K /dev/" + name],
+        ["df -B K " + name],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)

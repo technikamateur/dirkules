@@ -116,7 +116,7 @@ def pool_gen():
 
         elif value.fs == "ext4":
             if value.mountpoint:
-                free_space = ext4Tools.get_free_space(value.name)
+                free_space = ext4Tools.get_free_space(value.mountpoint)
             else:
                 free_space = 2
             pool_obj = Pool(value.label, value.size, free_space, raid, 1.00, raid, 1.00, value.fs, value.mountpoint,
