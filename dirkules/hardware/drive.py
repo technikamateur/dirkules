@@ -96,11 +96,11 @@ def part_for_disk(device):
     del parts[0]
     for part in parts:
         values = list()
-        for start, end in zip(element_length, element_length[1:]):
-            if end == element_length[-1:]:
+        for start, next_start in zip(element_length, element_length[1:]):
+            if next_start == element_length[-1:][0]:
                 values.append(part[start:len(part)].strip())
             else:
-                values.append(part[start:(end - 1)].strip())
+                values.append(part[start:(next_start - 1)].strip())
         part_dict.append(dict(zip(keys, values)))
 
     return part_dict
