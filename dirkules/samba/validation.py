@@ -35,4 +35,4 @@ class SambaAddForm(FlaskForm):
                                             validators.NumberRange(min=4, max=4,
                                                                    message="Bitte 4 Zahlen eingeben!")],
                             render_kw={"placeholder": "0700"})
-    submit = SubmitField("Speichern")
+    submit = SubmitField("Freigabe hinzufügen")

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Freigabe hinzufügen{% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
 {% block body %}
     <div class="ui container">
-        <t2>Neue Samba Share einrichten</t2>
         {% from "_formhelpers.html" import render_field %}
         <form method=post class="ui form error">
+            {{ form.hidden_tag() }}
             <h4 class="ui dividing header">Allgemeine Informationen</h4>
             {{ render_field(form.name) }}
             <div class="fields">
@@ -17,12 +17,12 @@
             </div>
             <h4 class="ui dividing header">Erweiterte Informationen</h4>
             {{ render_field(form.path) }}
-            {{ render_field(form.user) }}
             <div class="fields">
+                {{ render_field(form.user) }}
                 {{ render_field(form.create_mask) }}
                 {{ render_field(form.dir_mask) }}
             </div>
-            <button class="ui button" type="submit"><i class="plus icon"></i> Freigabe hinzufügen</button>
+            {{ render_field(form.submit) }}
         </form>
     </div>
     <script>

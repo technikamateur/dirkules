@@ -3,7 +3,7 @@ from dirkules import db
 from dirkules.config import staticDir
 from flask import render_template, url_for, request, redirect
 from dirkules.samba import bp_samba
-from dirkules.samba.manager import set_samba_global
+from dirkules.samba.manager import set_samba_global, generate_smb
 from dirkules.samba.models import SambaShare
 from dirkules.samba.validation import SambaConfigForm, SambaAddForm
 
@@ -41,4 +41,5 @@ def add():
 
 @bp_samba.route('/generate')
 def generate():
+    generate_smb()
     return redirect(url_for('.index'))
