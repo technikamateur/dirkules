@@ -6,6 +6,15 @@ from dirkules.samba.models import SambaGlobal
 
 
 def set_samba_global(workgroup, name):
+    """
+    Sets the variables for the [global] part in smb.conf
+    :param workgroup: Workgroup name
+    :type workgroup: string
+    :param name: Smbd server name
+    :type name: string
+    :return: nothing
+    :rtype: None
+    """
     SambaGlobal.query.delete()
     workgroup = SambaGlobal("workgroup", workgroup)
     name = SambaGlobal("server string", "%h {}".format(name))
@@ -15,10 +24,15 @@ def set_samba_global(workgroup, name):
 
 
 def generate_smb():
+    """
+    Function is used to generate a new smb.conf file
+    :return: nothing
+    :rtype: None
+    """
     if SambaGlobal.query.first() is None:
+        app.logger.warning("Samba not configured. Using default fallback.")
         workgroup = 'WORKGROUP'
         server_string = '%h dirkules'
-        app.logger.warning("Samba not configured. Using default fallback.")
     else:
         workgroup = SambaGlobal.query.get(1)
         server_string = SambaGlobal.query.get(2)
@@ -31,3 +45,4 @@ def generate_smb():
     f.write("workgroup = {}\n".format(workgroup))
     f.write(samba_global.read())
     f.close()
+    app.logger.info("Generated new samba config.")
