@@ -6,10 +6,9 @@ from dirkules import app, db, scheduler, app_version
 import dirkules.manager.serviceManager as servMan
 import dirkules.manager.driveManager as driveMan
 import dirkules.manager.cleaning as cleaningMan
-from dirkules.models import Drive, Cleaning, SambaShare, Pool
+from dirkules.models import Drive, Cleaning, Pool
 import dirkules.manager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, SambaCleaningForm, SambaAddForm, PoolAddForm
-from dirkules.config import staticDir
+from dirkules.validation.validators import CleaningForm, PoolAddForm
 
 
 @app.errorhandler(404)
@@ -146,36 +145,3 @@ def add_cleaning():
         viewManager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
         return redirect(url_for('cleaning'))
     return render_template('add_cleaning.html', form=form)
-
-
-@app.route('/samba', methods=['GET'])
-def samba():
-    shares = SambaShare.query.order_by(db.asc(db.collate(SambaShare.name, 'NOCASE'))).all()
-    return render_template('samba.html', shares=shares)
-
-
-@app.route('/samba/global', methods=['GET', 'POST'])
-def samba_global():
-    form = SambaCleaningForm(request.form)
-    if request.method == 'POST' and form.validate():
-        print("Input:")
-        print(form.workgroup.data)
-        print(form.server_string.data)
-        return redirect(url_for('samba_global'))
-    file = open(staticDir + "/conf/samba_global.conf")
-    conf = list()
-    while True:
-        line = file.readline()
-        if line != '':
-            conf.append(line.rstrip())
-        else:
-            break
-    return render_template('samba_global.html', form=form, conf=conf)
-
-
-@app.route('/samba/add', methods=['GET', 'POST'])
-def samba_add():
-    form = SambaAddForm(request.form)
-    if request.method == 'POST' and form.validate():
-        return redirect(url_for('samba'))
-    return render_template('samba_add.html', form=form)

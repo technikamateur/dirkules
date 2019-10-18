@@ -2,13 +2,10 @@
 import subprocess
 
 
-# This file should read btrfs pools
-# Storage: sudo btrfs fi usage -b -T /media/data-raid
-
-def get_free_space(name):
+def get_free_space(mount_point):
     lines = list()
     df = subprocess.Popen(
-        ["df -B K /dev/" + name],
+        ["df -B K " + mount_point],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -20,7 +17,7 @@ def get_free_space(name):
             break
     df.stdout.close()
     for line in lines:
-        newLine = ' '.join(line.split())
-        newLine = newLine.split(" ")
-        if name in newLine[0]:
-            return int(newLine[3][:-1]) * 1024
+        new_line = ' '.join(line.split())
+        new_line = new_line.split(" ")
+        if mount_point in new_line:
+            return int(new_line[3][:-1]) * 1024

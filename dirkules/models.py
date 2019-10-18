@@ -78,9 +78,10 @@ class Pool(db.Model):
     mountopt = db.Column(db.String)
     drives = db.Column(db.String)
     healthy = db.Column(db.Boolean)
+    missing = db.Column(db.String)
 
     def __init__(self, label, size, free, data_raid, data_ratio, meta_raid, meta_ratio, fs, mountpoint, mountopt,
-                 drives, healthy):
+                 drives, healthy, missing):
         self.label = label
         self.size = size
         self.free = free
@@ -93,6 +94,7 @@ class Pool(db.Model):
         self.mountopt = mountopt
         self.drives = drives
         self.healthy = healthy
+        self.missing = missing
 
 
 class Time(db.Model):
@@ -118,24 +120,3 @@ class Cleaning(db.Model):
         self.path = path
         self.state = state
 
-
-class SambaShare(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    writeable = db.Column(db.Boolean)
-    recycling = db.Column(db.Boolean)
-    btrfs = db.Column(db.Boolean)
-    options = db.relationship('SambaOptions', order_by="SambaOptions.id", backref="samba_share", lazy="select")
-
-    def __init__(self, name, writeable=False, recycling=False, btrfs=False):
-        self.name = name
-        self.writeable = writeable
-        self.recycling = recycling
-        self.btrfs = btrfs
-
-
-class SambaOptions(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    option = db.Column(db.String, nullable=False)
-    value = db.Column(db.String, nullable=False)
-    sambashare_id = db.Column(db.Integer, db.ForeignKey('samba_share.id'), nullable=False)

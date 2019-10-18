@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Samba{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+    <div class="topspacer"></div>
+    <div class="ui container">
+        <a href="{{ url_for('.config') }}">
+            <div class="ui primary labeled icon button">
+                <i class="edit icon"></i> Konfigurieren
+            </div>
+        </a>
+        <a href="{{ url_for('.add') }}">
+            <div class="ui primary labeled icon button">
+                <i class="plus icon"></i> Freigabe hinzufügen
+            </div>
+        </a>
+    <a href="{{ url_for('.generate') }}">
+            <div class="ui primary labeled icon button">
+                <i class="magic icon"></i> Generieren
+            </div>
+        </a>
+        <table class="ui celled fixed table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Schreibzugriff</th>
+                <th>Papierkorb</th>
+                <th>BtrFS Optimierungen</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for share in shares %}
+                <tr>
+                    <td>{{ share.name }}</td>
+                    <td>{{ share.writeable }}</td>
+                    <td>{{ share.recycling }}</td>
+                    <td>{{ share.btrfs }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

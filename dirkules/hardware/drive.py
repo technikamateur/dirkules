@@ -66,10 +66,10 @@ def part_for_disk(device):
     # lsblk /dev/sdd -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
     parts = []
     part_dict = list()
-    keys = ['name', 'label', 'fs', 'size', 'uuid', 'mount']
+    keys = ['size', 'name', 'label', 'fs', 'uuid', 'mount']
     device = "/dev/" + device
     lsblk = subprocess.Popen(
-        ["sudo lsblk " + device + " -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT"],
+        ["sudo lsblk " + device + " -l -b -o SIZE,NAME,LABEL,FSTYPE,UUID,MOUNTPOINT"],
         stdout=subprocess.PIPE,
         shell=True,
         universal_newlines=True)
@@ -83,26 +83,24 @@ def part_for_disk(device):
     del parts[1]
     element_length = list()
     counter = 0
-    last_letter = 0
     pre_value = " "
     for char in parts[0]:
         if char != " " and pre_value == " ":
-            element_length.append(counter)
+            if len(element_length) == 0:
+                element_length.append(0)
+            else:
+                element_length.append(counter)
         counter += 1
         pre_value = char
-        # size ist rechtsbuendig. Extra Behandlung
-        # TODO: Besser machen
-        if char == "S" and parts[0][last_letter] == "E":
-            del element_length[-1]
-            element_length.append((last_letter + 2))
-        if char != " ":
-            last_letter = counter - 1
     element_length.append(len(parts[0]))
     del parts[0]
     for part in parts:
         values = list()
-        for start, end in zip(element_length, element_length[1:]):
-            values.append(part[start:(end - 1)].strip())
+        for start, next_start in zip(element_length, element_length[1:]):
+            if next_start == element_length[-1:][0]:
+                values.append(part[start:len(part)].strip())
+            else:
+                values.append(part[start:(next_start - 1)].strip())
         part_dict.append(dict(zip(keys, values)))
 
     return part_dict

@@ -5,18 +5,19 @@
 {% endblock %}
 {% block body %}
     <div class="ui container">
-    <t2>Feste Bestandteile der<i> Samba global conf</i></t2>
+        <t2>Feste Bestandteile der<i> Samba global conf</i></t2>
         <div class="ui segment">
             {% for line in conf %}
                 {{ line }}<br>
             {% endfor %}
         </div>
-    <t2>Veränderbare Bestandteile der<i> Samba global conf</i></t2>
-    {% from "_formhelpers.html" import render_field %}
-    <form method=post class="ui form error">
+        <t2>Veränderbare Bestandteile der<i> Samba global conf</i></t2>
+        {% from "_formhelpers.html" import render_field %}
+        <form method=post class="ui form error">
+            {{ form.hidden_tag() }}
             {{ render_field(form.workgroup) }}
             {{ render_field(form.server_string) }}
-            <button class="ui button" type="submit"><i class="save icon"></i> Ändern</button>
-    </form>
+            {{ render_field(form.submit) }}
+        </form>
     </div>
 {% endblock %}

@@ -81,7 +81,7 @@
                     </tr>
                     <tr>
                         <td>Gesundheit</td>
-                        {% if pool.healthy %}
+                        {% if pool.healthy and pool.missing is none %}
                             <td class="positive"><i class="icon checkmark"></i>Gesund</td>
                         {% else %}
                             <td class="negative"><i class="attention icon"></i>Kritisch</td>
@@ -99,13 +99,14 @@
                         </div>
                         <p>
                             Die RAID Level von Data und Metadata unterscheiden sich. Normalerweise sollten beide gleich
-                            konfiguriert werden, da es sonst unter Umständen zu <b>Datenverlust</b> kommen kann, wenn ein
+                            konfiguriert werden, da es sonst unter Umständen zu <b>Datenverlust</b> kommen kann, wenn
+                            ein
                             Laufwerk ausfällt.<br>
                             Solltest du einen guten Grund dafür haben, ignoriere einfach diese Meldung.
                         </p>
                     </div>
                 {% endif %}
-                {% if pool.healthy %}
+                {% if pool.healthy and pool.missing is none %}
                     <div class="ui positive message">
                         <i class="close icon"></i>
                         <div class="header">
@@ -116,16 +117,28 @@
                         </p>
                     </div>
                 {% else %}
-                    <div class="ui negative message">
-                        <i class="close icon"></i>
-                        <div class="header">
-                            Kritischer Zustand
+                    {% if not pool.healthy %}
+                        <div class="ui negative message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Kritischer Zustand
+                            </div>
+                            <p>
+                                Mindetstens ein Laufwerk befindet sich in einem schlechten Zustand! Du solltest
+                                dieses schnellstmöglich tauschen.
+                            </p>
                         </div>
-                        <p>
-                            Mindetstens ein Laufwerk befindet sich in einem schlechten Zustand! Du solltest
-                            dieses schnellstmöglich tauschen.
-                        </p>
-                    </div>
+                    {% else %}
+                        <div class="ui negative message">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Kritischer Zustand
+                            </div>
+                            <p>
+                                Folgende Laufwerke wurden nicht gefunden: {{ pool.missing }}
+                            </p>
+                        </div>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
