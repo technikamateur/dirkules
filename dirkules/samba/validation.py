@@ -27,12 +27,8 @@ class SambaAddForm(FlaskForm):
     user = StringField("Berechtigte Nutzer", [validators.required(message="Bitte Feld ausfüllen!"),
                                               validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "sambadaniel"})
-    create_mask = IntegerField("Dateimaske", [validators.Optional(),
-                                              validators.NumberRange(min=4, max=4,
-                                                                     message="Bitte 4 Zahlen eingeben!")],
+    create_mask = IntegerField("Dateimaske", [validators.Optional()],
                                render_kw={"placeholder": "0600"})
-    dir_mask = IntegerField("Ordnermaske", [validators.Optional(),
-                                            validators.NumberRange(min=4, max=4,
-                                                                   message="Bitte 4 Zahlen eingeben!")],
+    dir_mask = IntegerField("Ordnermaske", [validators.Optional()],
                             render_kw={"placeholder": "0700"})
     submit = SubmitField("Freigabe hinzufügen")

@@ -2,7 +2,42 @@ from dirkules.config import staticDir
 
 from dirkules import db, app_version, app
 
-from dirkules.samba.models import SambaGlobal
+from dirkules.samba.models import SambaGlobal, SambaShare, SambaOption
+
+
+def create_share(name, path, user, dir_mask, create_mask, writeable, btrfs, recycling):
+    """
+    Creates a samba share in db with all needed options for proper generation.
+    :param name: Share name
+    :type name: String
+    :param path: Path to share. might change in later versions.
+    :type path: String
+    :param user: User which is allowed to access
+    :type user: String
+    :param dir_mask: The UNIX octal mask for directories in share
+    :type dir_mask: Integer
+    :param create_mask: The UNIX octal mask for files in share
+    :type create_mask: Integer
+    :param writeable: Defines whether share is writeable or not
+    :type writeable: Boolean
+    :param btrfs: Defines the btrfs vfs_object
+    :type btrfs: Boolean
+    :param recycling: Defines the recycle vfs_object
+    :type recycling: Boolean
+    :return: Nothing
+    :rtype: None
+    """
+    share = SambaShare(name, path, btrfs=btrfs, recycle=recycling)
+    user = SambaOption("valid users", user)
+    dir_mask = SambaOption("directory mask", dir_mask)
+    create_mask = SambaOption("create mask", create_mask)
+    if writeable:
+        writeable = SambaOption("writeable", "yes")
+    else:
+        writeable = SambaOption("writeable", "no")
+    share.options.extend([user, dir_mask, create_mask, writeable])
+    db.session.add(share)
+    db.session.commit()
 
 
 def set_samba_global(workgroup, name):
