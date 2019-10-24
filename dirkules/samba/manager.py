@@ -29,6 +29,10 @@ def create_share(name, path, user, dir_mask, create_mask, writeable, btrfs, recy
     """
     share = SambaShare(name, path, btrfs=btrfs, recycle=recycling)
     user = SambaOption("valid users", user)
+    if dir_mask is None:
+        dir_mask = "0700"
+    if create_mask is None:
+        create_mask = "0600"
     dir_mask = SambaOption("directory mask", dir_mask)
     create_mask = SambaOption("create mask", create_mask)
     if writeable:

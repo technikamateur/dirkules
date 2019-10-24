@@ -25,7 +25,7 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Schreibzugriff</th>
+                <th>Pfad</th>
                 <th>Papierkorb</th>
                 <th>BtrFS Optimierungen</th>
             </tr>
@@ -35,8 +35,8 @@
             {% for share in shares %}
                 <tr>
                     <td>{{ share.name }}</td>
-                    <td>{{ share.writeable }}</td>
-                    <td>{{ share.recycling }}</td>
+                    <td>{{ share.path }}</td>
+                    <td>{{ share.recycle}}</td>
                     <td>{{ share.btrfs }}</td>
                 </tr>
 

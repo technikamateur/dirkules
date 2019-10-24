@@ -33,3 +33,8 @@ class SambaOption(db.Model):
     option = db.Column(db.String, nullable=False)
     value = db.Column(db.String, nullable=False)
 
+    def __init__(self, option, value):
+        self.option = option
+        self.value = value
+
+
