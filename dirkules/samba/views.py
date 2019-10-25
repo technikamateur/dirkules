@@ -3,7 +3,7 @@ from dirkules import db
 from dirkules.config import staticDir
 from flask import render_template, url_for, request, redirect
 from dirkules.samba import bp_samba
-from dirkules.samba.manager import set_samba_global, generate_smb, create_share
+from dirkules.samba.manager import set_samba_global, generate_smb, create_share, get_pools
 from dirkules.samba.models import SambaShare
 from dirkules.samba.validation import SambaConfigForm, SambaAddForm
 
@@ -34,6 +34,7 @@ def config():
 @bp_samba.route('/add', methods=['GET', 'POST'])
 def add():
     form = SambaAddForm(request.form)
+    form.path.choices = get_pools()
     if request.method == 'POST' and form.validate():
         create_share(form.name.data, form.path.data, form.user.data, form.dir_mask.data, form.create_mask.data,
                      form.writeable.data, form.btrfs.data, form.recycling.data)

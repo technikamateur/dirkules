@@ -22,8 +22,7 @@ class SambaAddForm(FlaskForm):
     writeable = BooleanField("Schreibzugriff")
     recycling = BooleanField("Papierkorb")
     btrfs = BooleanField("BtrFS Optimierungen (Vorsicht!)")
-    # additional
-    path = SelectField("Pfad", choices=[("Value1", "Label1"), ("Value2", "Label2")])
+    path = SelectField("Pfad", validators=[validators.required(message="Bitte eine Auswahl treffen!")])
     user = StringField("Berechtigte Nutzer", [validators.required(message="Bitte Feld ausfüllen!"),
                                               validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "sambadaniel"})

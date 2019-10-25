@@ -1,8 +1,16 @@
+from dirkules.models import Pool
+
 from dirkules.config import staticDir
 
 from dirkules import db, app_version, app
 
 from dirkules.samba.models import SambaGlobal, SambaShare, SambaOption
+
+
+def get_pools():
+    pools = Pool.query.all()
+    choices = [(pool.id, pool.label) for pool in pools]
+    return choices
 
 
 def create_share(name, path, user, dir_mask, create_mask, writeable, btrfs, recycling):
