@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField
+from wtforms import StringField, BooleanField, SelectField, validators, SubmitField
 
 
 class SambaConfigForm(FlaskForm):
@@ -16,18 +16,20 @@ class SambaConfigForm(FlaskForm):
 
 
 class SambaAddForm(FlaskForm):
-    name = StringField("Name der Freigabe", [validators.required(message="Bitte Feld ausfüllen!"),
+    name = StringField("Name der Freigabe", [validators.InputRequired(message="Bitte Feld ausfüllen!"),
                                              validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "Bilder"})
     writeable = BooleanField("Schreibzugriff")
     recycling = BooleanField("Papierkorb")
     btrfs = BooleanField("BtrFS Optimierungen (Vorsicht!)")
-    path = SelectField("Pfad", validators=[validators.required(message="Bitte eine Auswahl treffen!")])
-    user = StringField("Berechtigte Nutzer", [validators.required(message="Bitte Feld ausfüllen!"),
+    path = SelectField("Pfad", validators=[validators.InputRequired(message="Bitte eine Auswahl treffen!")])
+    user = StringField("Berechtigte Nutzer", [validators.InputRequired(message="Bitte Feld ausfüllen!"),
                                               validators.Length(max=255, message="Eingabe zu lang")],
                        render_kw={"placeholder": "sambadaniel"})
-    create_mask = IntegerField("Dateimaske", [validators.Optional()],
-                               render_kw={"placeholder": "0600"})
-    dir_mask = IntegerField("Ordnermaske", [validators.Optional()],
-                            render_kw={"placeholder": "0700"})
+    create_mask = StringField("Dateimaske", [validators.Optional(),
+                                             validators.Regexp('^[0-7]{4}$', message="Dies ist kein gültiger Wert!")],
+                              render_kw={"placeholder": "0600"})
+    dir_mask = StringField("Ordnermaske", [validators.Optional(),
+                                           validators.Regexp('^[0-7]{4}$', message="Dies ist kein gültiger Wert!")],
+                           render_kw={"placeholder": "0700"})
     submit = SubmitField("Freigabe hinzufügen")

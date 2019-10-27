@@ -16,7 +16,7 @@
                 <i class="plus icon"></i> Freigabe hinzufügen
             </div>
         </a>
-    <a href="{{ url_for('.generate') }}">
+        <a href="{{ url_for('.generate') }}">
             <div class="ui primary labeled icon button">
                 <i class="magic icon"></i> Generieren
             </div>
@@ -28,6 +28,7 @@
                 <th>Pfad</th>
                 <th>Papierkorb</th>
                 <th>BtrFS Optimierungen</th>
+                <th>Aktionen</th>
             </tr>
             </thead>
 
@@ -36,8 +37,21 @@
                 <tr>
                     <td>{{ share.name }}</td>
                     <td>{{ share.path }}</td>
-                    <td>{{ share.recycle}}</td>
+                    <td>{{ share.recycle }}</td>
                     <td>{{ share.btrfs }}</td>
+                    <td>{% if share.enabled %}
+                        <a href="{{ url_for('.index', disable=share.id) }}">
+                            <div class="ui negative labeled icon button">
+                                <i class="pause icon"></i> Exkludieren
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('.index', enable=share.id) }}">
+                            <div class="ui positive labeled icon button">
+                                <i class="play icon"></i> Inkludieren
+                            </div>
+                        </a>
+                    {% endif %}</td>
                 </tr>
 
             {% endfor %}

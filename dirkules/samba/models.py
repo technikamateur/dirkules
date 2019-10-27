@@ -17,14 +17,16 @@ class SambaShare(db.Model):
     path = db.Column(db.String, nullable=False)
     recycle = db.Column(db.Boolean)
     btrfs = db.Column(db.Boolean)
+    enabled = db.Column(db.Boolean)
     options = db.relationship('SambaOption', order_by="SambaOption.id", backref="samba_share", lazy="select",
                               cascade="all, delete-orphan")
 
-    def __init__(self, name, path, recycle=False, btrfs=False):
+    def __init__(self, name, path, recycle=False, btrfs=False, enabled=True):
         self.name = name
         self.path = path
         self.recycle = recycle
         self.btrfs = btrfs
+        self.enabled = enabled
 
 
 class SambaOption(db.Model):
