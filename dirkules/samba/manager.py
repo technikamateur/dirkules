@@ -97,25 +97,26 @@ def generate_smb():
     f.write(samba_global.read())
     f.write("\n\n")
     for share in SambaShare.query.all():
-        f.write("[{}]\n".format(share.name))
-        f.write("path = {}\n".format(share.path))
-        if share.recycle or share.btrfs:
-            vfs_obj = ""
+        if share.enabled:
+            f.write("[{}]\n".format(share.name))
+            f.write("path = {}\n".format(share.path))
+            if share.recycle or share.btrfs:
+                vfs_obj = ""
+                if share.recycle:
+                    vfs_obj = vfs_obj + "recycle "
+                if share.btrfs:
+                    vfs_obj = vfs_obj + "btrfs"
+                f.write("vfs objects = {}\n".format(vfs_obj))
+            f.write(samba_share.read())
+            # reset file pointer
+            samba_share.seek(0)
+            f.write("\n")
+            for entry in share.options:
+                f.write("{} = {}\n".format(entry.option, entry.value))
             if share.recycle:
-                vfs_obj = vfs_obj + "recycle "
-            if share.btrfs:
-                vfs_obj = vfs_obj + "btrfs"
-            f.write("vfs objects = {}\n".format(vfs_obj))
-        f.write(samba_share.read())
-        # reset file pointer
-        samba_share.seek(0)
-        f.write("\n")
-        for entry in share.options:
-            f.write("{} = {}\n".format(entry.option, entry.value))
-        if share.recycle:
-            f.write(samba_recycle.read())
-            samba_recycle.seek(0)
-        f.write("\n\n")
+                f.write(samba_recycle.read())
+                samba_recycle.seek(0)
+            f.write("\n\n")
     f.close()
     samba_global.close()
     samba_share.close()
@@ -139,6 +140,11 @@ def get_share_by_id(share_id):
 
 
 def disable_share(share):
+    """
+    Disables a given share object.
+    :param share: share object
+    :return: nothing
+    """
     try:
         share.enabled = False
         db.session.commit()
@@ -147,6 +153,11 @@ def disable_share(share):
 
 
 def enable_share(share):
+    """
+    Enables a given share object.
+    :param share: share object
+    :return: nothing
+    """
     try:
         share.enabled = True
         db.session.commit()

@@ -62,7 +62,7 @@ def add():
     form.path.choices = smb_man.get_pools()
     if request.method == 'POST' and form.validate():
         smb_man.create_share(form.name.data, form.path.data, form.user.data, form.dir_mask.data, form.create_mask.data,
-                     form.writeable.data, form.btrfs.data, form.recycling.data)
+                             form.writeable.data, form.btrfs.data, form.recycling.data)
         return redirect(url_for('.index'))
     return render_template('samba/add.html', form=form)
 
@@ -71,3 +71,13 @@ def add():
 def generate():
     smb_man.generate_smb()
     return redirect(url_for('.index'))
+
+
+@bp_samba.route('/remove', methods=['GET', 'POST'])
+def remove():
+    share_id = request.args.get('share')
+    if share_id is None:
+        flash("Can't remove drive without id.")
+        return redirect(url_for('.index'))
+    else:
+        return render_template('samba/remove.html')

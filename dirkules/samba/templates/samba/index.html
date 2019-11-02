@@ -51,7 +51,13 @@
                                 <i class="play icon"></i> Inkludieren
                             </div>
                         </a>
-                    {% endif %}</td>
+                    {% endif %}
+                        <a href="{{ url_for('.remove', share=share.id) }}">
+                            <div class="ui orange icon button">
+                                <i class="trash icon"></i>
+                            </div>
+                        </a>
+                    </td>
                 </tr>
 
             {% endfor %}
