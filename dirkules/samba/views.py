@@ -80,4 +80,12 @@ def remove():
         flash("Can't remove drive without id.")
         return redirect(url_for('.index'))
     else:
-        return render_template('samba/remove.html')
+        try:
+            share_id = int(share_id)
+            share = smb_man.get_share_by_id(share_id)
+            return render_template('samba/remove.html')
+        except ValueError:
+            flash("ValueError: id is not an int")
+        except LookupError:
+            flash("LookupError: id not valid")
+        return redirect(url_for('.index'))

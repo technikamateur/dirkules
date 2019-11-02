@@ -163,3 +163,12 @@ def enable_share(share):
         db.session.commit()
     except:
         db.session.rollback()
+
+
+def remove_share(share, remove_data=False):
+    # TODO: Handling of remove_data. Not implemented because removing of share folder is a future thing.
+    try:
+        db.session.delete(share)
+        db.session.commit()
+    except:
+        db.session.rollback()
