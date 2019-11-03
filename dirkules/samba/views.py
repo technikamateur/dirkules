@@ -5,7 +5,7 @@ from flask import render_template, url_for, request, redirect, flash
 from dirkules.samba import bp_samba
 from dirkules.samba import manager as smb_man
 from dirkules.samba.models import SambaShare
-from dirkules.samba.validation import SambaConfigForm, SambaAddForm
+from dirkules.samba.validation import SambaConfigForm, SambaAddForm, SambaRemovalForm
 
 
 @bp_samba.route('/', methods=['GET'])
@@ -81,9 +81,13 @@ def remove():
         return redirect(url_for('.index'))
     else:
         try:
+            form = SambaRemovalForm(request.form)
             share_id = int(share_id)
             share = smb_man.get_share_by_id(share_id)
-            return render_template('samba/remove.html')
+            if request.method == 'POST' and form.validate():
+                print("LOL")
+                return redirect(url_for('.index'))
+            return render_template('samba/remove.html', name=share.name, form=form)
         except ValueError:
             flash("ValueError: id is not an int")
         except LookupError:

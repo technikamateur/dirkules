@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField, validators, SubmitField
 
+from dirkules.wtforms_extension import ToggleBooleanField, RequiredIf
+
 
 class SambaConfigForm(FlaskForm):
     workgroup = StringField("workgroup", [validators.required(message="Bitte Feld ausfüllen!"),
@@ -33,3 +35,10 @@ class SambaAddForm(FlaskForm):
                                            validators.Regexp('^[0-7]{4}$', message="Dies ist kein gültiger Wert!")],
                            render_kw={"placeholder": "0700"})
     submit = SubmitField("Freigabe hinzufügen")
+
+
+class SambaRemovalForm(FlaskForm):
+    remove_data = BooleanField("Alle Daten entfernen")
+    okay = ToggleBooleanField("Sicherheitsprotokolle überbrücken.",
+                              validators=[RequiredIf("remove_data",)])
+    submit = SubmitField("Pool erstellen")

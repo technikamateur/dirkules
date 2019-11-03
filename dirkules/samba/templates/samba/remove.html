@@ -6,6 +6,25 @@
 {% block body %}
     <div class="topspacer"></div>
     <div class="ui container">
-
+        <h2 class="ui center aligned icon header">
+            <i class="circular trash icon"></i>
+            <div class="content">
+                Freigabe entfernen
+                <div class="sub header">Sie möchten die Samba Freigabe mit dem Namen "{{ name }}" entfernen. Bitte
+                    konkretisieren und bestätigen.
+                </div>
+            </div>
+        </h2>
+        {% from "_formhelpers.html" import render_field %}
+        {% if form.errors %}
+            <form method=post class="ui form error">
+        {% else %}
+            <form method=post class="ui form">
+        {% endif %}
+        {{ form.hidden_tag() }}
+        {{ render_field(form.remove_data) }}
+        {{ render_field(form.okay) }}
+        {{ render_field(form.submit) }}
+        </form>
     </div>
 {% endblock %}

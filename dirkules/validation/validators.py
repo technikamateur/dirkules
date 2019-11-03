@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField
 from dirkules.models import Drive
+from dirkules.wtforms_extension import ToggleBooleanField
 
 
 class CleaningForm(FlaskForm):
@@ -25,10 +26,6 @@ class SemanticMultiSelectField(SelectField):
                 raise ValueError(self.gettext('{} is not a valid choice'.format(self.data)))
         else:
             raise ValueError(self.gettext('There are no elements available but this field is required.'))
-
-
-class ToggleBooleanField(BooleanField):
-    pass
 
 
 class PoolAddForm(FlaskForm):
