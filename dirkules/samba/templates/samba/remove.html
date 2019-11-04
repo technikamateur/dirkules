@@ -2,6 +2,18 @@
 {% block title %}Freigabe entfernen{% endblock %}
 {% block head %}
     {{ super() }}
+    {% if show_modal %}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#security')
+                    .modal('show')
+                ;
+                $('#confirm').click(function () {
+                    $('.ui.modal').modal('hide');
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock %}
 {% block body %}
     <div class="topspacer"></div>
@@ -23,8 +35,25 @@
         {% endif %}
         {{ form.hidden_tag() }}
         {{ render_field(form.remove_data) }}
-        {{ render_field(form.okay) }}
+        <div class="ui tiny modal" id="security">
+            <div class="ui icon header">
+                <i class="smile icon"></i> Authentifizierung benötigt
+            </div>
+            <div class="content">
+                <p>Du hast ausgewählt, dass alle Daten der Freigabe restlos entfernt werden sollen. Diese Aktion ist
+                    unumkehrbar!</p>
+                <p>Die Sicherheitsprotokolle von Dirkules verbieten diese Aktion. Um die Aktion dennoch auszuführen,
+                    bitte die Sicherheitsprotokolle überbrücken.</p>
+                <p>{{ render_field(form.okay) }}</p>
+            </div>
+            <div class="actions">
+                <div class="ui button" id="confirm">
+                    Bestätigen
+                </div>
+            </div>
+        </div>
         {{ render_field(form.submit) }}
         </form>
     </div>
 {% endblock %}
+

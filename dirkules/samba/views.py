@@ -76,6 +76,7 @@ def generate():
 @bp_samba.route('/remove', methods=['GET', 'POST'])
 def remove():
     share_id = request.args.get('share')
+    show_modal = False
     if share_id is None:
         flash("Can't remove drive without id.")
         return redirect(url_for('.index'))
@@ -84,10 +85,14 @@ def remove():
             form = SambaRemovalForm(request.form)
             share_id = int(share_id)
             share = smb_man.get_share_by_id(share_id)
-            if request.method == 'POST' and form.validate():
-                print("LOL")
-                return redirect(url_for('.index'))
-            return render_template('samba/remove.html', name=share.name, form=form)
+            if request.method == 'POST':
+                if form.validate():
+                    print("Alles Easy")
+                    return redirect(url_for('.index'))
+                else:
+                    show_modal = True
+                    print(form.okay.data)
+            return render_template('samba/remove.html', name=share.name, form=form, show_modal=show_modal)
         except ValueError:
             flash("ValueError: id is not an int")
         except LookupError:
