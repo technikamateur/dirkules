@@ -21,13 +21,13 @@
                 <i class="magic icon"></i> Generieren
             </div>
         </a>
-        <table class="ui celled fixed table">
+        <table class="ui celled padded table">
             <thead>
             <tr>
                 <th>Name</th>
                 <th>Pfad</th>
-                <th>Papierkorb</th>
-                <th>BtrFS Optimierungen</th>
+                <th class="collapsing">Papierkorb</th>
+                <th class="collapsing">BtrFS Modul</th>
                 <th>Aktionen</th>
             </tr>
             </thead>
@@ -37,23 +37,31 @@
                 <tr>
                     <td>{{ share.name }}</td>
                     <td>{{ share.path }}</td>
-                    <td>{{ share.recycle }}</td>
-                    <td>{{ share.btrfs }}</td>
+                    {% if share.recycle %}
+                        <td class="collapsing"><i class="check icon"></i> Aktiviert</td>
+                    {% else %}
+                        <td class="collapsing"><i class="close icon"></i> Deaktiviert</td>
+                    {% endif %}
+                    {% if share.btrfs %}
+                        <td class="collapsing"><i class="check icon"></i> Aktiviert</td>
+                    {% else %}
+                        <td class="collapsing"><i class="close icon"></i> Deaktiviert</td>
+                    {% endif %}
                     <td>{% if share.enabled %}
                         <a href="{{ url_for('.index', disable=share.id) }}">
-                            <div class="ui negative labeled icon button">
-                                <i class="pause icon"></i> Exkludieren
+                            <div class="ui orange icon basic button">
+                                <i class="unlink icon"></i>
                             </div>
                         </a>
                     {% else %}
                         <a href="{{ url_for('.index', enable=share.id) }}">
-                            <div class="ui positive labeled icon button">
-                                <i class="play icon"></i> Inkludieren
+                            <div class="ui green icon basic button">
+                                <i class="linkify icon"></i>
                             </div>
                         </a>
                     {% endif %}
                         <a href="{{ url_for('.remove', share=share.id) }}">
-                            <div class="ui orange icon button">
+                            <div class="ui red icon basic button">
                                 <i class="trash icon"></i>
                             </div>
                         </a>

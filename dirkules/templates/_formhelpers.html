@@ -46,13 +46,7 @@
         {% else %}
             <div class="field">
         {% endif %}
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <div class="ui pointing below red basic label">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        {% endif %}
+
         {% if field.type == 'BooleanField' %}
             <div class="ui checkbox">
         {% else %}
@@ -110,6 +104,6 @@
     </div>
     </div>
     {% else %}
-        ERROR
+        ERROR LOL
     {% endif %}
 {% endmacro %}

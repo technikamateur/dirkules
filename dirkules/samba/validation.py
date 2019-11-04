@@ -7,12 +7,12 @@ from dirkules.wtforms_extension import ToggleBooleanField, RequiredIf
 class SambaConfigForm(FlaskForm):
     workgroup = StringField("workgroup", [validators.required(message="Bitte Feld ausfüllen!"),
                                           validators.Regexp('^[a-z]+$', message="Bitte nur Kleinbuchstaben eingeben."),
-                                          validators.Length(max=255, message="Eingabe zu lang")],
+                                          validators.Length(max=11, message="Maximal 11 Zeichen.")],
                             render_kw={"placeholder": "Nichts..."})
     server_string = StringField("server string", [validators.required(message="Bitte Feld ausfüllen!"),
                                                   validators.Regexp('^[a-z]+$',
                                                                     message="Bitte nur Kleinbuchstaben eingeben."),
-                                                  validators.Length(max=255, message="Eingabe zu lang")],
+                                                  validators.Length(max=15, message="Maximal 15 Zeichen.")],
                                 render_kw={"placeholder": "Nichts..."})
     submit = SubmitField("Speichern")
 
@@ -41,4 +41,4 @@ class SambaRemovalForm(FlaskForm):
     remove_data = BooleanField("Alle Daten entfernen")
     okay = ToggleBooleanField("Sicherheitsprotokolle überbrücken.",
                               validators=[RequiredIf("remove_data",)])
-    submit = SubmitField("Pool erstellen")
+    submit = SubmitField("Freigabe löschen")

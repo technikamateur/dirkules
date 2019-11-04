@@ -124,21 +124,6 @@ def generate_smb():
     app.logger.info("Generated new samba config.")
 
 
-def get_share_by_id(share_id):
-    """
-    Returns drive object for given id
-    :param share_id: id of drive (primary key)
-    :type share_id: int
-    :return: Share object
-    :rtype: Share
-    """
-    share = SambaShare.query.get(share_id)
-    if share is not None:
-        return share
-    else:
-        raise LookupError
-
-
 def disable_share(share):
     """
     Disables a given share object.

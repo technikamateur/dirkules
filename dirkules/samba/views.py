@@ -4,7 +4,7 @@ from dirkules.config import staticDir
 from flask import render_template, url_for, request, redirect, flash
 from dirkules.samba import bp_samba
 from dirkules.samba import manager as smb_man
-from dirkules.samba.models import SambaShare
+from dirkules.samba.models import SambaShare, SambaGlobal
 from dirkules.samba.validation import SambaConfigForm, SambaAddForm, SambaRemovalForm
 
 
@@ -17,31 +17,34 @@ def index():
         if e_share is not None:
             try:
                 e_share = int(e_share)
-                share = smb_man.get_share_by_id(e_share)
+                share = SambaShare.query.get_or_404(e_share)
                 smb_man.enable_share(share)
             except ValueError:
-                flash("ValueError: enable")
+                flash("ValueError: enable", category="error")
             except LookupError:
-                flash("LookupError: id not valid")
+                flash("LookupError: id not valid", category="error")
             return redirect(url_for('.index'))
         elif d_share is not None:
             try:
                 d_share = int(d_share)
-                share = smb_man.get_share_by_id(d_share)
+                share = SambaShare.query.get_or_404(d_share)
                 smb_man.disable_share(share)
             except ValueError:
-                flash("ValueError: disable")
+                flash("ValueError: disable", category="error")
             except LookupError:
-                flash("LookupError: id not valid")
+                flash("LookupError: id not valid", category="error")
             return redirect(url_for('.index'))
     else:
-        flash("Value Error: enable and disable set")
+        flash("Value Error: enable and disable set", category="error")
     return render_template('samba/index.html', shares=shares)
 
 
 @bp_samba.route('/config', methods=['GET', 'POST'])
 def config():
     form = SambaConfigForm(request.form)
+    if SambaGlobal.query.first() is not None:
+        form.workgroup.data = SambaGlobal.query.get(1)
+        form.server_string.data = SambaGlobal.query.get(2)
     if request.method == 'POST' and form.validate():
         smb_man.set_samba_global(form.workgroup.data, form.server_string.data)
         return redirect(url_for('.index'))
@@ -70,6 +73,9 @@ def add():
 @bp_samba.route('/generate')
 def generate():
     smb_man.generate_smb()
+    if SambaGlobal.query.first() is None:
+        flash("Samba wurde nicht konfiguriert. Es wird der default fallback verwendet", category="warn")
+    flash("Konfiguration erfolgreich generiert", category="positive")
     return redirect(url_for('.index'))
 
 
@@ -78,23 +84,20 @@ def remove():
     share_id = request.args.get('share')
     show_modal = False
     if share_id is None:
-        flash("Can't remove drive without id.")
+        flash("Keine id angegeben. Möglicherweise ist der Verweis veraltet", category="error")
         return redirect(url_for('.index'))
     else:
         try:
             form = SambaRemovalForm(request.form)
             share_id = int(share_id)
-            share = smb_man.get_share_by_id(share_id)
+            share = SambaShare.query.get_or_404(share_id)
             if request.method == 'POST':
                 if form.validate():
-                    print("Alles Easy")
+                    smb_man.remove_share(share, remove_data=bool(form.remove_data.data))
                     return redirect(url_for('.index'))
                 else:
                     show_modal = True
-                    print(form.okay.data)
             return render_template('samba/remove.html', name=share.name, form=form, show_modal=show_modal)
         except ValueError:
-            flash("ValueError: id is not an int")
-        except LookupError:
-            flash("LookupError: id not valid")
+            flash("ValueError: id is not an int", category="error")
         return redirect(url_for('.index'))
