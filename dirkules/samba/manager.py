@@ -68,7 +68,7 @@ def set_samba_global(workgroup, name):
     """
     SambaGlobal.query.delete()
     workgroup = SambaGlobal("workgroup", workgroup)
-    name = SambaGlobal("server string", "%h {}".format(name))
+    name = SambaGlobal("server string", "{}".format(name))
     db.session.add(workgroup)
     db.session.add(name)
     db.session.commit()
@@ -85,8 +85,8 @@ def generate_smb():
         workgroup = 'WORKGROUP'
         server_string = '%h dirkules'
     else:
-        workgroup = SambaGlobal.query.get(1)
-        server_string = SambaGlobal.query.get(2)
+        workgroup = SambaGlobal.query.get(1).value
+        server_string = "%h " + str(SambaGlobal.query.get(2).value)
     f = open("smb.conf.txt", "w")
     samba_global = open(staticDir + "/conf/samba_global.conf", "r")
     samba_share = open(staticDir + "/conf/samba_share.conf", "r")

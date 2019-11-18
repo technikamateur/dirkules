@@ -43,8 +43,8 @@ def index():
 def config():
     form = SambaConfigForm(request.form)
     if SambaGlobal.query.first() is not None:
-        form.workgroup.data = SambaGlobal.query.get(1)
-        form.server_string.data = SambaGlobal.query.get(2)
+        form.workgroup.data = SambaGlobal.query.get(1).value
+        form.server_string.data = SambaGlobal.query.get(2).value
     if request.method == 'POST' and form.validate():
         smb_man.set_samba_global(form.workgroup.data, form.server_string.data)
         return redirect(url_for('.index'))
