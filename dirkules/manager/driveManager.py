@@ -95,7 +95,7 @@ def pool_gen():
             raid = "unbekannt"
         drives = ""
         for part in value:
-            drives = drives + str(Drive.query.get(part.drive_id)) + ","
+            drives = drives + str(Drive.query.get(part.drive_id).name) + ","
         drives = drives[:-1]
         value = value[0]
         missing = absent_drive(drives)

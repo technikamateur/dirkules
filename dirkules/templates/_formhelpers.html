@@ -15,7 +15,7 @@
     {% endif %}
     {{ field(**kwargs)|safe }}
     </div>
-    {% elif field.type == 'SelectField' or field.type =='QuerySelectField' %}
+    {% elif field.type == 'SelectField' %}
         <div class="field">
         {% if field.errors %}
             <div class="ui mymindrop selection dropdown error">
@@ -26,17 +26,9 @@
     <i class="dropdown icon"></i>
     <div class="default text">{{ field.label.text }}</div>
     <div class="menu">
-        {% if field.type == 'SelectField' %}
-            {% for value, label in field.choices %}
-                <div class="item" data-value="{{ value }}">{{ label }}</div>
-            {% endfor %}
-        {% else %}
-            {% for drive in query %}
-                <div class="item" data-value="{{ drive.name }}">{{ drive.name }}: {{ drive.model }}
-                    ({{ drive.size|filesizeformat(true) }})
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% for value, label in field.choices %}
+            <div class="item" data-value="{{ value }}">{{ label }}</div>
+        {% endfor %}
     </div>
     </div>
     </div>
@@ -104,6 +96,6 @@
     </div>
     </div>
     {% else %}
-        ERROR LOL
+        This field is not defined in formhelpers.
     {% endif %}
 {% endmacro %}

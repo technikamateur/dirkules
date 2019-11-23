@@ -13,7 +13,7 @@ def get_pools():
     :return: List of tuples (id, label) of pools
     """
     pools = Pool.query.all()
-    choices = [(str(pool.id), pool.label) for pool in pools]
+    choices = [(str(pool.id), pool.label + ": " + pool.drives + " mounted on " + pool.mountpoint) for pool in pools]
     return choices
 
 
@@ -39,6 +39,7 @@ def create_share(name, path, user, dir_mask, create_mask, writeable, btrfs, recy
     :return: Nothing
     :rtype: None
     """
+    path = Pool.query.get(int(path))
     share = SambaShare(name, path, btrfs=btrfs, recycle=recycling)
     user = SambaOption("valid users", user)
     if dir_mask is None:
