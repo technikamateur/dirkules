@@ -39,7 +39,7 @@ def create_share(name, path, user, dir_mask, create_mask, writeable, btrfs, recy
     :return: Nothing
     :rtype: None
     """
-    path = Pool.query.get(int(path))
+    path = Pool.query.get(int(path)).mountpoint + "/{}".format(name)
     share = SambaShare(name, path, btrfs=btrfs, recycle=recycling)
     user = SambaOption("valid users", user)
     if dir_mask is None:
