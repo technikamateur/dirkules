@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Freigabe entfernen{% endblock %}
+{% block body %}
+    <div class="topspacer"></div>
+    <div class="ui container">
+        <h2 class="ui center aligned icon header">
+            <i class="circular trash icon"></i>
+            <div class="content">
+                Freigabe entfernen
+                <div class="sub header">Sie möchten die Samba Freigabe mit dem Namen "{{ name }}" entfernen. Bitte
+                    konkretisieren und bestätigen.
+                </div>
+            </div>
+        </h2>
+        {% from "_formhelpers.html" import render_field %}
+        {% if form.errors %}
+            <form method=post class="ui form error">
+        {% else %}
+            <form method=post class="ui form">
+        {% endif %}
+        {{ form.hidden_tag() }}
+        {{ render_field(form.remove_data) }}
+            {% if show_modal %}
+                <div class="ui segment">
+                {{ render_field(form.okay) }}
+                </div>
+                <div class="ui error message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Verletzung der Sicherheitsprotokolle
+                    </div>
+                    Die Sicherheitsprotokolle verhindern die automatische Ausführung.<br>
+                    Für das Ausführen der gewünschten Aktion, ist eine Überbrückung der Sicherheitsprotokolle nötig.
+                    Bitte bestätigen.
+                </div>
+            {% endif %}
+        {{ render_field(form.submit) }}
+        </form>
+    </div>
+{% endblock %}
+

@@ -37,7 +37,7 @@ def drives():
             abort(500, description="Expected int, but got {}.".format(delete))
         except LookupError:
             abort(500, description="Invalid drive id {}".format(delete))
-
+        return redirect(url_for('drives'))
     return render_template('drives.html', drives=Drive.query.all())
 
 
