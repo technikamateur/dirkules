@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Add Cleaning{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block body %}
+    <div class="ui container">
+        {% from "_formhelpers.html" import render_field %}
+        <form method=post class="ui form error">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.jobname) }}
+            {{ render_field(form.path) }}
+            {{ render_field(form.active) }}
+            {{ render_field(form.submit) }}
+        </form>
+    </div>
+    <script>
+        $(document).ready(
+            function () {
+                $('.ui.checkbox')
+                    .checkbox()
+                ;
+            });
+    </script>
+{% endblock %}
