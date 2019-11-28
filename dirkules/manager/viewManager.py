@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
-from dirkules import db
 from dirkules.hardware.btrfsTools import create_pool
-from dirkules.models import Cleaning, Drive
-
-
-def create_cleaning_obj(jobname, path, active):
-    job = Cleaning(jobname, path, active)
-    db.session.add(job)
-    db.session.commit()
+from dirkules.models import Drive
 
 
 def get_empty_drives():

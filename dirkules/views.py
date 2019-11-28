@@ -1,14 +1,13 @@
 import datetime
 import subprocess
 from time import sleep
-from flask import render_template, redirect, request, url_for, flash, abort
-from dirkules import app, db, scheduler, app_version
+from flask import render_template, redirect, request, url_for, abort
+from dirkules import app, scheduler, app_version
 import dirkules.manager.serviceManager as servMan
 import dirkules.manager.driveManager as driveMan
-import dirkules.manager.cleaning as cleaningMan
-from dirkules.models import Drive, Cleaning, Pool
+from dirkules.models import Drive, Pool
 import dirkules.manager.viewManager as viewManager
-from dirkules.validation.validators import CleaningForm, PoolAddForm
+from dirkules.validation.validators import PoolAddForm
 
 
 @app.errorhandler(404)
@@ -85,63 +84,3 @@ def partitions(part):
     except LookupError:
         abort(500, description="Invalid drive id {}".format(part))
     return render_template('partitions.html', parts=drive.partitions)
-
-
-@app.route('/cleaning', methods=['GET'])
-def cleaning():
-    remove = request.args.get('remove')
-    changestate = request.args.get('changestate')
-    service = request.args.get('service')
-    if not (remove is not None and changestate is not None):
-        if remove is not None:
-            try:
-                remove = int(remove)
-                Cleaning.query.filter(Cleaning.id == remove).delete()
-                db.session.commit()
-                return redirect(request.path, code=302)
-            except ValueError:
-                flash("Value Error: remove")
-        elif changestate is not None:
-            try:
-                changestate = int(changestate)
-                job = Cleaning.query.get(changestate)
-                if job.state == 0:
-                    job.state = 1
-                else:
-                    job.state = 0
-                db.session.commit()
-                return redirect(request.path, code=302)
-            except ValueError:
-                flash("Value Error: changestate")
-    else:
-        flash("Value Error: remove and changestate set")
-    if service is not None:
-        try:
-            service = str(service)
-            if service == "start":
-                if not cleaningMan.running():
-                    cleaningMan.enable()
-                    return redirect(request.path, code=302)
-                else:
-                    flash("Error: Cleaning Service already running.")
-            elif service == "pause":
-                if cleaningMan.running():
-                    cleaningMan.disable()
-                    return redirect(request.path, code=302)
-                else:
-                    flash("Error: Cleaning Service already paused.")
-            else:
-                raise ValueError
-        except ValueError:
-            flash("Value Error: service")
-    elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning.html', elements=elements, task_running=cleaningMan.running())
-
-
-@app.route('/add_cleaning', methods=['GET', 'POST'])
-def add_cleaning():
-    form = CleaningForm(request.form)
-    if request.method == 'POST' and form.validate():
-        viewManager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
-        return redirect(url_for('cleaning'))
-    return render_template('add_cleaning.html', form=form)

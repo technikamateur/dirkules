@@ -15,6 +15,7 @@ app_version = app.config["VERSION"]
 
 import dirkules.models
 import dirkules.samba.models
+import dirkules.cleaning.models
 
 # create db if not exists
 db.create_all()

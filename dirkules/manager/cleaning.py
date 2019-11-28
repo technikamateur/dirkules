@@ -1,6 +1,6 @@
 import datetime
 import os
-from dirkules.models import Cleaning
+from dirkules.cleaning.models import Cleaning
 from dirkules.hardware import autoclean
 from dirkules import db, app, scheduler
 
