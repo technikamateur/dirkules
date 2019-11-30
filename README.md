@@ -27,4 +27,4 @@ Als dieser Nutzer folgende Befehle ausführen:
 ## Integrierte Projekte und Frameworks
 - [Semantic UI](https://github.com/Semantic-Org/Semantic-UI) - licensed under MIT
 - [UI-Icon](https://github.com/Semantic-Org/UI-Icon/) - licensed under MIT
-- [CodePen Error Page](https://codepen.io/saransh/pen/aezht) - licensed under MIT
+- [404 Page by Saransh Sinha](https://codepen.io/saransh/pen/aezht) - licensed under MIT
