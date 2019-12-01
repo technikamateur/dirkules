@@ -13,6 +13,10 @@ csrf = CSRFProtect()
 csrf.init_app(app)
 app_version = app.config["VERSION"]
 
+# initialize scheduler
+scheduler = APScheduler()
+scheduler.init_app(app)
+
 import dirkules.models
 import dirkules.samba.models
 import dirkules.cleaning.models
@@ -20,8 +24,6 @@ import dirkules.cleaning.models
 # create db if not exists
 db.create_all()
 # start scheduler
-scheduler = APScheduler()
-scheduler.init_app(app)
 scheduler.start()
 # import views
 import dirkules.views

@@ -1,14 +1,15 @@
 from flask import request, redirect, flash, render_template, url_for
 
-from dirkules import app, db
+from dirkules import db
 from dirkules.cleaning import manager as cleaning_manager
 
 from dirkules.cleaning.models import Cleaning
 from dirkules.cleaning.validation import CleaningForm
+from dirkules.cleaning import bp_cleaning
 
 
-@app.route('/', methods=['GET'])
-def cleaning():
+@bp_cleaning.route('/', methods=['GET'])
+def index():
     remove = request.args.get('remove')
     changestate = request.args.get('changestate')
     service = request.args.get('service')
@@ -55,13 +56,13 @@ def cleaning():
         except ValueError:
             flash("Value Error: service")
     elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning.html', elements=elements, task_running=cleaning_manager.running())
+    return render_template('cleaning/cleaning.html', elements=elements, task_running=cleaning_manager.running())
 
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_cleaning():
+@bp_cleaning.route('/add', methods=['GET', 'POST'])
+def add():
     form = CleaningForm(request.form)
     if request.method == 'POST' and form.validate():
         cleaning_manager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
-        return redirect(url_for('cleaning'))
-    return render_template('add_cleaning.html', form=form)
+        return redirect(url_for('.index'))
+    return render_template('cleaning/add_cleaning.html', form=form)

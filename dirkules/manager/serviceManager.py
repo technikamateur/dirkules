@@ -1,5 +1,4 @@
 import subprocess
-import dirkules.manager.cleaning as cleaningMan
 
 
 def service_state():
@@ -15,8 +14,8 @@ def service_state():
     else:
         service.update({"samba": False})
     # now dirkules internal services
-    if cleaningMan.running():
+    """ if cleaningMan.running():
         service.update({"Dirkules cleaning service": True})
     else:
-        service.update({"Dirkules cleaning service": False})
+        service.update({"Dirkules cleaning service": False}) """
     return service

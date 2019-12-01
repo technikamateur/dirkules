@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Cleaning{% endblock %}
-{% block head %}
-    {{ super() }}
-{% endblock %}
 {% block body %}
     <div class="infobox">
         <div class="ui info message">
@@ -19,19 +16,19 @@
         </div>
     </div>
     <div class="ui container">
-        <a href="{{ url_for('add_cleaning') }}">
+        <a href="{{ url_for('.add') }}">
             <div class="ui primary labeled icon button">
                 <i class="plus icon"></i> Job hinzufügen
             </div>
         </a>
         {% if task_running %}
-            <a href="{{ url_for('cleaning', service="pause") }}">
+            <a href="{{ url_for('.index', service="pause") }}">
                 <div class="ui negative labeled icon button">
                     <i class="pause icon"></i> Service pausieren
                 </div>
             </a>
         {% else %}
-            <a href="{{ url_for('cleaning', service="start") }}">
+            <a href="{{ url_for('.index', service="start") }}">
                 <div class="ui positive labeled icon button">
                     <i class="play icon"></i> Service starten
                 </div>
@@ -61,12 +58,12 @@
                     <td>{{ element.time }}</td>
                     <td>
                         <div class="buttonspace">
-                            <a href="{{ url_for('cleaning', remove=(element.id)) }}">
+                            <a href="{{ url_for('.index', remove=(element.id)) }}">
                                 <div class="ui negative basic button">
                                     <i class="trash icon"></i> Job entfernen
                                 </div>
                             </a></div>
-                        <a href="{{ url_for('cleaning', changestate=(element.id)) }}">
+                        <a href="{{ url_for('.index', changestate=(element.id)) }}">
                             <div class="ui primary basic button">
                                 <i class="sync icon"></i> Status ändern
                             </div>
