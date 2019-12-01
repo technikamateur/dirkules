@@ -1,11 +1,13 @@
 from flask import request, redirect, flash, render_template, url_for
 
 from dirkules import app, db
-from dirkules.cleaning.manager import create_cleaning_obj
+from dirkules.cleaning import manager as cleaning_manager
+
 from dirkules.cleaning.models import Cleaning
+from dirkules.cleaning.validation import CleaningForm
 
 
-@app.route('/cleaning', methods=['GET'])
+@app.route('/', methods=['GET'])
 def cleaning():
     remove = request.args.get('remove')
     changestate = request.args.get('changestate')
@@ -37,14 +39,14 @@ def cleaning():
         try:
             service = str(service)
             if service == "start":
-                if not cleaningMan.running():
-                    cleaningMan.enable()
+                if not cleaning_manager.running():
+                    cleaning_manager.enable()
                     return redirect(request.path, code=302)
                 else:
                     flash("Error: Cleaning Service already running.")
             elif service == "pause":
-                if cleaningMan.running():
-                    cleaningMan.disable()
+                if cleaning_manager.running():
+                    cleaning_manager.disable()
                     return redirect(request.path, code=302)
                 else:
                     flash("Error: Cleaning Service already paused.")
@@ -53,13 +55,13 @@ def cleaning():
         except ValueError:
             flash("Value Error: service")
     elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning.html', elements=elements, task_running=cleaningMan.running())
+    return render_template('cleaning.html', elements=elements, task_running=cleaning_manager.running())
 
 
-@app.route('/add_cleaning', methods=['GET', 'POST'])
+@app.route('/add', methods=['GET', 'POST'])
 def add_cleaning():
     form = CleaningForm(request.form)
     if request.method == 'POST' and form.validate():
-        create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
+        cleaning_manager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
         return redirect(url_for('cleaning'))
     return render_template('add_cleaning.html', form=form)

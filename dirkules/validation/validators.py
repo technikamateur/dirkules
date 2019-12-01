@@ -4,20 +4,6 @@ from dirkules.models import Drive
 from dirkules.wtforms_extension import ToggleBooleanField
 
 
-class CleaningForm(FlaskForm):
-    jobname = StringField("Job Name", [validators.required(message="Bitte Feld ausfüllen!"),
-                                       validators.none_of('123456789/\\.',
-                                                          "Bitte ausschließlich Buchstaben eingeben!"),
-                                       validators.Length(max=255, message="Eingabe zu lang")],
-                          render_kw={"placeholder": "Dowloads Verzeichnis"})
-    path = StringField("Pfad", [validators.required(message="Bitte Feld ausfüllen!"),
-                                validators.none_of('\\', "Bitte kein \\"),
-                                validators.Length(max=255, message="Eingabe zu lang")],
-                       render_kw={"placeholder": "/media/downloads/"})
-    active = BooleanField("Sofort aktvieren (Vorsicht!)")
-    submit = SubmitField("Job speichern")
-
-
 class SemanticMultiSelectField(SelectField):
     def pre_validate(self, form):
         if self.choices is not None:
