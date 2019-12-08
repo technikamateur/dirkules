@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
-{% block head %}
-    {{ super() }}
-{% endblock %}
 {% block body %}
     <div class="ui container">
         <t2>Feste Bestandteile der<i> Samba global conf</i></t2>
@@ -12,12 +9,10 @@
             {% endfor %}
         </div>
         <t2>Veränderbare Bestandteile der<i> Samba global conf</i></t2>
-        {% from "_formhelpers.html" import render_field %}
-        <form method=post class="ui form error">
-            {{ form.hidden_tag() }}
-            {{ render_field(form.workgroup) }}
-            {{ render_field(form.server_string) }}
-            {{ render_field(form.submit) }}
+        <form method=post class="ui form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
         </form>
     </div>
 {% endblock %}

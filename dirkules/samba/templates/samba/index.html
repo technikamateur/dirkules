@@ -3,17 +3,17 @@
 {% block body %}
     <div class="topspacer"></div>
     <div class="ui container">
-        <a href="{{ url_for('.config') }}">
+        <a href="{% url 'samba:config' %}">
             <div class="ui primary labeled icon button">
                 <i class="edit icon"></i> Konfigurieren
             </div>
         </a>
-        <a href="{{ url_for('.add') }}">
+        <a href="{% url 'samba:add' %}">
             <div class="ui primary labeled icon button">
                 <i class="plus icon"></i> Freigabe hinzufügen
             </div>
         </a>
-        <a href="{{ url_for('.generate') }}">
+        <a href="">
             <div class="ui primary labeled icon button">
                 <i class="magic icon"></i> Generieren
             </div>
@@ -44,7 +44,7 @@
                     {% else %}
                         <td class="collapsing"><i class="close icon"></i> Deaktiviert</td>
                     {% endif %}
-                    <td>{% if share.enabled %}
+                    {% comment %} <td>{% if share.enabled %}
                         <a href="{{ url_for('.index', disable=share.id) }}">
                             <div class="ui orange icon basic button">
                                 <i class="unlink icon"></i>
@@ -62,7 +62,7 @@
                                 <i class="trash icon"></i>
                             </div>
                         </a>
-                    </td>
+                    </td> {% endcomment %}
                 </tr>
 
             {% endfor %}
