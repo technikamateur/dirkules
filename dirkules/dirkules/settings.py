@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'semanticuiforms',
     'samba.apps.SambaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
