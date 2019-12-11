@@ -28,8 +28,8 @@ scheduler.start()
 # import views
 import dirkules.views
 
-from dirkules.samba import bp_samba as bp_samba
-from dirkules.cleaning import bp_cleaning as bp_cleaning
+from .samba.views import bp_samba as bp_samba
+from .cleaning.views import bp_cleaning as bp_cleaning
 
 app.register_blueprint(bp_samba, url_prefix='/samba')
 app.register_blueprint(bp_cleaning, url_prefix='/cleaning')

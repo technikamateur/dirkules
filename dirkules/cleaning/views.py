@@ -1,11 +1,13 @@
-from flask import request, redirect, flash, render_template, url_for
+from flask import request, redirect, flash, render_template, url_for, Blueprint
 
 from dirkules import db
 from dirkules.cleaning import manager as cleaning_manager
 
 from dirkules.cleaning.models import Cleaning
 from dirkules.cleaning.validation import CleaningForm
-from dirkules.cleaning import bp_cleaning
+
+
+bp_cleaning = Blueprint('cleaning', __name__, template_folder='templates')
 
 
 @bp_cleaning.route('/', methods=['GET'])

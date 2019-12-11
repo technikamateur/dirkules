@@ -1,11 +1,13 @@
 from dirkules import db
 
 from dirkules.config import staticDir
-from flask import render_template, url_for, request, redirect, flash
-from dirkules.samba import bp_samba
+from flask import render_template, url_for, request, redirect, flash, Blueprint
 from dirkules.samba import manager as smb_man
 from dirkules.samba.models import SambaShare, SambaGlobal
 from dirkules.samba.validation import SambaConfigForm, SambaAddForm, SambaRemovalForm
+
+
+bp_samba = Blueprint('samba', __name__, template_folder='templates')
 
 
 @bp_samba.route('/', methods=['GET'])
