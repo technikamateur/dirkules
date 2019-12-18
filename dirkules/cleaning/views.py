@@ -6,7 +6,6 @@ from dirkules.cleaning import manager as cleaning_manager
 from dirkules.cleaning.models import Cleaning
 from dirkules.cleaning.validation import CleaningForm
 
-
 bp_cleaning = Blueprint('cleaning', __name__, template_folder='templates')
 
 
@@ -27,11 +26,8 @@ def index():
         elif changestate is not None:
             try:
                 changestate = int(changestate)
-                job = Cleaning.query.get(changestate)
-                if job.state == 0:
-                    job.state = 1
-                else:
-                    job.state = 0
+                job = Cleaning.query.get_or_404(changestate)
+                job.change_active()
                 db.session.commit()
                 return redirect(request.path, code=302)
             except ValueError:
@@ -58,7 +54,7 @@ def index():
         except ValueError:
             flash("Value Error: service")
     elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning/cleaning.html', elements=elements, task_running=cleaning_manager.running())
+    return render_template('cleaning/index.html', elements=elements, task_running=cleaning_manager.running())
 
 
 @bp_cleaning.route('/add', methods=['GET', 'POST'])
@@ -67,4 +63,4 @@ def add():
     if request.method == 'POST' and form.validate():
         cleaning_manager.create_cleaning_obj(form.jobname.data, form.path.data, form.active.data)
         return redirect(url_for('.index'))
-    return render_template('cleaning/add_cleaning.html', form=form)
+    return render_template('cleaning/add.html', form=form)
