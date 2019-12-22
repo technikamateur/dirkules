@@ -25,21 +25,6 @@ def index():
     return render_template('index.html', service=servMan.service_state())
 
 
-@app.route('/drives', methods=['GET'])
-def drives():
-    delete = request.args.get('delete')
-    if delete is not None:
-        try:
-            drive = driveMan.get_drive_by_id(int(delete))
-            driveMan.delete_drive(drive)
-        except ValueError:
-            abort(500, description="Expected int, but got {}.".format(delete))
-        except LookupError:
-            abort(500, description="Invalid drive id {}".format(delete))
-        return redirect(url_for('drives'))
-    return render_template('drives.html', drives=Drive.query.all())
-
-
 @app.route('/pools', methods=['GET'])
 def pools():
     return render_template('pools.html', pools=Pool.query.all())
@@ -73,14 +58,3 @@ def add_pool():
 @app.route('/about', methods=['GET'])
 def about():
     return render_template('about.html', version=app_version)
-
-
-@app.route('/partitions/<part>', methods=['GET'])
-def partitions(part):
-    try:
-        drive = driveMan.get_drive_by_id(int(part))
-    except ValueError:
-        abort(500, description="Expected int, but got {}.".format(part))
-    except LookupError:
-        abort(500, description="Invalid drive id {}".format(part))
-    return render_template('partitions.html', parts=drive.partitions)

@@ -20,7 +20,7 @@
 <nav class="ui mymenu inverted massive menu">
     <a class="item" href="{{ url_for('index') }}"><i class="smile icon"></i> Startseite</a>
     <a class="item" href="/nzbget"><i class="download icon"></i> NZBGet</a>
-    <a class="item" href="{{ url_for('drives') }}"><i class="hdd icon"></i> Festplatten</a>
+    <a class="item" href="{{ url_for('drives.index') }}"><i class="hdd icon"></i> Festplatten</a>
     <a class="item" href="{{ url_for('pools') }}"><i class="server icon"></i> Pools</a>
     <a class="item" href="{{ url_for('cleaning.index') }}"><i class="trash icon"></i> Cleaning</a>
     <a class="item" href="{{ url_for('samba.index') }}"><i class="share alternate icon"></i> Samba</a>

@@ -28,9 +28,11 @@ scheduler.start()
 # import views
 import dirkules.views
 
+from .drives.views import bp_drives as bp_drives
 from .samba.views import bp_samba as bp_samba
 from .cleaning.views import bp_cleaning as bp_cleaning
 
+app.register_blueprint(bp_drives, url_prefix='/drives')
 app.register_blueprint(bp_samba, url_prefix='/samba')
 app.register_blueprint(bp_cleaning, url_prefix='/cleaning')
 
