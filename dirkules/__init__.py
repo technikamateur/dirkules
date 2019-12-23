@@ -6,12 +6,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_apscheduler import APScheduler
 
+from .flask_semanticui import Semantic
+
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
 csrf = CSRFProtect()
 csrf.init_app(app)
 app_version = app.config["VERSION"]
+
+Semantic(app)
 
 # initialize scheduler
 scheduler = APScheduler()
