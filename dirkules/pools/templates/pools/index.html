@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Pools{% endblock %}
-{% block head %}
-    {{ super() }}
-{% endblock %}
 {% block body %}
     <div class="topspacer"></div>
     <div class="ui container">
@@ -18,7 +15,7 @@
                 </p>
             </div>
         </div>
-        <a href="{{ url_for('add_pool') }}">
+        <a href="{{ url_for('.add') }}">
             <div class="ui primary labeled icon button">
                 <i class="plus icon"></i> Neuen Pool erstellen
             </div>
@@ -56,7 +53,7 @@
                     {% endif %}
                     <td>{{ pool.drives }}</td>
                     <td>
-                        <a href="{{ url_for('pool', pool=(pool.id)) }}"
+                        <a href="{{ url_for('.detail', pool=(pool.id)) }}"
                            class="ui primary basic button">
                             <i class="eye icon"></i>
                             Details

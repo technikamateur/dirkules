@@ -38,7 +38,7 @@ def index():
             return redirect(url_for('.index'))
     else:
         flash("Value Error: enable and disable set", category="error")
-    return render_template('samba/index.html', shares=shares)
+    return render_template('samba/detail.html', shares=shares)
 
 
 @bp_samba.route('/config', methods=['GET', 'POST'])

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SelectField, IntegerField, RadioField, validators, SubmitField
-from dirkules.models import Drive
+from wtforms import SelectField, SubmitField, StringField, RadioField, BooleanField, validators
+
 from dirkules.wtforms_extension import ToggleBooleanField
 
 

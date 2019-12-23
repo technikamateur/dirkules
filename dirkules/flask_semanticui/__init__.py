@@ -1,7 +1,7 @@
 from flask import Blueprint
 
 
-class Semantic(object):
+class SemanticUI():
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)

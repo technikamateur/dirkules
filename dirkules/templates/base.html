@@ -1,117 +1,103 @@
-<!DOCTYPE html>
-
-<head>
-    {% block head %}
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('semanticui.static', filename='css/semantic.min.css') }}"/>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('semanticui.static', filename='css/icon.min.css') }}"/>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}"/>
-        <!-- JQuery -->
-        <script src="{{ url_for('semanticui.static', filename='js/jquery-3.1.1.min.js') }}"></script>
-        <!-- Semantic UI -->
-        <script src="{{ url_for('semanticui.static', filename='js/semantic.min.js') }}"></script>
-        <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
-</head>
-
-<body>
-<nav class="ui mymenu inverted massive menu">
-    <a class="item" href="{{ url_for('index') }}"><i class="smile icon"></i> Startseite</a>
-    <a class="item" href="/nzbget"><i class="download icon"></i> NZBGet</a>
-    <a class="item" href="{{ url_for('drives.index') }}"><i class="hdd icon"></i> Festplatten</a>
-    <a class="item" href="{{ url_for('pools') }}"><i class="server icon"></i> Pools</a>
-    <a class="item" href="{{ url_for('cleaning.index') }}"><i class="trash icon"></i> Cleaning</a>
-    <a class="item" href="{{ url_for('samba.index') }}"><i class="share alternate icon"></i> Samba</a>
-    <div class="right menu">
-        <a class="ui item" href="{{ url_for('about') }}">über Dirkules</a>
-    </div>
-</nav>
-
-{% with errors = get_flashed_messages(category_filter=["error"]) %}
-    {% if errors %}
-        <div class="tablebox">
-            <div class="ui negative message">
-                <i class="close icon"></i>
-                <div class="header">
-                    Ein oder Mehrere Fehler sind aufgetreten
-                </div>
-                <ul class="list">
-                    {% for msg in errors %}
-                        <li>{{ msg }}</li>
-                    {% endfor -%}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{% endwith %}
-
-{% with warns = get_flashed_messages(category_filter=["warn"]) %}
-    {% if warns %}
-        <div class="tablebox">
-            <div class="ui warning message">
-                <i class="close icon"></i>
-                <div class="header">
-                    Ein oder Mehrere Warnungen sind aufgetreten
-                </div>
-                <ul class="list">
-                    {% for msg in warns %}
-                        <li>{{ msg }}</li>
-                    {% endfor -%}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{% endwith %}
-
-{% with info = get_flashed_messages(category_filter=["info"]) %}
-    {% if info %}
-        <div class="tablebox">
-            <div class="ui message">
-                <i class="close icon"></i>
-            <div class="header">
-                    Folgende Informationen sind vorhanden
-                </div>
-                <ul class="list">
-                    {% for msg in info %}
-                        <li>{{ msg }}</li>
-                    {% endfor -%}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{% endwith %}
-
-{% with pos = get_flashed_messages(category_filter=["positive"]) %}
-    {% if pos %}
-        <div class="tablebox">
-            <div class="ui positive message">
-                <i class="close icon"></i>
-            <div class="header">
-                    Folgendes wurde erfolgreich abgeschlossen
-                </div>
-                <ul class="list">
-                    {% for msg in pos %}
-                        <li>{{ msg }}</li>
-                    {% endfor -%}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{% endwith %}
-
-{% block body %}
+{% extends "semanticui/base.html" %}
+{% block styles %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/myStyle.css') }}"/>
 {% endblock %}
-</body>
-<script>
-    $('.message .close')
-        .on('click', function () {
-            $(this)
-                .closest('.message')
-                .transition('fade')
-            ;
-        })
-    ;
-</script>
-</html>
+
+{% block messages %}
+    <nav class="ui mymenu inverted massive menu">
+        <a class="item" href="{{ url_for('index') }}"><i class="smile icon"></i> Startseite</a>
+        <a class="item" href="/nzbget"><i class="download icon"></i> NZBGet</a>
+        <a class="item" href="{{ url_for('drives.index') }}"><i class="hdd icon"></i> Festplatten</a>
+        <a class="item" href="{{ url_for('pools.index') }}"><i class="server icon"></i> Pools</a>
+        <a class="item" href="{{ url_for('cleaning.index') }}"><i class="trash icon"></i> Cleaning</a>
+        <a class="item" href="{{ url_for('samba.index') }}"><i class="share alternate icon"></i> Samba</a>
+        <div class="right menu">
+            <a class="ui item" href="{{ url_for('about') }}">über Dirkules</a>
+        </div>
+    </nav>
+
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+            <div class="tablebox">
+                <div class="ui negative message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Ein oder Mehrere Fehler sind aufgetreten
+                    </div>
+                    <ul class="list">
+                        {% for msg in errors %}
+                            <li>{{ msg }}</li>
+                        {% endfor -%}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% with warns = get_flashed_messages(category_filter=["warn"]) %}
+        {% if warns %}
+            <div class="tablebox">
+                <div class="ui warning message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Ein oder Mehrere Warnungen sind aufgetreten
+                    </div>
+                    <ul class="list">
+                        {% for msg in warns %}
+                            <li>{{ msg }}</li>
+                        {% endfor -%}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% with info = get_flashed_messages(category_filter=["info"]) %}
+        {% if info %}
+            <div class="tablebox">
+                <div class="ui message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Folgende Informationen sind vorhanden
+                    </div>
+                    <ul class="list">
+                        {% for msg in info %}
+                            <li>{{ msg }}</li>
+                        {% endfor -%}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% with pos = get_flashed_messages(category_filter=["positive"]) %}
+        {% if pos %}
+            <div class="tablebox">
+                <div class="ui positive message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Folgendes wurde erfolgreich abgeschlossen
+                    </div>
+                    <ul class="list">
+                        {% for msg in pos %}
+                            <li>{{ msg }}</li>
+                        {% endfor -%}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            })
+        ;
+    </script>
+{% endblock %}
