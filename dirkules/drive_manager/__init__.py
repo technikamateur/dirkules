@@ -1,48 +1,51 @@
+import os
 import subprocess
 
 
-def _is_healthy(device):
-    """
-    This function returns for given device e.g. "/dev/sda" the answer of the question: Is this drive healthy?
-    It will use the output of the linux tool "smartctl".
-    :param device: The device you actually wanna check
-    :type device: str
-    :return: healthy information
-    :rtype: bool
-    """
-    smartctl = subprocess.run(["sudo", "smartctl", "-H", device], shell=False, timeout=20, check=True,
-                              universal_newlines=True, stdout=subprocess.PIPE)
-    if any('PASSED' in line for line in smartctl.stdout.splitlines()):
-        return True
-    else:
-        return False
-
-
 class DriveManager:
-    def __init__(self, db_drives):
-        self.db_drives = db_drives
-        self.sorted_drive_dict = None
+    """
+    There should be only one DriveManager in your app.
+    """
+    smartctl_available = False
 
-    def get_all_drives(self):
-        drives = list()
+    def __init__(self):
+        self.sorted_drive_dict = None
+        self._check_required_tools()
+
+    def _check_required_tools(self):
+        """
+        Checks for required tools:
+        - smartmontools
+        """
+        if os.path.isfile('/usr/sbin/smartctl'):
+            self.smartctl_available = True
+
+    @staticmethod
+    def _is_healthy(device):
+        """
+        This function returns for given device the answer of the question: Is this drive healthy?
+        It will use the output of the linux tool "smartctl".
+        :param device: The device you actually want to check
+        :type device: str (e.g. "/dev/sda")
+        :return: healthy information
+        :rtype: bool
+        """
+        smartctl = subprocess.run(["sudo", "smartctl", "-H", device], shell=False, timeout=20, check=True,
+                                  universal_newlines=True, stdout=subprocess.PIPE)
+        if any('PASSED' in line for line in smartctl.stdout.splitlines()):
+            return True
+        else:
+            return False
+
+    def _update_drives(self):
         drive_dict = list()
         keys = [
             'name', 'model', 'serial', 'size', 'rota', 'rm', 'hotplug', 'state',
             'smart'
         ]
-
-        lsblk = subprocess.Popen(
-            ["sudo lsblk -I 8 -d -b -o NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG"],
-            stdout=subprocess.PIPE,
-            shell=True,
-            universal_newlines=True)
-        while True:
-            line = lsblk.stdout.readline()
-            if line != '':
-                drives.append(line.rstrip())
-            else:
-                break
-        lsblk.stdout.close()
+        lsblk = subprocess.run(["sudo", "lsblk", "-I", "8", "-d", "-b", "-o", "NAME,MODEL,SERIAL,SIZE,ROTA,RM,HOTPLUG"],
+                               shell=False, timeout=45, check=True, universal_newlines=True, stdout=subprocess.PIPE)
+        drives = lsblk.stdout.splitlines()
         del drives[0]
         for line in drives:
             new_line = ' '.join(line.split())
@@ -59,7 +62,14 @@ class DriveManager:
                 else:
                     values.append(new_line[i])
             values.append("running")
-            values.append(_is_healthy("/dev/" + values[0]))
+            values.append(self._is_healthy("/dev/" + values[0]))
             drive_dict.append(dict(zip(keys, values)))
         self.sorted_drive_dict = sorted(drive_dict, key=lambda drive: drive['name'])
+
+    def get_all_drives(self):
+        """
+        Returns a standardized list of dictionaries which contains all information about all drives in the system.
+        :rtype: list
+        """
+        self._update_drives()
         return self.sorted_drive_dict
