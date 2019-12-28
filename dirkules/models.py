@@ -35,7 +35,7 @@ class Drive(db.Model):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.name == other.name and self.smart == other.smart
+            return self.name == other.name and self.serial == other.serial
         else:
             return False
 

@@ -6,10 +6,11 @@ import dirkules.manager.driveManager as drive_man
 from dirkules import app, db
 from dirkules.cleaning.models import Cleaning
 from dirkules.hardware import autoclean
+from . import tasks_helper
 
 
 def refresh_disks():
-    drive_man.get_drives()
+    tasks_helper.update_drives()
     drive_man.get_partitions()
     drive_man.pool_gen()
 
