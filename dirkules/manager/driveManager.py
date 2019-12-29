@@ -1,27 +1,8 @@
 from dirkules import db
 from dirkules.models import Drive, Partitions, Pool
-from dirkules.hardware import drive as hardware_drives
 import dirkules.hardware.btrfsTools as btrfsTools
 import dirkules.hardware.ext4Tools as ext4Tools
 
-
-# all partitions with given drive_name will be deleted and freshly added
-# this is much faster than querying all partitions for a specific drive and check for changes
-def get_partitions():
-    drives = Drive.query.all()
-    for drive in drives:
-        if not drive.missing:
-            Partitions.query.filter(Partitions.drive_id == drive.id).delete()
-            part_dict = hardware_drives.part_for_disk(drive.name)
-            for part in part_dict:
-                if part.get("label") == "":
-                    label = "none"
-                else:
-                    label = part.get("label")
-                partition_obj = Partitions(part.get("name"), label, part.get("fs"), int(part.get("size")),
-                                           part.get("uuid"), part.get("mount"), drive)
-                drive.partitions.append(partition_obj)
-    db.session.commit()
 
 
 def pool_gen():

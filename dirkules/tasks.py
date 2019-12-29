@@ -11,7 +11,7 @@ from . import tasks_helper
 
 def refresh_disks():
     tasks_helper.update_drives()
-    drive_man.get_partitions()
+    tasks_helper.get_partitions()
     drive_man.pool_gen()
 
 

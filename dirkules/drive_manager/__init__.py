@@ -12,6 +12,7 @@ class DriveManager:
 
     def __init__(self):
         self.sorted_drive_dict = None
+        self.part_dict = dict()
         self._check_required_tools()
 
     def _check_required_tools(self):
@@ -21,6 +22,10 @@ class DriveManager:
         """
         if os.path.isfile('/usr/sbin/smartctl'):
             self.smartctl_available = True
+
+    def _update_everything(self):
+        self._update_drives()
+        self._update_partitions()
 
     @staticmethod
     def _is_healthy(device):
@@ -72,10 +77,10 @@ class DriveManager:
         :rtype: list
         """
         if not cached or self.sorted_drive_dict is None:
-            self._update_drives()
+            self._update_everything()
         return self.sorted_drive_dict
 
-    def part_for_disk(self, device):
+    def _update_partitions(self):
         """
         This function is used to return a standardized list of dictionaries which contains all information about
         this partition
@@ -84,31 +89,38 @@ class DriveManager:
         :return: list of dictionaries (every dictionary represents a partition)
         :rtype: list
         """
-        # lsblk /dev/sdd -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
-        part_dict = list()
-        lsblk = subprocess.run(["sudo", "lsblk", device, "-l", "-b", "-o", "SIZE,NAME,LABEL,FSTYPE,UUID,MOUNTPOINT"],
-                               shell=False, timeout=45, check=True, universal_newlines=True, stdout=subprocess.PIPE)
-        parts = lsblk.stdout.splitlines()
-        del parts[1]
-        element_length = list()
-        counter = 0
-        pre_value = " "
-        for char in parts[0]:
-            if char != " " and pre_value == " ":
-                if len(element_length) == 0:
-                    element_length.append(0)
-                else:
-                    element_length.append(counter)
-            counter += 1
-            pre_value = char
-        element_length.append(len(parts[0]))
-        del parts[0]
-        for part in parts:
-            values = list()
-            for start, next_start in zip(element_length, element_length[1:]):
-                if next_start == element_length[-1:][0]:
-                    values.append(part[start:len(part)].strip())
-                else:
-                    values.append(part[start:(next_start - 1)].strip())
-            part_dict.append(dict(zip(self.part_keys, values)))
-        return part_dict
+        for drive in self.sorted_drive_dict:
+            # lsblk /dev/sdd -l -b -o NAME,LABEL,FSTYPE,SIZE,UUID,MOUNTPOINT
+            part_dict = list()
+            name = '/dev/' + drive.get("name")
+            lsblk = subprocess.run(["sudo", "lsblk", name, "-l", "-b", "-o", "SIZE,NAME,LABEL,FSTYPE,UUID,MOUNTPOINT"],
+                                   shell=False, timeout=45, check=True, universal_newlines=True, stdout=subprocess.PIPE)
+            parts = lsblk.stdout.splitlines()
+            del parts[1]
+            element_length = list()
+            counter = 0
+            pre_value = " "
+            for char in parts[0]:
+                if char != " " and pre_value == " ":
+                    if len(element_length) == 0:
+                        element_length.append(0)
+                    else:
+                        element_length.append(counter)
+                counter += 1
+                pre_value = char
+            element_length.append(len(parts[0]))
+            del parts[0]
+            for part in parts:
+                values = list()
+                for start, next_start in zip(element_length, element_length[1:]):
+                    if next_start == element_length[-1:][0]:
+                        values.append(part[start:len(part)].strip())
+                    else:
+                        values.append(part[start:(next_start - 1)].strip())
+                part_dict.append(dict(zip(self.part_keys, values)))
+            self.part_dict.update({drive.get("name"): part_dict})
+
+    def get_all_partitions(self, cached=False):
+        if not self.part_dict or not cached:
+            self._update_everything()
+        return self.part_dict

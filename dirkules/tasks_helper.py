@@ -1,5 +1,5 @@
 import datetime
-from .models import Drive
+from .models import Drive, Partitions
 from . import db, app
 
 from .drive_manager import DriveManager
@@ -49,7 +49,7 @@ def update_drives():
                 db_drives.remove(db_drive)
             except ValueError:
                 app.logger.error(
-                    "The following drive {} ({}) has been found in database: BAD, but could not be found in this function! This is a bad thing.".format(
+                    "The following drive {} ({}) has been found in database, but could not be found?!".format(
                         db_drive.name, db_drive.model))
     for drive in db_drives:
         drive.missing = True
@@ -113,3 +113,20 @@ def get_drives():
         app.logger.error("During a drive rescan: Following Drives could not be found: {}.".format(old_drives))
     db.session.commit()
 """
+
+
+def get_partitions():
+    drives = Drive.query.all()
+    for drive in drives:
+        if not drive.missing:
+            Partitions.query.filter(Partitions.drive_id == drive.id).delete()
+            part_dict = dm.part_for_disk(drive.name)
+            for part in part_dict:
+                if part.get("label") == "":
+                    label = "none"
+                else:
+                    label = part.get("label")
+                partition_obj = Partitions(part.get("name"), label, part.get("fs"), int(part.get("size")),
+                                           part.get("uuid"), part.get("mount"), drive)
+                drive.partitions.append(partition_obj)
+    db.session.commit()
