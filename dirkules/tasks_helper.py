@@ -1,4 +1,6 @@
 import datetime
+import subprocess
+
 from .models import Drive, Partitions
 from . import db, app
 
@@ -45,12 +47,7 @@ def update_drives():
             if db_drive.missing:
                 db_drive.missing = False
             # and remove this drive from db_drives
-            try:
-                db_drives.remove(db_drive)
-            except ValueError:
-                app.logger.error(
-                    "The following drive {} ({}) has been found in database, but could not be found?!".format(
-                        db_drive.name, db_drive.model))
+            db_drives = [drv for drv in db_drives if drv.serial != serial]
     for drive in db_drives:
         drive.missing = True
         app.logger.error(
@@ -114,7 +111,7 @@ def get_drives():
     db.session.commit()
 """
 
-
+"""
 def get_partitions():
     drives = Drive.query.all()
     for drive in drives:
@@ -130,3 +127,28 @@ def get_partitions():
                                            part.get("uuid"), part.get("mount"), drive)
                 drive.partitions.append(partition_obj)
     db.session.commit()
+"""
+
+
+def get_partitions():
+    partitions = dm.get_all_partitions()
+    for drv_serial, part_dict in partitions.items():
+        db_drive = db.session.query(Drive).filter(Drive.serial == drv_serial).scalar()
+        Partitions.query.filter(Partitions.drive_id == db_drive.id).delete()
+        for part in part_dict:
+            if part.get("label") == "":
+                label = "none"
+            else:
+                label = part.get("label")
+            partition_obj = Partitions(part.get("name"), label, part.get("fs"), int(part.get("size")),
+                                       part.get("uuid"), part.get("mount"))
+            db_drive.partitions.append(partition_obj)
+    db.session.commit()
+
+
+def autoclean(path):
+    # remove all files older than 180 days
+    subprocess.run(["sudo", "find", path, "-type", "f", "-mtime", "+180", "-delete"], shell=False,
+                   timeout=90, check=True)
+    subprocess.run(["sudo", "find", path, "-mindepth", "1", "-type", "d", "-empty", "-delete"], shell=False,
+                   timeout=90, check=True)

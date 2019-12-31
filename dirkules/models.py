@@ -53,14 +53,13 @@ class Partitions(db.Model):
     mountpoint = db.Column(db.String)
     label = db.Column(db.String)
 
-    def __init__(self, name, label, fs, size, uuid, mpoint, drive):
+    def __init__(self, name, label, fs, size, uuid, mpoint):
         self.name = name
         self.label = label
         self.fs = fs
         self.size = size
         self.uuid = uuid
         self.mountpoint = mpoint
-        self.drive = drive
 
 
 class Pool(db.Model):

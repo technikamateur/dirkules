@@ -25,6 +25,8 @@ class DriveManager:
 
     def _update_everything(self):
         self._update_drives()
+        if self.part_dict:
+            self.part_dict.clear()
         self._update_partitions()
 
     @staticmethod
@@ -118,7 +120,7 @@ class DriveManager:
                     else:
                         values.append(part[start:(next_start - 1)].strip())
                 part_dict.append(dict(zip(self.part_keys, values)))
-            self.part_dict.update({drive.get("name"): part_dict})
+            self.part_dict.update({drive.get("serial"): part_dict})
 
     def get_all_partitions(self, cached=False):
         if not self.part_dict or not cached:
