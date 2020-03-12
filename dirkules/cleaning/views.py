@@ -54,7 +54,7 @@ def index():
         except ValueError:
             flash("Value Error: service")
     elements = Cleaning.query.order_by(db.asc(db.collate(Cleaning.name, 'NOCASE'))).all()
-    return render_template('cleaning/detail.html', elements=elements, task_running=cleaning_manager.running())
+    return render_template('cleaning/index.html', elements=elements, task_running=cleaning_manager.running())
 
 
 @bp_cleaning.route('/add', methods=['GET', 'POST'])
